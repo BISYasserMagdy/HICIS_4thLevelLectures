@@ -92,16 +92,20 @@
     border:1px solid #ecdca4;
     color:#6b5a1f;
     border-radius:10px;
-    padding:12px 18px;
-    font-size:.86rem;
+    padding:14px 18px;
+    font-size:.95rem;
+    font-weight:500;
     margin-top:16px;
-    line-height:1.7;
+    line-height:1.8;
+    white-space:normal;
+    overflow-wrap:break-word;
+    box-shadow:0 2px 6px rgba(107,90,31,.12);
   }
 
   /* ---------- Controls bar ---------- */
   .controls-wrap{
     max-width:1180px;
-    margin:-26px auto 0;
+    margin:22px auto 0;
     padding:0 28px;
     position:relative;
     z-index:2;
@@ -410,9 +414,304 @@
     .controls-wrap{padding:0 16px;}
     .two-col{grid-template-columns:1fr;}
   }
+
+  /* ---------- Section nav (Courses / Quizzes) ---------- */
+  .section-nav-wrap{
+    max-width:1180px;
+    margin:18px auto 0;
+    padding:0 28px;
+  }
+  .section-nav{
+    display:flex;
+    gap:10px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:6px;
+    width:fit-content;
+    box-shadow:0 6px 18px -12px rgba(20,40,30,.2);
+  }
+  .section-btn{
+    border:none;
+    background:transparent;
+    color:var(--muted);
+    padding:9px 20px;
+    border-radius:999px;
+    font-family:'Tajawal',sans-serif;
+    font-size:.92rem;
+    font-weight:700;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition:all .15s ease;
+  }
+  .section-btn.active{
+    background:var(--green-deep);
+    color:#fff;
+  }
+  .section-btn .badge{
+    background:var(--gold);
+    color:#fff;
+    font-size:.68rem;
+    padding:1px 7px;
+    border-radius:999px;
+    font-weight:700;
+  }
+  .section-btn.active .badge{background:rgba(255,255,255,.28);}
+
+  /* ---------- Quiz section ---------- */
+  #quizSection{display:none;}
+  .tips-panel{
+    background:linear-gradient(135deg, #eef6f0, #fdf6e3);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    margin-bottom:26px;
+  }
+  .tips-panel h3{
+    font-family:'Cairo',sans-serif;
+    color:var(--green-deep);
+    margin:0 0 10px;
+    font-size:1.02rem;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .tips-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:10px;
+  }
+  .tip-item{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:.82rem;
+    color:var(--ink);
+    line-height:1.6;
+    display:flex;
+    gap:8px;
+  }
+  .tip-item .ic{font-size:1.1rem; flex-shrink:0;}
+
+  .review-cta{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+    background:var(--green-deep);
+    color:#fff;
+    border-radius:var(--radius);
+    padding:18px 22px;
+    margin-bottom:26px;
+  }
+  .review-cta .txt h3{margin:0 0 4px; font-family:'Cairo',sans-serif; font-size:1.05rem;}
+  .review-cta .txt p{margin:0; color:#cfe1d6; font-size:.85rem;}
+  .review-cta button{
+    background:var(--gold);
+    color:#fff;
+    border:none;
+    padding:11px 22px;
+    border-radius:999px;
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    font-size:.9rem;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .review-cta button:disabled{
+    background:rgba(255,255,255,.25);
+    cursor:default;
+  }
+  .review-cta button:hover:not(:disabled){background:#c69a4e;}
+
+  .quiz-course-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:16px;
+  }
+  .quiz-course-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+    position:relative;
+  }
+  .quiz-course-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 14px 28px -18px rgba(20,40,30,.35);
+  }
+  .quiz-course-card h4{
+    font-family:'Cairo',sans-serif;
+    margin:0 0 10px;
+    color:var(--ink);
+    font-size:1rem;
+  }
+  .quiz-course-card .stats{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .quiz-course-card .stat-chip{
+    font-size:.74rem;
+    padding:4px 9px;
+    border-radius:999px;
+    background:var(--cream);
+    color:var(--green-deep);
+    font-weight:700;
+  }
+  .quiz-course-card .stat-chip.due{background:#fdf6e3; color:#946c1c;}
+  .quiz-course-card .stat-chip.mastered{background:#e6f2ea; color:#1e6b45;}
+
+  /* ---------- Quiz session ---------- */
+  .quiz-session{max-width:640px; margin:0 auto;}
+  .quiz-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:16px;
+    gap:10px;
+  }
+  .quiz-back{
+    background:none;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 14px;
+    font-family:'Tajawal',sans-serif;
+    font-size:.84rem;
+    color:var(--green-deep);
+    cursor:pointer;
+  }
+  .quiz-back:hover{background:var(--cream);}
+  .quiz-progress-text{font-size:.84rem; color:var(--muted); font-weight:700;}
+  .progress-bar{
+    height:7px;
+    background:var(--cream);
+    border-radius:999px;
+    overflow:hidden;
+    margin-bottom:22px;
+  }
+  .progress-bar-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--gold), var(--gold-light));
+    transition:width .25s ease;
+  }
+  .quiz-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:26px;
+    box-shadow:0 10px 30px -18px rgba(20,40,30,.3);
+  }
+  .quiz-type-tag{
+    display:inline-block;
+    font-size:.7rem;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:999px;
+    background:var(--cream);
+    color:var(--green-deep);
+    margin-bottom:12px;
+  }
+  .quiz-question{
+    font-family:'Cairo',sans-serif;
+    font-size:1.08rem;
+    color:var(--ink);
+    line-height:1.6;
+    margin:0 0 20px;
+  }
+  .quiz-options{display:flex; flex-direction:column; gap:10px;}
+  .quiz-opt{
+    text-align:right;
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:10px;
+    padding:13px 16px;
+    font-family:'Tajawal',sans-serif;
+    font-size:.92rem;
+    color:var(--ink);
+    cursor:pointer;
+    transition:all .12s ease;
+  }
+  .quiz-opt:hover:not(:disabled){border-color:var(--gold); background:var(--cream);}
+  .quiz-opt.correct{
+    background:#e6f2ea;
+    border-color:#3f9d67;
+    color:#1e6b45;
+    font-weight:700;
+  }
+  .quiz-opt.wrong{
+    background:#fbe9e7;
+    border-color:#d9634f;
+    color:#a13b28;
+    font-weight:700;
+  }
+  .quiz-opt:disabled{cursor:default; opacity:.85;}
+  .tf-row{display:flex; gap:12px;}
+  .tf-row .quiz-opt{flex:1; text-align:center; font-weight:700;}
+
+  .quiz-feedback{
+    margin-top:18px;
+    padding:12px 14px;
+    border-radius:10px;
+    font-size:.86rem;
+    line-height:1.7;
+    display:none;
+  }
+  .quiz-feedback.show{display:block;}
+  .quiz-feedback.ok{background:#e6f2ea; color:#1e6b45; border:1px solid #bfe2cc;}
+  .quiz-feedback.bad{background:#fbe9e7; color:#a13b28; border:1px solid #f0c3ba;}
+
+  .quiz-actions{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:18px;
+  }
+  .quiz-next-btn{
+    background:var(--green-deep);
+    color:#fff;
+    border:none;
+    padding:11px 24px;
+    border-radius:8px;
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    font-size:.88rem;
+    cursor:pointer;
+    display:none;
+  }
+  .quiz-next-btn.show{display:inline-flex;}
+  .quiz-next-btn:hover{background:var(--green);}
+
+  .quiz-summary{
+    text-align:center;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:40px 24px;
+  }
+  .quiz-summary .score{
+    font-family:'Cairo',sans-serif;
+    font-size:2.4rem;
+    font-weight:800;
+    color:var(--green-deep);
+    margin:6px 0 4px;
+  }
+  .quiz-summary p{color:var(--muted); margin:0 0 20px;}
+  .quiz-summary .link-btn{display:inline-flex;}
+
+  @media (max-width:600px){
+    .section-nav-wrap{padding:0 16px;}
+    .quiz-card{padding:20px;}
+  }
 </style>
 </head>
 <body>
+
 
 <header class="top">
   <div class="top-inner">
@@ -431,7 +730,14 @@
   </div>
 </div>
 
-<div class="controls-wrap">
+<div class="section-nav-wrap">
+  <div class="section-nav" id="sectionNav">
+    <button class="section-btn active" data-section="courses">📚 المحاضرات</button>
+    <button class="section-btn" data-section="quiz">🧠 اختبارات وتدريب <span class="badge" id="dueBadge" style="display:none;">0</span></button>
+  </div>
+</div>
+
+<div class="controls-wrap" id="coursesControls">
   <div class="controls">
     <div class="level-tabs" id="levelTabs"></div>
     <div class="search-box">
@@ -442,6 +748,30 @@
 </div>
 
 <main id="mainContent"></main>
+
+<main id="quizSection">
+  <div class="tips-panel">
+    <h3>💡 تقنيات تساعدك على الحفظ والمذاكرة</h3>
+    <div class="tips-grid">
+      <div class="tip-item"><span class="ic">🔁</span><span><strong>التكرار المتباعد (Spaced Repetition):</strong> النظام هنا يعيد لك السؤال في المواعيد المثلى بدل ما تذاكره كله مرة واحدة.</span></div>
+      <div class="tip-item"><span class="ic">🧪</span><span><strong>الاختبار الذاتي (Active Recall):</strong> اختبر نفسك بدل قراءة المذكرة بشكل سلبي — ده أقوى طريقة للتثبيت.</span></div>
+      <div class="tip-item"><span class="ic">🗣️</span><span><strong>تقنية فاينمان:</strong> بعد ما تجاوب، حاول تشرح إجابتك لزميلك بكلامك الخاص.</span></div>
+      <div class="tip-item"><span class="ic">🔗</span><span><strong>الربط بمثال واقعي:</strong> اربط كل مفهوم بموقف عملي أو مثال من حياتك عشان يترسخ أسرع.</span></div>
+    </div>
+  </div>
+
+  <div class="review-cta">
+    <div class="txt">
+      <h3 id="reviewTitle">مراجعة مجدولة اليوم</h3>
+      <p id="reviewSub">جمّعنا لك الأسئلة اللي محتاجة مراجعة دلوقتي من كل المواد.</p>
+    </div>
+    <button id="startReviewBtn">ابدأ المراجعة الآن</button>
+  </div>
+
+  <div id="quizCourseList" class="quiz-course-grid"></div>
+
+  <div id="quizSessionWrap" style="display:none;"></div>
+</main>
 
 <footer>
   معهد أبوقير العليا للعلوم التجارية (حاسبات ونظم معلومات سابقًا) — جدول المحاضرات
@@ -457,7 +787,7 @@ const seedData = [
   { id:"c2", level:"الفرقة الرابعة - الترم الأول", name:"Enterprises Information System", doctor:"", ta:"", day:"", time:"", room:"", link:"" },
   { id:"c3", level:"الفرقة الرابعة - الترم الأول", name:"Public Finance", doctor:"", ta:"", day:"", time:"", room:"", link:"" },
   { id:"c4", level:"الفرقة الرابعة - الترم الأول", name:"Feasibility Study of Projects", doctor:"", ta:"", day:"", time:"", room:"", link:"" },
-  { id:"c5", level:"الفرقة الرابعة - الترم الأول", name:"Applied Statistics", doctor:"د. حجر (Dr. Hager)", ta:"عروة بشير", day:"", time:"", room:"", link:"" },
+  { id:"c5", level:"الفرقة الرابعة - الترم الأول", name:"Applied Statistics", doctor:"د. هاجر (Dr. Hager)", ta:"أروى بشير", day:"", time:"", room:"", link:"" },
 ];
 
 /* ---------------- State ---------------- */
@@ -513,6 +843,13 @@ function escapeHtml(s){
   return (s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
+function pluralizeCourses(n){
+  if(n === 1) return "مادة واحدة";
+  if(n === 2) return "مادتان";
+  if(n >= 3 && n <= 10) return n + " مواد";
+  return n + " مادة";
+}
+
 function courseCard(c){
   const hasDoctor = c.doctor && c.doctor.trim();
   const hasTa = c.ta && c.ta.trim();
@@ -564,7 +901,7 @@ function renderContent(){
 
   main.innerHTML = Object.keys(groups).map(level => `
     <div class="group">
-      <h2 class="group-title">${escapeHtml(level)} <span class="pill">${groups[level].length} مادة</span></h2>
+      <h2 class="group-title">${escapeHtml(level)} <span class="pill">${pluralizeCourses(groups[level].length)}</span></h2>
       <div class="grid">
         ${groups[level].map(courseCard).join('')}
       </div>
@@ -579,7 +916,434 @@ document.getElementById('searchInput').addEventListener('input', renderContent);
   await loadCourses();
   renderTabs();
   renderContent();
+  await initQuiz();
 })();
+
+/* =========================================================
+   QUIZ / EXERCISES + SPACED REPETITION (Leitner system)
+   ========================================================= */
+
+/* ---- Question bank (MCQ + True/False) per course id ---- */
+const quizBank = {
+  c1: [ // Business Analytics & Data Mining
+    { id:"c1q1", type:"mcq", q:"أي من الآتي يُعتبر الهدف الأساسي من التنقيب عن البيانات (Data Mining)؟",
+      options:["حذف البيانات القديمة","اكتشاف أنماط وعلاقات مفيدة داخل بيانات ضخمة","تصميم واجهة المستخدم","نسخ قواعد البيانات احتياطيًا"], correct:1,
+      explain:"التنقيب عن البيانات يهدف لاستخراج أنماط وعلاقات ذات قيمة من كميات كبيرة من البيانات لدعم اتخاذ القرار." },
+    { id:"c1q2", type:"tf", q:"تحليلات الأعمال الوصفية (Descriptive Analytics) تجيب على سؤال 'ماذا حدث؟'.",
+      correct:true, explain:"التحليلات الوصفية تلخص البيانات التاريخية لفهم ما حدث في الماضي." },
+    { id:"c1q3", type:"mcq", q:"أي نوع من التحليلات يستخدم النماذج الإحصائية للتنبؤ بما سيحدث مستقبلًا؟",
+      options:["Descriptive Analytics","Diagnostic Analytics","Predictive Analytics","Prescriptive Analytics"], correct:2,
+      explain:"التحليلات التنبؤية (Predictive Analytics) تستخدم بيانات تاريخية ونماذج إحصائية للتنبؤ بالمستقبل." },
+    { id:"c1q4", type:"tf", q:"التصنيف (Classification) والتجميع (Clustering) طريقتان متطابقتان تمامًا في التنقيب عن البيانات.",
+      correct:false, explain:"التصنيف تعلّم إشرافي (له فئات معروفة مسبقًا)، بينما التجميع تعلّم غير إشرافي (يكتشف المجموعات بنفسه)." },
+    { id:"c1q5", type:"mcq", q:"ما اسم الرسم البياني الشائع لعرض العلاقة بين متغيرين رقميين واكتشاف الارتباط بينهما؟",
+      options:["Pie Chart","Scatter Plot","Bar Chart","Gantt Chart"], correct:1,
+      explain:"مخطط الانتشار (Scatter Plot) يُستخدم لعرض العلاقة بين متغيرين رقميين." },
+    { id:"c1q6", type:"mcq", q:"خصائص البيانات الضخمة (Big Data) المعروفة بـ 'الـ Vs' تشمل غالبًا: الحجم، السرعة، و...",
+      options:["التنوع (Variety)","الجمال (Beauty)","الترتيب الأبجدي","اللون"], correct:0,
+      explain:"من أشهر خصائص البيانات الضخمة: Volume (الحجم)، Velocity (السرعة)، Variety (التنوع)، وأحيانًا Veracity وValue." },
+    { id:"c1q7", type:"tf", q:"خوارزمية K-Means تُستخدم في التجميع (Clustering) وتحتاج لتحديد عدد المجموعات (K) مسبقًا.",
+      correct:true, explain:"في K-Means لازم تحدد عدد العناقيد K قبل تشغيل الخوارزمية." },
+    { id:"c1q8", type:"mcq", q:"مصفوفة الالتباس (Confusion Matrix) تُستخدم أساسًا لتقييم أداء نموذج...",
+      options:["التصنيف (Classification)","التجميع (Clustering)","الانحدار الخطي فقط","تصميم الواجهات"], correct:0,
+      explain:"مصفوفة الالتباس توضح عدد التوقعات الصحيحة والخاطئة لنموذج تصنيف (True/False Positive/Negative)." },
+    { id:"c1q9", type:"tf", q:"الإفراط في التخصيص (Overfitting) يعني أن النموذج يحفظ بيانات التدريب جيدًا لكنه يفشل في التعميم على بيانات جديدة.",
+      correct:true, explain:"الـ Overfitting مشكلة شائعة تجعل النموذج ضعيف الأداء على بيانات لم يرها من قبل." },
+    { id:"c1q10", type:"mcq", q:"أي من الآتي يُعد مثالًا على أداة أو منصة لذكاء الأعمال (Business Intelligence)؟",
+      options:["Power BI","Photoshop","AutoCAD","Premiere Pro"], correct:0,
+      explain:"Power BI من أشهر أدوات ذكاء الأعمال المستخدمة لتحليل البيانات وعرضها في لوحات معلومات تفاعلية." },
+  ],
+  c2: [ // Enterprises Information System
+    { id:"c2q1", type:"mcq", q:"ما الهدف الرئيسي من نظام تخطيط موارد المؤسسة (ERP)؟",
+      options:["تصميم شعار الشركة","دمج وإدارة العمليات والبيانات عبر إدارات الشركة المختلفة في نظام واحد","بيع المنتجات أونلاين فقط","إدارة حسابات السوشيال ميديا"], correct:1,
+      explain:"نظام ERP يهدف لتوحيد بيانات وعمليات الشركة (مالية، مخازن، موارد بشرية...) في نظام متكامل واحد." },
+    { id:"c2q2", type:"tf", q:"نظام CRM يُستخدم أساسًا لإدارة العلاقة مع العملاء وليس لإدارة المخزون.",
+      correct:true, explain:"CRM (Customer Relationship Management) يركّز على إدارة بيانات وتفاعلات العملاء." },
+    { id:"c2q3", type:"mcq", q:"أي من الآتي مثال على نظام معلومات على مستوى العمليات التشغيلية اليومية (TPS)؟",
+      options:["نظام معالجة فواتير المبيعات اليومية","لوحة معلومات استراتيجية للإدارة العليا","تقرير تحليل السوق السنوي","خطة النمو الخمسية"], correct:0,
+      explain:"نظام معالجة المعاملات (TPS) يتعامل مع العمليات الروتينية اليومية مثل الفواتير والمبيعات." },
+    { id:"c2q4", type:"tf", q:"نظم دعم القرار (DSS) مصممة لاتخاذ قرارات آلية بالكامل دون تدخل بشري.",
+      correct:false, explain:"نظم دعم القرار تساعد متخذ القرار البشري بتحليلات ومعلومات، لكنها لا تحل محله." },
+    { id:"c2q5", type:"mcq", q:"نظام إدارة سلسلة التوريد (SCM) يركّز بشكل أساسي على إدارة...",
+      options:["تدفق المواد والمعلومات من المورّد وحتى العميل","حسابات الموظفين فقط","تصميم المنتجات الإعلانية","صيانة الأجهزة المكتبية"], correct:0,
+      explain:"SCM (Supply Chain Management) يدير تدفق السلع والمعلومات عبر كل مراحل سلسلة التوريد من المورد للعميل النهائي." },
+    { id:"c2q6", type:"tf", q:"نظام إدارة المعرفة (Knowledge Management System) يهدف لتجميع ومشاركة خبرات وتجارب العاملين داخل المؤسسة.",
+      correct:true, explain:"نظم إدارة المعرفة تحفظ الخبرات والدروس المستفادة وتجعلها متاحة لبقية العاملين." },
+    { id:"c2q7", type:"mcq", q:"ما الفرق الأساسي بين التجارة الإلكترونية B2B و B2C؟",
+      options:["B2B بين شركة وشركة، وB2C بين شركة ومستهلك نهائي","لا فرق بينهما إطلاقًا","B2B للأفراد فقط","B2C للحكومة فقط"], correct:0,
+      explain:"B2B (Business to Business) تتم بين منشآت، بينما B2C (Business to Consumer) تتم بين المنشأة والمستهلك النهائي مباشرة." },
+    { id:"c2q8", type:"tf", q:"من أبرز تحديات تطبيق نظام ERP داخل الشركة مقاومة الموظفين للتغيير وتكلفة التنفيذ العالية.",
+      correct:true, explain:"مقاومة التغيير، التكلفة، والوقت المطلوب للتدريب من أشهر تحديات تطبيق أنظمة ERP." },
+    { id:"c2q9", type:"mcq", q:"أي مما يلي من أهم فوائد تكامل أنظمة المعلومات داخل المؤسسة؟",
+      options:["تقليل ازدواجية البيانات وتحسين دقة اتخاذ القرار","زيادة عدد الفروع تلقائيًا","إلغاء الحاجة لأي موظفين","تقليل جودة المنتج"], correct:0,
+      explain:"التكامل بين الأنظمة يقلل من تكرار إدخال البيانات ويحسّن دقتها وسرعة اتخاذ القرار." },
+  ],
+  c3: [ // Public Finance
+    { id:"c3q1", type:"mcq", q:"ما المقصود بالمالية العامة (Public Finance)؟",
+      options:["إدارة الأموال الشخصية للأفراد","دراسة إيرادات ونفقات الدولة وكيفية إدارتها","محاسبة الشركات الخاصة فقط","تحليل أسواق الأسهم"], correct:1,
+      explain:"المالية العامة تدرس كيفية حصول الدولة على إيراداتها (كالضرائب) وإنفاقها لتحقيق أهداف اقتصادية واجتماعية." },
+    { id:"c3q2", type:"tf", q:"الضريبة التصاعدية تعني أن نسبة الضريبة تزيد كلما زاد دخل المكلَّف.",
+      correct:true, explain:"في الضريبة التصاعدية، ترتفع النسبة المئوية للضريبة مع ارتفاع شريحة الدخل." },
+    { id:"c3q3", type:"mcq", q:"أي مما يلي يُعد من أدوات السياسة المالية للدولة؟",
+      options:["سعر الفائدة البنكي","الإنفاق العام والضرائب","سعر صرف العملة فقط","احتياطي النقد الأجنبي فقط"], correct:1,
+      explain:"السياسة المالية تعتمد أساسًا على أداتي الإنفاق العام والضرائب، بخلاف السياسة النقدية التي تديرها البنوك المركزية." },
+    { id:"c3q4", type:"tf", q:"العجز في الموازنة العامة يعني أن إيرادات الدولة أكبر من نفقاتها.",
+      correct:false, explain:"العجز يحدث عندما تكون النفقات أكبر من الإيرادات، أما زيادة الإيرادات عن النفقات فتُسمى فائضًا." },
+    { id:"c3q5", type:"mcq", q:"ضريبة القيمة المضافة (VAT) تُصنَّف عادة من ضمن الضرائب...",
+      options:["غير المباشرة","المباشرة على الدخل","على الثروة فقط","الجمركية فقط"], correct:0,
+      explain:"ضريبة القيمة المضافة ضريبة غير مباشرة تُفرض على الاستهلاك وتُحصَّل عبر البائع من المشتري." },
+    { id:"c3q6", type:"tf", q:"السلع العامة (Public Goods) مثل الدفاع الوطني تتميز بعدم إمكانية استبعاد أي فرد من الاستفادة منها.",
+      correct:true, explain:"من أهم خصائص السلعة العامة أنها غير قابلة للاستبعاد (Non-excludable) وغير تنافسية في الاستهلاك." },
+    { id:"c3q7", type:"mcq", q:"عندما تلجأ الدولة للاقتراض لتمويل عجز الموازنة، فإن هذا يُعرف بـ...",
+      options:["الدين العام","الضريبة التصاعدية","الإعانة الاجتماعية","التضخم"], correct:0,
+      explain:"الدين العام هو ما تقترضه الدولة (داخليًا أو خارجيًا) لتغطية العجز في موازنتها." },
+    { id:"c3q8", type:"tf", q:"السياسة النقدية (Monetary Policy) من اختصاص وزارة المالية وليس البنك المركزي.",
+      correct:false, explain:"السياسة النقدية من اختصاص البنك المركزي، أما السياسة المالية (الإنفاق والضرائب) فمن اختصاص وزارة المالية." },
+    { id:"c3q9", type:"mcq", q:"الإعانات الحكومية (Subsidies) المقدمة للسلع الأساسية تُعد جزءًا من...",
+      options:["الإنفاق العام","الإيرادات الضريبية","الدين الخارجي فقط","سعر الصرف"], correct:0,
+      explain:"الإعانات (كإعانة الخبز أو الوقود) تمثل بندًا من بنود الإنفاق العام للدولة." },
+  ],
+  c4: [ // Feasibility Study of Projects
+    { id:"c4q1", type:"mcq", q:"ما الهدف الأساسي من دراسة الجدوى لمشروع جديد؟",
+      options:["تصميم شعار المشروع","تقييم مدى إمكانية نجاح المشروع قبل تنفيذه من جميع النواحي","توظيف العمالة فورًا","الإعلان عن المشروع"], correct:1,
+      explain:"دراسة الجدوى تهدف لتقييم المشروع فنيًا وماليًا وسوقيًا قبل اتخاذ قرار الاستثمار فيه." },
+    { id:"c4q2", type:"tf", q:"دراسة الجدوى السوقية تُعنى بتحديد حجم الطلب المتوقع على المنتج أو الخدمة.",
+      correct:true, explain:"الدراسة السوقية تحلل الطلب والعرض والمنافسين والسعر المناسب للمنتج." },
+    { id:"c4q3", type:"mcq", q:"أي من الآتي مؤشر مالي شائع يُستخدم لتقييم جدوى المشروع؟",
+      options:["صافي القيمة الحالية (NPV)","عدد الموظفين","لون العبوة","اسم العلامة التجارية"], correct:0,
+      explain:"صافي القيمة الحالية (NPV) من أهم المؤشرات المالية لتقييم جدوى الاستثمار في المشروع." },
+    { id:"c4q4", type:"tf", q:"دراسة الجدوى الفنية تهتم بتحديد الموقع والآلات والتكنولوجيا اللازمة للمشروع.",
+      correct:true, explain:"الجدوى الفنية تركز على الجوانب التشغيلية مثل الموقع، والمعدات، والعملية الإنتاجية." },
+    { id:"c4q5", type:"mcq", q:"نقطة التعادل (Break-Even Point) هي النقطة التي عندها...",
+      options:["تتساوى الإيرادات مع التكاليف الكلية (لا ربح ولا خسارة)","يتحقق أعلى ربح ممكن","تتوقف المبيعات نهائيًا","يبدأ المشروع فقط"], correct:0,
+      explain:"عند نقطة التعادل تكون الإيرادات الكلية مساوية للتكاليف الكلية، أي لا يوجد ربح أو خسارة." },
+    { id:"c4q6", type:"tf", q:"معدل العائد الداخلي (IRR) هو معدل الخصم الذي يجعل صافي القيمة الحالية (NPV) للمشروع يساوي صفرًا.",
+      correct:true, explain:"IRR هو معدل الخصم الذي عنده تتساوى القيمة الحالية للتدفقات الداخلة مع الخارجة، فيصبح NPV = صفر." },
+    { id:"c4q7", type:"mcq", q:"دراسة الجدوى القانونية تهتم بشكل أساسي بـ...",
+      options:["التراخيص والقوانين المنظمة لنشاط المشروع","اختيار لون شعار الشركة","تحديد سعر البيع فقط","حجم الطلب المتوقع"], correct:0,
+      explain:"الجدوى القانونية تتأكد من توافق المشروع مع القوانين والتراخيص المطلوبة لممارسة النشاط." },
+    { id:"c4q8", type:"tf", q:"فترة الاسترداد (Payback Period) تقيس المدة الزمنية اللازمة لاسترجاع التكلفة الاستثمارية الأولية من التدفقات النقدية للمشروع.",
+      correct:true, explain:"فترة الاسترداد توضح خلال كام سنة/شهر هيرجع رأس المال المستثمر من صافي التدفقات النقدية." },
+    { id:"c4q9", type:"mcq", q:"أي مما يلي يُعتبر من أصحاب المصلحة (Stakeholders) الرئيسيين في أي مشروع؟",
+      options:["المستثمرون والعملاء والموظفون","المنافسون فقط","الموردين فقط دون غيرهم","لا أحد قبل التشغيل"], correct:0,
+      explain:"أصحاب المصلحة يشملون كل من له تأثير أو تأثر بالمشروع: مستثمرين، عملاء، موظفين، موردين، وأحيانًا المجتمع." },
+  ],
+  c5: [ // Applied Statistics
+    { id:"c5q1", type:"mcq", q:"أي مقياس من مقاييس النزعة المركزية يتأثر بشدة بالقيم المتطرفة (Outliers)؟",
+      options:["الوسيط (Median)","المنوال (Mode)","الوسط الحسابي (Mean)","لا شيء مما سبق"], correct:2,
+      explain:"الوسط الحسابي يتأثر بالقيم المتطرفة لأنه يعتمد على مجموع كل القيم، بعكس الوسيط الذي يعتمد على الترتيب." },
+    { id:"c5q2", type:"tf", q:"الانحراف المعياري يقيس مدى تشتت البيانات حول الوسط الحسابي.",
+      correct:true, explain:"الانحراف المعياري (Standard Deviation) مقياس تشتت يوضح مدى ابتعاد القيم عن المتوسط." },
+    { id:"c5q3", type:"mcq", q:"في اختبار الفرضيات، ماذا يعني رفض فرض العدم (Null Hypothesis) خطأً وهو صحيح؟",
+      options:["خطأ من النوع الأول (Type I Error)","خطأ من النوع الثاني (Type II Error)","معامل الارتباط","مستوى الثقة"], correct:0,
+      explain:"رفض فرض العدم رغم صحته يُسمى خطأ من النوع الأول (Type I Error)." },
+    { id:"c5q4", type:"tf", q:"معامل الارتباط (Correlation Coefficient) تتراوح قيمته دائمًا بين -1 و +1.",
+      correct:true, explain:"معامل الارتباط بيرسون محصور دائمًا بين -1 (ارتباط عكسي تام) و +1 (ارتباط طردي تام)." },
+    { id:"c5q5", type:"mcq", q:"أي مما يلي مثال على متغير كمي مستمر؟",
+      options:["عدد الطلاب في الفصل","الطول بالسنتيمتر","النوع (ذكر/أنثى)","الحالة الاجتماعية"], correct:1,
+      explain:"الطول متغير كمي مستمر لأنه يمكن أن يأخذ أي قيمة عشرية ضمن مدى معين." },
+    { id:"c5q6", type:"mcq", q:"في العينة العشوائية البسيطة (Simple Random Sample)، يكون لكل فرد في المجتمع...",
+      options:["فرصة متساوية ومستقلة للاختيار","فرصة أكبر إذا كان قريبًا من الباحث","فرصة صفرية للاختيار","نفس الترتيب الأبجدي فقط"], correct:0,
+      explain:"في العينة العشوائية البسيطة يكون لكل عنصر في المجتمع نفس احتمال الاختيار بشكل مستقل." },
+    { id:"c5q7", type:"tf", q:"في التوزيع الطبيعي (Normal Distribution)، يتساوى الوسط الحسابي والوسيط والمنوال تقريبًا.",
+      correct:true, explain:"التوزيع الطبيعي متماثل (Symmetric)، لذلك تتقارب فيه القيم الثلاث لمقاييس النزعة المركزية." },
+    { id:"c5q8", type:"mcq", q:"اختبار مربع كاي (Chi-Square Test) يُستخدم غالبًا لاختبار العلاقة بين...",
+      options:["متغيرين كميين مستمرين","متغيرين وصفيين (فئويين)","متوسط واحد فقط","الانحراف المعياري فقط"], correct:1,
+      explain:"اختبار Chi-Square مناسب لاختبار العلاقة أو الاستقلالية بين متغيرات وصفية (Categorical)." },
+    { id:"c5q9", type:"tf", q:"فترة الثقة (Confidence Interval) توضح مدى تشتت العينة فقط ولا علاقة لها بتقدير قيمة المجتمع.",
+      correct:false, explain:"فترة الثقة هي مدى يُتوقع أن تقع فيه القيمة الحقيقية للمجتمع بدرجة ثقة معينة (مثل 95%)." },
+    { id:"c5q10", type:"mcq", q:"إذا كان الالتواء (Skewness) لتوزيع بيانات موجب، فهذا يعني أن الذيل الأطول للتوزيع يميل...",
+      options:["لليمين (نحو القيم الكبيرة)","لليسار (نحو القيم الصغيرة)","في المنتصف تمامًا","لا يوجد ذيل"], correct:0,
+      explain:"الالتواء الموجب (Positive Skew) يعني أن الذيل الطويل للتوزيع يمتد ناحية القيم الكبيرة (اليمين)." },
+  ],
+};
+
+/* ---- Leitner spaced-repetition state ----
+   box 1..5, higher box = better known = longer interval before it's due again.
+   intervals in days per box. */
+const BOX_INTERVAL_DAYS = {1:0, 2:1, 3:3, 4:7, 5:14};
+let srsState = {};      // { questionId: {box, due (ISO date), seen, correctCount, wrongCount} }
+let currentSession = null; // { queue:[{courseId, question}], idx, answered, correctInSession, total }
+let activeSection = 'courses';
+
+function todayStr(){
+  return new Date().toISOString().slice(0,10);
+}
+function addDays(dateStr, days){
+  const d = new Date(dateStr + "T00:00:00");
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0,10);
+}
+
+async function loadSrsState(){
+  try{
+    const res = await window.storage.get('srs_state', false);
+    if(res && res.value){ srsState = JSON.parse(res.value); return; }
+  }catch(e){ /* not found yet */ }
+  srsState = {};
+}
+async function saveSrsState(){
+  try{ await window.storage.set('srs_state', JSON.stringify(srsState), false); }
+  catch(e){ console.error('تعذر حفظ تقدم المراجعة', e); }
+}
+
+function getCardState(qid){
+  if(!srsState[qid]){
+    srsState[qid] = { box:1, due: todayStr(), seen:0, correctCount:0, wrongCount:0 };
+  }
+  return srsState[qid];
+}
+
+function isDue(qid){
+  const st = getCardState(qid);
+  return st.due <= todayStr();
+}
+
+function recordAnswer(qid, isCorrect){
+  const st = getCardState(qid);
+  st.seen += 1;
+  if(isCorrect){
+    st.correctCount += 1;
+    st.box = Math.min(5, st.box + 1);
+  }else{
+    st.wrongCount += 1;
+    st.box = 1;
+  }
+  st.due = addDays(todayStr(), BOX_INTERVAL_DAYS[st.box]);
+  saveSrsState();
+}
+
+function allQuestionsFlat(){
+  const out = [];
+  Object.keys(quizBank).forEach(cid=>{
+    quizBank[cid].forEach(q=> out.push({courseId:cid, question:q}));
+  });
+  return out;
+}
+
+function dueCountForCourse(cid){
+  return (quizBank[cid]||[]).filter(q=>isDue(q.id)).length;
+}
+function totalDueCount(){
+  return allQuestionsFlat().filter(item=>isDue(item.question.id)).length;
+}
+function masteredCountForCourse(cid){
+  return (quizBank[cid]||[]).filter(q=> getCardState(q.id).box >= 4).length;
+}
+
+function courseNameById(cid){
+  const c = courses.find(c=>c.id===cid);
+  return c ? c.name : cid;
+}
+
+/* ---- Section switching ---- */
+function switchSection(section){
+  activeSection = section;
+  document.querySelectorAll('.section-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.section === section);
+  });
+  const coursesControls = document.getElementById('coursesControls');
+  const mainContent = document.getElementById('mainContent');
+  const quizSection = document.getElementById('quizSection');
+  if(section === 'courses'){
+    coursesControls.style.display = '';
+    mainContent.style.display = '';
+    quizSection.style.display = 'none';
+  }else{
+    coursesControls.style.display = 'none';
+    mainContent.style.display = 'none';
+    quizSection.style.display = 'block';
+    endQuizSession(false);
+    renderQuizHome();
+  }
+}
+
+document.getElementById('sectionNav').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.section-btn');
+  if(!btn) return;
+  switchSection(btn.dataset.section);
+});
+
+/* ---- Quiz home (course list + due badge) ---- */
+function refreshDueBadge(){
+  const n = totalDueCount();
+  const badge = document.getElementById('dueBadge');
+  if(n > 0){
+    badge.style.display = 'inline-block';
+    badge.textContent = n;
+  }else{
+    badge.style.display = 'none';
+  }
+}
+
+function renderQuizHome(){
+  refreshDueBadge();
+  const dueTotal = totalDueCount();
+  const startBtn = document.getElementById('startReviewBtn');
+  const reviewSub = document.getElementById('reviewSub');
+  if(dueTotal === 0){
+    startBtn.disabled = true;
+    startBtn.textContent = "لا توجد مراجعات مستحقة الآن 🎉";
+    reviewSub.textContent = "كل الأسئلة اللي جاوبت عليها متجدولة للمراجعة في وقتها المناسب. جرّب مذاكرة مادة جديدة!";
+  }else{
+    startBtn.disabled = false;
+    startBtn.textContent = `ابدأ المراجعة الآن (${dueTotal})`;
+    reviewSub.textContent = "جمّعنا لك الأسئلة اللي محتاجة مراجعة دلوقتي من كل المواد.";
+  }
+
+  const list = document.getElementById('quizCourseList');
+  const courseIds = Object.keys(quizBank).filter(cid => quizBank[cid].length > 0);
+  list.innerHTML = courseIds.map(cid=>{
+    const total = quizBank[cid].length;
+    const due = dueCountForCourse(cid);
+    const mastered = masteredCountForCourse(cid);
+    return `
+    <div class="quiz-course-card" data-course="${cid}">
+      <h4>${escapeHtml(courseNameById(cid))}</h4>
+      <div class="stats">
+        <span class="stat-chip">📝 ${total} سؤال</span>
+        ${due > 0 ? `<span class="stat-chip due">⏰ ${due} مستحق</span>` : ''}
+        ${mastered > 0 ? `<span class="stat-chip mastered">✅ ${mastered} متقن</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+  list.querySelectorAll('.quiz-course-card').forEach(card=>{
+    card.addEventListener('click', ()=> startQuizSession(card.dataset.course));
+  });
+  document.getElementById('quizCourseList').style.display = '';
+  document.getElementById('quizSessionWrap').style.display = 'none';
+}
+
+document.getElementById('startReviewBtn').addEventListener('click', ()=> startReviewSession());
+
+/* ---- Sessions ---- */
+function startQuizSession(courseId){
+  const items = quizBank[courseId].map(q=>({courseId, question:q}));
+  runSession(items, `اختبار: ${courseNameById(courseId)}`);
+}
+
+function startReviewSession(){
+  const items = allQuestionsFlat().filter(item=>isDue(item.question.id));
+  if(items.length === 0) return;
+  // shuffle
+  items.sort(()=>Math.random()-0.5);
+  runSession(items, "المراجعة المجدولة");
+}
+
+function runSession(items, title){
+  currentSession = { title, queue: items, idx:0, correctInSession:0, total: items.length };
+  document.getElementById('quizCourseList').style.display = 'none';
+  document.getElementById('quizSessionWrap').style.display = '';
+  renderQuestion();
+}
+
+function endQuizSession(rerender){
+  currentSession = null;
+  if(rerender !== false) renderQuizHome();
+}
+
+function renderQuestion(){
+  const wrap = document.getElementById('quizSessionWrap');
+  if(!currentSession || currentSession.idx >= currentSession.queue.length){
+    renderSummary();
+    return;
+  }
+  const item = currentSession.queue[currentSession.idx];
+  const q = item.question;
+  const progressPct = Math.round((currentSession.idx / currentSession.total) * 100);
+
+  let optionsHtml = '';
+  if(q.type === 'mcq'){
+    optionsHtml = `<div class="quiz-options">` + q.options.map((opt, i)=>
+      `<button class="quiz-opt" data-idx="${i}">${escapeHtml(opt)}</button>`
+    ).join('') + `</div>`;
+  }else{
+    optionsHtml = `<div class="tf-row">
+      <button class="quiz-opt" data-val="true">✅ صح</button>
+      <button class="quiz-opt" data-val="false">❌ غلط</button>
+    </div>`;
+  }
+
+  wrap.innerHTML = `
+    <div class="quiz-session">
+      <div class="quiz-topbar">
+        <button class="quiz-back" id="quizBackBtn">← رجوع للقائمة</button>
+        <span class="quiz-progress-text">${currentSession.idx + 1} / ${currentSession.total} — ${escapeHtml(currentSession.title)}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-bar-fill" style="width:${progressPct}%"></div></div>
+      <div class="quiz-card">
+        <span class="quiz-type-tag">${q.type === 'mcq' ? 'اختيار من متعدد' : 'صح أم غلط'}</span>
+        <p class="quiz-question">${escapeHtml(q.q)}</p>
+        ${optionsHtml}
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <div class="quiz-actions">
+          <button class="quiz-next-btn" id="quizNextBtn">${currentSession.idx + 1 === currentSession.total ? 'عرض النتيجة' : 'السؤال التالي'}</button>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('quizBackBtn').addEventListener('click', ()=> endQuizSession());
+
+  const optButtons = wrap.querySelectorAll('.quiz-opt');
+  optButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const isCorrect = q.type === 'mcq'
+        ? Number(btn.dataset.idx) === q.correct
+        : (btn.dataset.val === 'true') === q.correct;
+
+      optButtons.forEach(b=> b.disabled = true);
+
+      if(q.type === 'mcq'){
+        optButtons.forEach((b,i)=>{
+          if(i === q.correct) b.classList.add('correct');
+          else if(b === btn && !isCorrect) b.classList.add('wrong');
+        });
+      }else{
+        optButtons.forEach(b=>{
+          const bVal = b.dataset.val === 'true';
+          if(bVal === q.correct) b.classList.add('correct');
+          else if(b === btn && !isCorrect) b.classList.add('wrong');
+        });
+      }
+
+      const fb = document.getElementById('quizFeedback');
+      fb.classList.add('show', isCorrect ? 'ok' : 'bad');
+      fb.textContent = (isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. ') + (q.explain || '');
+
+      recordAnswer(q.id, isCorrect);
+      if(isCorrect) currentSession.correctInSession += 1;
+
+      document.getElementById('quizNextBtn').classList.add('show');
+    });
+  });
+
+  document.getElementById('quizNextBtn').addEventListener('click', ()=>{
+    currentSession.idx += 1;
+    renderQuestion();
+  });
+}
+
+function renderSummary(){
+  const wrap = document.getElementById('quizSessionWrap');
+  const { correctInSession, total } = currentSession;
+  const pct = total > 0 ? Math.round((correctInSession/total)*100) : 0;
+  wrap.innerHTML = `
+    <div class="quiz-session">
+      <div class="quiz-summary">
+        <div>🎯</div>
+        <div class="score">${correctInSession} / ${total}</div>
+        <p>نسبة الإجابات الصحيحة: ${pct}% — استمر في المراجعة اليومية للحفظ بشكل أفضل.</p>
+        <button class="link-btn" id="quizDoneBtn">العودة لقائمة المواد</button>
+      </div>
+    </div>`;
+  document.getElementById('quizDoneBtn').addEventListener('click', ()=> endQuizSession());
+}
+
+/* ---- Quiz init ---- */
+async function initQuiz(){
+  await loadSrsState();
+  refreshDueBadge();
+}
 </script>
 </body>
 </html>
