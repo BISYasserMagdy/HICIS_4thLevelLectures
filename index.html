@@ -571,6 +571,58 @@
     cursor:default;
   }
   .review-cta button:hover:not(:disabled){background:#c69a4e;}
+  .review-cta-btns{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    flex-shrink:0;
+  }
+  .review-cta button.secondary{
+    background:rgba(255,255,255,.12);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.4);
+  }
+  .review-cta button.secondary:hover:not(:disabled){background:rgba(255,255,255,.22);}
+
+  .quiz-mode-btns{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+  }
+  .quiz-mode-btn{
+    flex:1;
+    background:var(--green-deep);
+    color:#fff;
+    border:none;
+    padding:8px 10px;
+    border-radius:8px;
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    font-size:.78rem;
+    cursor:pointer;
+  }
+  .quiz-mode-btn:hover{background:var(--green);}
+  .quiz-mode-btn.secondary{
+    background:#fff;
+    color:var(--green-deep);
+    border:1px solid var(--line);
+  }
+  .quiz-mode-btn.secondary:hover{background:var(--cream);}
+  .quiz-pdf-btn{
+    display:block;
+    width:100%;
+    margin-top:8px;
+    background:#fff;
+    color:#555;
+    border:1px dashed var(--line);
+    padding:8px 10px;
+    border-radius:8px;
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    font-size:.76rem;
+    cursor:pointer;
+  }
+  .quiz-pdf-btn:hover{background:var(--cream); color:var(--ink);}
 
   .quiz-course-grid{
     display:grid;
@@ -611,6 +663,18 @@
   }
   .quiz-course-card .stat-chip.due{background:#fdf6e3; color:#946c1c;}
   .quiz-course-card .stat-chip.mastered{background:#e6f2ea; color:#1e6b45;}
+  .quiz-lec-breakdown{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px dashed var(--line);
+  }
+  .lec-breakdown-item{
+    font-size:.76rem;
+    color:var(--muted);
+  }
 
   /* ---------- Quiz session ---------- */
   .quiz-session{max-width:640px; margin:0 auto;}
@@ -662,6 +726,28 @@
     color:var(--green-deep);
     margin-bottom:12px;
   }
+  .quiz-lec-tag{
+    display:inline-block;
+    font-size:.7rem;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:999px;
+    background:#fdf6e3;
+    color:#946c1c;
+    margin-bottom:12px;
+    margin-inline-start:6px;
+  }
+  .quiz-page-tag{
+    display:inline-block;
+    font-size:.7rem;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:999px;
+    background:#eaf1fb;
+    color:#2a5b96;
+    margin-bottom:12px;
+    margin-inline-start:6px;
+  }
   .quiz-question{
     font-family:'Cairo',sans-serif;
     font-size:1.08rem;
@@ -696,8 +782,26 @@
     font-weight:700;
   }
   .quiz-opt:disabled{cursor:default; opacity:.85;}
+  .quiz-opt.selected{border-color:var(--gold); background:var(--cream); font-weight:700;}
   .tf-row{display:flex; gap:12px;}
   .tf-row .quiz-opt{flex:1; text-align:center; font-weight:700;}
+
+  .quiz-all-list{display:flex; flex-direction:column; gap:18px; margin:16px 0;}
+  .quiz-card-all{margin:0;}
+  .quiz-all-answered-bar{
+    position:sticky; top:8px; z-index:2;
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:8px 16px;
+    font-size:.82rem;
+    font-weight:700;
+    color:var(--green-deep);
+    display:inline-block;
+    margin-bottom:8px;
+  }
+  .quiz-all-submit-bar{justify-content:center;}
+  #quizSubmitAllBtn:disabled{opacity:.5; cursor:default;}
 
   .quiz-feedback{
     margin-top:18px;
@@ -809,7 +913,10 @@
       <h3 id="reviewTitle">مراجعة مجدولة اليوم</h3>
       <p id="reviewSub">جمّعنا لك الأسئلة اللي محتاجة مراجعة دلوقتي من كل المواد.</p>
     </div>
-    <button id="startReviewBtn">ابدأ المراجعة الآن</button>
+    <div class="review-cta-btns">
+      <button id="startReviewBtn">ابدأ المراجعة الآن</button>
+      <button id="startReviewAllBtn" class="secondary">حل الكل مرة واحدة</button>
+    </div>
   </div>
 
   <div id="quizCourseList" class="quiz-course-grid"></div>
@@ -992,117 +1099,117 @@ document.getElementById('searchInput').addEventListener('input', renderContent);
 /* ---- Question bank (MCQ + True/False) per course id ---- */
 const quizBank = {
   c1: [ // Business Analytics & Data Mining
-    { id:"c1q1", type:"mcq", q:"According to the lecture, Data Analytics refers to the techniques used to analyze data in order to...",
+    { id:"c1q1", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:4, q:"According to the lecture, Data Analytics refers to the techniques used to analyze data in order to...",
       options:["reduce database size","enhance productivity and business gains","design network infrastructure","encrypt data"], correct:1,
       explain:"Data analytics refers to the techniques used to analyze data in order to enhance productivity and business gains." },
-    { id:"c1q2", type:"tf", q:"In data analytics, data is extracted from various sources, then cleaned and categorized to analyze different behavioral patterns.", correct:true,
+    { id:"c1q2", type:"tf", lec:1, lecTitle:"Fundamentals of Business Analytics", page:4, q:"In data analytics, data is extracted from various sources, then cleaned and categorized to analyze different behavioral patterns.", correct:true,
       explain:"Data is extracted from various sources, then cleaned and categorized to analyze different behavioral patterns." },
-    { id:"c1q3", type:"tf", q:"The techniques and tools employed in data analytics are fixed and never vary between organizations.", correct:false,
+    { id:"c1q3", type:"tf", lec:1, lecTitle:"Fundamentals of Business Analytics", page:4, q:"The techniques and tools employed in data analytics are fixed and never vary between organizations.", correct:false,
       explain:"The techniques and tools employed vary depending on the organization or individual." },
-    { id:"c1q4", type:"mcq", q:"Business Analytics is the process of...",
+    { id:"c1q4", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:6, q:"Business Analytics is the process of...",
       options:["collecting, analyzing, and interpreting data to help organizations make informed decisions and improve performance","storing data only","designing web applications","managing company networks"], correct:0,
       explain:"Business analytics is the process of collecting, analyzing, and interpreting data to help organizations make informed decisions and improve their performance." },
-    { id:"c1q5", type:"mcq", q:"Which of the following is NOT listed as an importance of Business Analytics?",
+    { id:"c1q5", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:7, q:"Which of the following is NOT listed as an importance of Business Analytics?",
       options:["Improving decision-making","Increasing efficiency","Forecasting the future","Reducing employee headcount"], correct:3,
       explain:"Importance of BA: improving decision-making, increasing efficiency, forecasting the future, identifying opportunities and risks, enhancing customer satisfaction." },
-    { id:"c1q6", type:"mcq", q:"Which type of analytics helps companies forecast future trends and market demand?",
+    { id:"c1q6", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:7, q:"Which type of analytics helps companies forecast future trends and market demand?",
       options:["Descriptive","Predictive","Diagnostic","Prescriptive"], correct:1,
       explain:"Predictive analytics helps companies forecast future trends and market demand." },
-    { id:"c1q7", type:"tf", q:"One benefit of Business Analytics is identifying potential risks before they escalate into major problems.", correct:true,
+    { id:"c1q7", type:"tf", lec:1, lecTitle:"Fundamentals of Business Analytics", page:7, q:"One benefit of Business Analytics is identifying potential risks before they escalate into major problems.", correct:true,
       explain:"Identifying opportunities and risks enables companies to recognize new opportunities and identify potential risks before they escalate into major problems." },
-    { id:"c1q8", type:"mcq", q:"Which of the following is a Software tool for Business Analytics?",
+    { id:"c1q8", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:8, q:"Which of the following is a Software tool for Business Analytics?",
       options:["Excel, Tableau, and Power BI","Data mining","Machine learning","Statistical analysis"], correct:0,
       explain:"Software: such as Excel, Tableau, Power BI, Python, SAS, and R." },
-    { id:"c1q9", type:"mcq", q:"Which of the following is classified as a Technique rather than Software?",
+    { id:"c1q9", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:8, q:"Which of the following is classified as a Technique rather than Software?",
       options:["Power BI","SAS","Machine learning","R"], correct:2,
       explain:"Techniques: such as statistical analysis, data mining, machine learning, and artificial intelligence." },
-    { id:"c1q10", type:"mcq", q:"Analyzing employee data to improve recruitment and retention is a real-world application of BA in...",
+    { id:"c1q10", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:9, q:"Analyzing employee data to improve recruitment and retention is a real-world application of BA in...",
       options:["Marketing","Finance","Operations","Human Resources"], correct:3,
       explain:"Human Resources: analyzing employee data to improve recruitment and retention." },
-    { id:"c1q11", type:"mcq", q:"Optimizing supply chains and inventory management falls under which application?",
+    { id:"c1q11", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:9, q:"Optimizing supply chains and inventory management falls under which application?",
       options:["Operations","Finance","Marketing","Human Resources"], correct:0,
       explain:"Operations: optimizing supply chains and inventory management." },
-    { id:"c1q12", type:"mcq", q:"The First Era in the history of Business Analytics was characterized by...",
+    { id:"c1q12", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:10, q:"The First Era in the history of Business Analytics was characterized by...",
       options:["big data and artificial intelligence","manual tools and spreadsheets","cloud computing","neural networks"], correct:1,
       explain:"First Era: Traditional Business Analytics — using manual tools and spreadsheets for data analysis." },
-    { id:"c1q13", type:"mcq", q:"The Third Era in the evolution of Business Analytics relies on...",
+    { id:"c1q13", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:10, q:"The Third Era in the evolution of Business Analytics relies on...",
       options:["Excel and statistical analysis","manual tools","big data and artificial intelligence","paper records"], correct:2,
       explain:"Third Era: Big Data and Artificial Intelligence — leveraging big data, AI, and machine learning to analyze data more deeply and rapidly." },
-    { id:"c1q14", type:"mcq", q:"The three components of Business Analytics are:",
+    { id:"c1q14", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:11, q:"The three components of Business Analytics are:",
       options:["Data, Tools and Techniques, Expertise and Knowledge","Data, Servers, Internet","Storage, Display, Printing","Descriptive, Predictive, Prescriptive"], correct:0,
       explain:"Components of Business Analytics: Data, Tools and Techniques, and Expertise and Knowledge." },
-    { id:"c1q15", type:"mcq", q:"SQL and NoSQL are classified as...",
+    { id:"c1q15", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:12, q:"SQL and NoSQL are classified as...",
       options:["Data management software","Data visualization tools","Predictive analytics platforms","Statistical analysis tools"], correct:0,
       explain:"Data management software: such as SQL and NoSQL." },
-    { id:"c1q16", type:"mcq", q:"SAS and SPSS are classified in the lecture as...",
+    { id:"c1q16", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:12, q:"SAS and SPSS are classified in the lecture as...",
       options:["Data visualization tools","Predictive analytics platforms","Data management software","Statistical programming languages"], correct:1,
       explain:"Predictive analytics platforms: such as SAS and SPSS." },
-    { id:"c1q17", type:"mcq", q:"The correct order of the Key Elements of Business Analytics is:",
+    { id:"c1q17", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:13, q:"The correct order of the Key Elements of Business Analytics is:",
       options:["Analysis → Collection → Cleaning → Visualization → Recommendations","Collection → Cleaning → Analysis → Visualization → Recommendations","Cleaning → Collection → Visualization → Analysis → Recommendations","Collection → Analysis → Cleaning → Recommendations → Visualization"], correct:1,
       explain:"Data Collection → Data Cleaning → Data Analysis → Data Visualization → Providing Recommendations." },
-    { id:"c1q18", type:"tf", q:"Questionnaires, interviews, and observation are tools used for Data Collection.", correct:true,
+    { id:"c1q18", type:"tf", lec:1, lecTitle:"Fundamentals of Business Analytics", page:13, q:"Questionnaires, interviews, and observation are tools used for Data Collection.", correct:true,
       explain:"Data Collection uses various tools such as observation, questionnaires, record cards, interviews, and reports." },
-    { id:"c1q19", type:"mcq", q:"Removing duplicate or incomplete data while ensuring data quality represents which step?",
+    { id:"c1q19", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:13, q:"Removing duplicate or incomplete data while ensuring data quality represents which step?",
       options:["Data Collection","Data Cleaning","Data Visualization","Data Analysis"], correct:1,
       explain:"Data Cleaning: processing data to eliminate errors and redundancies while ensuring data quality." },
-    { id:"c1q20", type:"mcq", q:"In the retail company practical example, sales data is gathered from...",
+    { id:"c1q20", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:14, q:"In the retail company practical example, sales data is gathered from...",
       options:["the point-of-sale (POS) system","the CRM system only","the inventory system only","social media"], correct:0,
       explain:"Sales data comes from the POS system, customer data from CRM, and inventory data from the inventory management system." },
-    { id:"c1q21", type:"mcq", q:"According to the lecture, Data means...",
+    { id:"c1q21", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:17, q:"According to the lecture, Data means...",
       options:["any facts, numbers, or text that can be processed by a computer","the final results of analysis","management recommendations","charts and graphs"], correct:0,
       explain:"Data: any facts, numbers, or text that can be processed by a computer." },
-    { id:"c1q22", type:"mcq", q:"Sales, costs, inventory, and payroll data are classified as...",
+    { id:"c1q22", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:17, q:"Sales, costs, inventory, and payroll data are classified as...",
       options:["Non-operational data","Metadata","Operational or transactional data","Semi-structured data"], correct:2,
       explain:"Operational or transactional data: such as sales, costs, inventory, payroll, and accounting." },
-    { id:"c1q23", type:"mcq", q:"Data about the data itself, such as database design or data dictionary definitions, is called...",
+    { id:"c1q23", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:17, q:"Data about the data itself, such as database design or data dictionary definitions, is called...",
       options:["Metadata","Raw data","Big data","Master data"], correct:0,
       explain:"Metadata: data about the data itself, such as logical database designs or data dictionary definitions." },
-    { id:"c1q24", type:"mcq", q:"Industry sales figures, forecasts, and macroeconomic data are classified as...",
+    { id:"c1q24", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:17, q:"Industry sales figures, forecasts, and macroeconomic data are classified as...",
       options:["Operational data","Non-operational data","Metadata","Transactional data"], correct:1,
       explain:"Non-operational data: such as industry sales figures, forecasts, and macroeconomic data." },
-    { id:"c1q25", type:"mcq", q:"A dataset is...",
+    { id:"c1q25", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:18, q:"A dataset is...",
       options:["a group of related data that shares the same set of attributes","an Excel file only","a relational database","an analysis program"], correct:0,
       explain:"Datasets are groups or sets of related data that share the same set of attributes or characteristics." },
-    { id:"c1q26", type:"tf", q:"Each member of the dataset is called a \"datum.\"", correct:true,
+    { id:"c1q26", type:"tf", lec:1, lecTitle:"Fundamentals of Business Analytics", page:18, q:"Each member of the dataset is called a \"datum.\"", correct:true,
       explain:"Each member of the dataset is called a datum." },
-    { id:"c1q27", type:"mcq", q:"According to Data Generation, data is generated by...",
+    { id:"c1q27", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:19, q:"According to Data Generation, data is generated by...",
       options:["Human and Machine","Internet and Cloud","Companies and Governments","Software and Hardware"], correct:0,
       explain:"Data Generation branches into Human and Machine." },
-    { id:"c1q28", type:"mcq", q:"Sensor data and GPS data in XML format are examples of data generated by...",
+    { id:"c1q28", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:19, q:"Sensor data and GPS data in XML format are examples of data generated by...",
       options:["Humans","Machines","Analysts","Customers"], correct:1,
       explain:"Machine-generated data includes web server textual data, smart meter sensor data, and GPS XML data." },
-    { id:"c1q29", type:"mcq", q:"Patterns, correlations, or relationships within data yield...",
+    { id:"c1q29", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:20, q:"Patterns, correlations, or relationships within data yield...",
       options:["Information","Data","Wisdom","Metadata"], correct:0,
       explain:"Patterns, correlations, or relationships within all this data can yield information." },
-    { id:"c1q30", type:"mcq", q:"Transforming information into awareness of historical patterns and future trends represents...",
+    { id:"c1q30", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:21, q:"Transforming information into awareness of historical patterns and future trends represents...",
       options:["Data","Information","Knowledge","Metadata"], correct:2,
       explain:"Information can be transformed into knowledge regarding historical patterns and future trends." },
-    { id:"c1q31", type:"mcq", q:"In the engineer example, writing \"the vehicle requires 5 gallons of fuel to travel 100 miles\" represents...",
+    { id:"c1q31", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:22, q:"In the engineer example, writing \"the vehicle requires 5 gallons of fuel to travel 100 miles\" represents...",
       options:["Data","Information","Knowledge","Wisdom"], correct:1,
       explain:"Information is typically the answer to a question, while simply writing the number \"5\" is just Data." },
-    { id:"c1q32", type:"mcq", q:"In the DIKW pyramid, Knowledge equals...",
+    { id:"c1q32", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:22, q:"In the DIKW pyramid, Knowledge equals...",
       options:["Data + context","Information + Rules","Knowledge + experience","Data + experience"], correct:1,
       explain:"Information = Data + context, Knowledge = Information + Rules, Wisdom = Knowledge + experience." },
-    { id:"c1q33", type:"mcq", q:"In the DIKW pyramid, the topmost level is...",
+    { id:"c1q33", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:23, q:"In the DIKW pyramid, the topmost level is...",
       options:["Knowledge","Information","Wisdom","Data"], correct:2,
       explain:"Wisdom sits at the top of the pyramid and equals Knowledge + experience." },
-    { id:"c1q34", type:"mcq", q:"Which of the following is an example of Structured Data?",
+    { id:"c1q34", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:27, q:"Which of the following is an example of Structured Data?",
       options:["Video files","Spreadsheets and relational databases","Audio recordings","Images"], correct:1,
       explain:"Structured data examples: spreadsheets, relational databases (SQL Server, Oracle, MySQL), and transactional data." },
-    { id:"c1q35", type:"tf", q:"Structured data is easily searchable and filterable using SQL queries.", correct:true,
+    { id:"c1q35", type:"tf", lec:1, lecTitle:"Fundamentals of Business Analytics", page:27, q:"Structured data is easily searchable and filterable using SQL queries.", correct:true,
       explain:"Characteristics of structured data include being easily searchable and filterable via SQL, clear organization, and easy storage." },
-    { id:"c1q36", type:"mcq", q:"Which of the following is a characteristic of Unstructured Data?",
+    { id:"c1q36", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:28, q:"Which of the following is a characteristic of Unstructured Data?",
       options:["It follows a specific schema","It grows slower than structured data","It is large in volume and requires advanced tools","It is easily stored in tables"], correct:2,
       explain:"Unstructured data is unstructured, large in volume, requires advanced tools like machine learning and text analysis, and grows faster than structured data." },
-    { id:"c1q37", type:"tf", q:"NoSQL can be used to store unstructured data alongside structured data.", correct:true,
+    { id:"c1q37", type:"tf", lec:1, lecTitle:"Fundamentals of Business Analytics", page:28, q:"NoSQL can be used to store unstructured data alongside structured data.", correct:true,
       explain:"NoSQL can be used to store unstructured data alongside structured data." },
-    { id:"c1q38", type:"mcq", q:"Extracting keywords and concepts from text to convert unstructured data into structured data is called...",
+    { id:"c1q38", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:29, q:"Extracting keywords and concepts from text to convert unstructured data into structured data is called...",
       options:["Text Mining","Data Cleaning","Data Visualization","Image Analysis"], correct:0,
       explain:"Text Mining: extracting keywords and concepts from text." },
-    { id:"c1q39", type:"mcq", q:"Which of the following is an example of Semi-structured Data?",
+    { id:"c1q39", type:"mcq", lec:1, lecTitle:"Fundamentals of Business Analytics", page:30, q:"Which of the following is an example of Semi-structured Data?",
       options:["An MP3 file","XML files, JSON files, and RSS feeds","A SQL table","A JPG image"], correct:1,
       explain:"Semi-structured data examples: EDI files, spreadsheets, RSS feeds, sensor data, XML/JSON." },
-    { id:"c1q40", type:"tf", q:"Semi-structured data is easier to process than unstructured data and is hierarchical or graph-based in nature.", correct:true,
+    { id:"c1q40", type:"tf", lec:1, lecTitle:"Fundamentals of Business Analytics", page:30, q:"Semi-structured data is easier to process than unstructured data and is hierarchical or graph-based in nature.", correct:true,
       explain:"Semi-structured data is hierarchical/graph-based rather than relational, easier to process than unstructured data, and requires specific preprocessing such as XML validation." },
   ],
   c2: [ // Enterprises Information System
@@ -1254,6 +1361,18 @@ function renderQuizHome(){
     const total = quizBank[cid].length;
     const due = dueCountForCourse(cid);
     const mastered = masteredCountForCourse(cid);
+    const lecGroups = {};
+    quizBank[cid].forEach(q=>{
+      if(!q.lec) return;
+      const key = q.lec;
+      if(!lecGroups[key]) lecGroups[key] = { title:q.lecTitle||'', count:0 };
+      lecGroups[key].count += 1;
+    });
+    const lecKeys = Object.keys(lecGroups).sort((a,b)=>a-b);
+    const lecBreakdownHtml = lecKeys.length ? `
+      <div class="quiz-lec-breakdown">
+        ${lecKeys.map(k=> `<span class="lec-breakdown-item">محاضرة ${k}${lecGroups[k].title ? `: ${escapeHtml(lecGroups[k].title)}` : ''} — ${lecGroups[k].count} سؤال</span>`).join('')}
+      </div>` : '';
     return `
     <div class="quiz-course-card" data-course="${cid}">
       <h4>${escapeHtml(courseNameById(cid))}</h4>
@@ -1262,36 +1381,122 @@ function renderQuizHome(){
         ${due > 0 ? `<span class="stat-chip due">⏰ ${due} مستحق</span>` : ''}
         ${mastered > 0 ? `<span class="stat-chip mastered">✅ ${mastered} متقن</span>` : ''}
       </div>
+      ${lecBreakdownHtml}
+      <div class="quiz-mode-btns">
+        <button class="quiz-mode-btn" data-course="${cid}" data-mode="sequential">سؤال سؤال</button>
+        <button class="quiz-mode-btn secondary" data-course="${cid}" data-mode="all">حل الكل مرة واحدة</button>
+      </div>
+      <button class="quiz-pdf-btn" data-course="${cid}">🖨️ تحميل الأسئلة PDF (للطباعة)</button>
     </div>`;
   }).join('');
-  list.querySelectorAll('.quiz-course-card').forEach(card=>{
-    card.addEventListener('click', ()=> startQuizSession(card.dataset.course));
+  list.querySelectorAll('.quiz-mode-btn').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      startQuizSession(btn.dataset.course, btn.dataset.mode);
+    });
+  });
+  list.querySelectorAll('.quiz-pdf-btn').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      downloadQuizPdf(btn.dataset.course);
+    });
   });
   document.getElementById('quizCourseList').style.display = '';
   document.getElementById('quizSessionWrap').style.display = 'none';
 }
 
-document.getElementById('startReviewBtn').addEventListener('click', ()=> startReviewSession());
+document.getElementById('startReviewBtn').addEventListener('click', ()=> startReviewSession('sequential'));
+document.getElementById('startReviewAllBtn').addEventListener('click', ()=> startReviewSession('all'));
 
 /* ---- Sessions ---- */
-function startQuizSession(courseId){
-  const items = quizBank[courseId].map(q=>({courseId, question:q}));
-  runSession(items, `اختبار: ${courseNameById(courseId)}`);
+/* ---- Print / Download as PDF ---- */
+function downloadQuizPdf(courseId){
+  const questions = quizBank[courseId] || [];
+  if(questions.length === 0) return;
+  const courseName = courseNameById(courseId);
+
+  const questionsHtml = questions.map((q, i) => {
+    const optionsHtml = q.type === 'mcq'
+      ? `<ol type="a" class="pq-options">${q.options.map((opt, oi)=>
+          `<li class="${oi === q.correct ? 'pq-correct' : ''}">${escapeHtml(opt)}${oi === q.correct ? ' ✅' : ''}</li>`).join('')}</ol>`
+      : `<div class="pq-options">
+          <span class="${q.correct === true ? 'pq-correct' : ''}">✅ صح${q.correct === true ? ' ✔' : ''}</span>
+          &nbsp;&nbsp;
+          <span class="${q.correct === false ? 'pq-correct' : ''}">❌ غلط${q.correct === false ? ' ✔' : ''}</span>
+        </div>`;
+    return `
+      <div class="pq-item">
+        <p class="pq-q"><strong>${i+1}.</strong> ${escapeHtml(q.q)}
+          ${q.lec ? `<span class="pq-tag">محاضرة ${q.lec}${q.lecTitle ? ': ' + escapeHtml(q.lecTitle) : ''}</span>` : ''}
+          ${q.page ? `<span class="pq-tag">صفحة ${q.page}</span>` : ''}
+        </p>
+        ${optionsHtml}
+        ${q.explain ? `<p class="pq-explain">💡 ${escapeHtml(q.explain)}</p>` : ''}
+      </div>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>${escapeHtml(courseName)} — بنك الأسئلة</title>
+<style>
+  body{ font-family:'Tahoma','Segoe UI',sans-serif; padding:28px; color:#222; }
+  h1{ font-size:1.3rem; margin-bottom:2px; }
+  .pq-sub{ color:#666; font-size:.85rem; margin-bottom:22px; }
+  .pq-item{ margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #ddd; page-break-inside:avoid; }
+  .pq-q{ font-size:1rem; margin:0 0 8px; }
+  .pq-tag{ display:inline-block; font-size:.72rem; background:#f1ede4; color:#555; border-radius:999px; padding:2px 9px; margin-inline-start:6px; }
+  .pq-options{ margin:0 0 8px; padding-inline-start:22px; font-size:.92rem; line-height:1.8; }
+  .pq-correct{ color:#1e6b45; font-weight:700; }
+  .pq-explain{ font-size:.82rem; color:#555; margin:0; }
+  @media print{ body{ padding:10mm; } }
+</style>
+</head>
+<body>
+  <h1>${escapeHtml(courseName)} — بنك الأسئلة</h1>
+  <p class="pq-sub">${questions.length} سؤال — مع الإجابات الصحيحة والشرح</p>
+  ${questionsHtml}
+</body>
+</html>`;
+
+  const printWin = window.open('', '_blank');
+  if(!printWin){
+    alert('المتصفح منع فتح نافذة جديدة. اسمح بالنوافذ المنبثقة لهذا الموقع وجرّب تاني.');
+    return;
+  }
+  printWin.document.open();
+  printWin.document.write(html);
+  printWin.document.close();
+  printWin.onload = () => {
+    printWin.focus();
+    printWin.print();
+  };
 }
 
-function startReviewSession(){
+
+function startQuizSession(courseId, mode){
+  const items = quizBank[courseId].map(q=>({courseId, question:q}));
+  runSession(items, `اختبار: ${courseNameById(courseId)}`, mode);
+}
+
+function startReviewSession(mode){
   const items = allQuestionsFlat().filter(item=>isDue(item.question.id));
   if(items.length === 0) return;
   // shuffle
   items.sort(()=>Math.random()-0.5);
-  runSession(items, "المراجعة المجدولة");
+  runSession(items, "المراجعة المجدولة", mode);
 }
 
-function runSession(items, title){
-  currentSession = { title, queue: items, idx:0, correctInSession:0, total: items.length };
+function runSession(items, title, mode){
+  currentSession = { title, queue: items, idx:0, correctInSession:0, total: items.length, mode: mode || 'sequential', answers:{}, graded:false };
   document.getElementById('quizCourseList').style.display = 'none';
   document.getElementById('quizSessionWrap').style.display = '';
-  renderQuestion();
+  if(currentSession.mode === 'all'){
+    renderAllQuestions();
+  }else{
+    renderQuestion();
+  }
 }
 
 function endQuizSession(rerender){
@@ -1330,6 +1535,8 @@ function renderQuestion(){
       <div class="progress-bar"><div class="progress-bar-fill" style="width:${progressPct}%"></div></div>
       <div class="quiz-card">
         <span class="quiz-type-tag">${q.type === 'mcq' ? 'اختيار من متعدد' : 'صح أم غلط'}</span>
+        ${q.lec ? `<span class="quiz-lec-tag">📖 محاضرة ${q.lec}${q.lecTitle ? `: ${escapeHtml(q.lecTitle)}` : ''}</span>` : ''}
+        ${q.page ? `<span class="quiz-page-tag">📄 صفحة ${q.page}</span>` : ''}
         <p class="quiz-question">${escapeHtml(q.q)}</p>
         ${optionsHtml}
         <div class="quiz-feedback" id="quizFeedback"></div>
@@ -1378,6 +1585,112 @@ function renderQuestion(){
     currentSession.idx += 1;
     renderQuestion();
   });
+}
+
+/* ---- All-at-once mode ---- */
+function renderAllQuestions(){
+  const wrap = document.getElementById('quizSessionWrap');
+  const items = currentSession.queue;
+
+  const questionsHtml = items.map((item, i)=>{
+    const q = item.question;
+    let optionsHtml = '';
+    if(q.type === 'mcq'){
+      optionsHtml = `<div class="quiz-options" data-qi="${i}">` + q.options.map((opt, oi)=>
+        `<button class="quiz-opt" data-qi="${i}" data-idx="${oi}">${escapeHtml(opt)}</button>`
+      ).join('') + `</div>`;
+    }else{
+      optionsHtml = `<div class="tf-row" data-qi="${i}">
+        <button class="quiz-opt" data-qi="${i}" data-val="true">✅ صح</button>
+        <button class="quiz-opt" data-qi="${i}" data-val="false">❌ غلط</button>
+      </div>`;
+    }
+    return `
+      <div class="quiz-card quiz-card-all" id="qcard-${i}">
+        <span class="quiz-type-tag">${i+1}. ${q.type === 'mcq' ? 'اختيار من متعدد' : 'صح أم غلط'}</span>
+        ${q.lec ? `<span class="quiz-lec-tag">📖 محاضرة ${q.lec}${q.lecTitle ? `: ${escapeHtml(q.lecTitle)}` : ''}</span>` : ''}
+        ${q.page ? `<span class="quiz-page-tag">📄 صفحة ${q.page}</span>` : ''}
+        <p class="quiz-question">${escapeHtml(q.q)}</p>
+        ${optionsHtml}
+        <div class="quiz-feedback" id="quizFeedbackAll-${i}"></div>
+      </div>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <div class="quiz-session">
+      <div class="quiz-topbar">
+        <button class="quiz-back" id="quizBackBtn">← رجوع للقائمة</button>
+        <span class="quiz-progress-text">${items.length} سؤال — ${escapeHtml(currentSession.title)} (حل الكل مرة واحدة)</span>
+      </div>
+      <div id="quizAllAnsweredBar" class="quiz-all-answered-bar">جاوبت 0 / ${items.length}</div>
+      <div class="quiz-all-list">${questionsHtml}</div>
+      <div class="quiz-actions quiz-all-submit-bar">
+        <button class="quiz-next-btn show" id="quizSubmitAllBtn" disabled>سلّم الإجابات</button>
+      </div>
+    </div>`;
+
+  document.getElementById('quizBackBtn').addEventListener('click', ()=> endQuizSession());
+
+  wrap.querySelectorAll('.quiz-opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(currentSession.graded) return;
+      const qi = Number(btn.dataset.qi);
+      const val = btn.dataset.idx !== undefined ? Number(btn.dataset.idx) : (btn.dataset.val === 'true');
+      currentSession.answers[qi] = val;
+      wrap.querySelectorAll(`.quiz-opt[data-qi="${qi}"]`).forEach(b=> b.classList.remove('selected'));
+      btn.classList.add('selected');
+      updateAllAnsweredBar();
+    });
+  });
+
+  document.getElementById('quizSubmitAllBtn').addEventListener('click', gradeAllQuestions);
+  updateAllAnsweredBar();
+}
+
+function updateAllAnsweredBar(){
+  const items = currentSession.queue;
+  const answeredCount = Object.keys(currentSession.answers).length;
+  const bar = document.getElementById('quizAllAnsweredBar');
+  const submitBtn = document.getElementById('quizSubmitAllBtn');
+  if(bar) bar.textContent = `جاوبت ${answeredCount} / ${items.length}`;
+  if(submitBtn) submitBtn.disabled = answeredCount < items.length;
+}
+
+function gradeAllQuestions(){
+  const items = currentSession.queue;
+  currentSession.graded = true;
+  let correct = 0;
+
+  items.forEach((item, i)=>{
+    const q = item.question;
+    const given = currentSession.answers[i];
+    const isCorrect = q.type === 'mcq' ? given === q.correct : given === q.correct;
+    if(isCorrect) correct += 1;
+    recordAnswer(q.id, isCorrect);
+
+    const optButtons = document.querySelectorAll(`.quiz-opt[data-qi="${i}"]`);
+    optButtons.forEach(b=>{
+      b.disabled = true;
+      const bVal = q.type === 'mcq' ? Number(b.dataset.idx) : (b.dataset.val === 'true');
+      if(bVal === q.correct) b.classList.add('correct');
+      else if(Number(b.dataset.qi) === i && bVal === given && !isCorrect) b.classList.add('wrong');
+    });
+
+    const fb = document.getElementById(`quizFeedbackAll-${i}`);
+    fb.classList.add('show', isCorrect ? 'ok' : 'bad');
+    fb.textContent = (isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. ') + (q.explain || '');
+  });
+
+  currentSession.correctInSession = correct;
+
+  const submitBar = document.querySelector('.quiz-all-submit-bar');
+  submitBar.innerHTML = `<button class="link-btn" id="quizAllDoneBtn">عرض النتيجة</button>`;
+  document.getElementById('quizAllDoneBtn').addEventListener('click', renderSummary);
+
+  const bar = document.getElementById('quizAllAnsweredBar');
+  if(bar) bar.textContent = `النتيجة: ${correct} / ${items.length}`;
+
+  document.getElementById('quizSessionWrap').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function renderSummary(){
