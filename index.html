@@ -1811,11 +1811,11 @@ const videoSuggestions = [
     url:"https://www.youtube.com/playlist?list=PLvBw4OilVA0q2D6CKvMw9rjWTAHEoQHMd", count:"18 فيديو",
     /* ضيف اسم الفيديو في title لو عايز (اختياري) */
     videos:[
-      {id:"bYHpzQhyGeU"},{id:"e88L0H6SjRE"},{id:"Yui5KKg2vMg"},{id:"NvBEe7OwElw"},
-      {id:"iyjUvXG-YbM"},{id:"6fWs7R3qD-w"},{id:"JeppUK-YBKA"},{id:"KnSAQcPuOgE"},
-      {id:"GC62DtHhbdg"},{id:"BbmZxec6kbI"},{id:"f54hZV1qlYo"},{id:"3hKjHBbgMnA"},
-      {id:"nn0N6uYc8PM"},{id:"9Q5tQKkJLFw"},{id:"7EAa88QeXuw"},{id:"DjPPqqzdELk"},
-      {id:"-54psTv9kf0"},{id:"JeuBeg8TEPs"}
+      {id:"bYHpzQhyGeU",title:"Part 1 — Public Finance — مالية عامة"},{id:"e88L0H6SjRE",title:"Part 2 — Public Finance"},{id:"Yui5KKg2vMg",title:"Part 3 — The Scope & Functions of Public Finance — نطاق ووظائف المالية العامة"},{id:"NvBEe7OwElw",title:"Part 4 — Public Finance vs. Private Finance — المالية العامة مقابل التمويل الخاص"},
+      {id:"iyjUvXG-YbM",title:"Part 5 — Four Basic Functions of the Government — أربع وظائف أساسية للحكومة"},{id:"6fWs7R3qD-w",title:"Part 6 — Production Possibilities Frontier (PPF) — منحنى إمكانيات الإنتاج"},{id:"JeppUK-YBKA",title:"Part 7 — Circular Flow Model — نموذج التدفق الدائري"},{id:"KnSAQcPuOgE",title:"Part 8 — Public Goods & Private Goods"},
+      {id:"GC62DtHhbdg",title:"Part 9 — Pure Public Goods vs. Pure Private Goods"},{id:"BbmZxec6kbI",title:"Part 10 — Congestible Public Goods & Price-excludable Public Goods"},{id:"f54hZV1qlYo",title:"Part 11 — Principle of Maximum Social Advantage & Pareto Efficiency"},{id:"3hKjHBbgMnA",title:"Part 12 — Pareto Efficiency"},
+      {id:"nn0N6uYc8PM",title:"Part 14 — Implications of Externalities & Types of Externalities"},{id:"9Q5tQKkJLFw",title:"Part 15 — Public Expenditures — النفقات العامة"},{id:"7EAa88QeXuw",title:"Part 16 — Impacts of Public Expenditure — آثار الإنفاق العام"},{id:"DjPPqqzdELk",title:"Part 17 — Classifications of Public Expenditures"},
+      {id:"-54psTv9kf0",title:"Part 19 — Wagner's Law of Increasing State Activity & Peacock-Wiseman Hypothesis"},{id:"JeuBeg8TEPs"}
     ] },
   { courseId:"c4", title:"Feasibility Study", channel:"Dr Mohamed Gaber Ghanem", count:"7 فيديوهات",
     url:"https://www.youtube.com/playlist?list=PLL8ZSo-b0ACAj5HVI2_pN_ASsJLuOjEYz" }
@@ -1824,6 +1824,28 @@ const videoSuggestions = [
 function playlistId(url){
   const m = /[?&]list=([\w-]+)/.exec(url||'');
   return m ? m[1] : '';
+}
+
+
+/* يجيب عناوين الفيديوهات تلقائيًا من يوتيوب (oEmbed) لو مكتوبش title يدويًا */
+const _titleCache = {};
+function loadVideoTitles(){
+  let saved = {};
+  try{ saved = JSON.parse(localStorage.getItem('ytTitles') || '{}'); }catch(e){}
+  Object.assign(_titleCache, saved);
+  document.querySelectorAll('.vi-row-title[data-auto="1"]').forEach(el=>{
+    const id = el.dataset.tid;
+    if(_titleCache[id]){ el.textContent = _titleCache[id]; return; }
+    fetch('https://www.youtube.com/oembed?format=json&url=' + encodeURIComponent('https://www.youtube.com/watch?v=' + id))
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(d => {
+        if(!d || !d.title) return;
+        _titleCache[id] = d.title;
+        el.textContent = d.title;
+        try{ localStorage.setItem('ytTitles', JSON.stringify(_titleCache)); }catch(e){}
+      })
+      .catch(()=>{ /* يفضل الرقم لو مفيش اتصال */ });
+  });
 }
 
 function renderVideos(){
@@ -1859,7 +1881,7 @@ function renderVideos(){
                 <span class="num">${i+1}</span>
               </button>
               <div class="vi-row-info">
-                <div class="vi-row-title">${escapeHtml(vd.title || `الفيديو ${i+1}`)}</div>
+                <div class="vi-row-title" data-tid="${escapeHtml(vd.id)}" data-auto="${vd.title ? 0 : 1}">${escapeHtml(vd.title || `الفيديو ${i+1}`)}</div>
                 <a href="https://www.youtube.com/watch?v=${encodeURIComponent(vd.id)}&list=${encodeURIComponent(pid)}" target="_blank" rel="noopener">فتح على يوتيوب ↗</a>
               </div>
             </div>`).join('')}
@@ -1868,6 +1890,7 @@ function renderVideos(){
       }).join('')}
     </div>`;
   }).join('') + '</div>';
+  loadVideoTitles();
 }
 
 document.getElementById('videosList').addEventListener('click', (e)=>{
