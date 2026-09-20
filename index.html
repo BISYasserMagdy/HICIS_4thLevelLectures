@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>معهد أبوقير العليا للعلوم التجارية | جدول المحاضرات</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0e3b2e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="جدول المحاضرات">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Cairo:wght@600;800&display=swap" rel="stylesheet">
 <style>
@@ -958,6 +966,15 @@
     .schedule-frame{padding:10px;}
     .disclaimer-wrap{padding:0 14px;}
   }
+
+  /* ---------- Install app ---------- */
+  .install-wrap{max-width:1180px; margin:26px auto 0; padding:0 28px; text-align:center;}
+  .install-btn{
+    background:var(--green-deep); color:#fff; border:2px solid var(--gold); border-radius:999px;
+    padding:11px 26px; font-family:'Tajawal',sans-serif; font-weight:800; font-size:.95rem; cursor:pointer;
+    box-shadow:0 10px 24px -14px rgba(14,59,46,.7);
+  }
+  .install-hint{color:var(--muted); font-size:.85rem; margin:10px auto 0; max-width:420px; line-height:1.8;}
 </style>
 </head>
 <body>
@@ -1040,6 +1057,11 @@
     <span class="disclaimer-label">⚠️ تنويه</span>
     <p>هذا الموقع لا يمثل معهد أبوقير العليا بشكل رسمي، وهو مجهود شخصي من الطالب <strong>ياسر مجدي</strong> لتيسير تنظيم دراسة المواد على زملائه الطلبة.</p>
   </div>
+</div>
+
+<div class="install-wrap" id="installWrap" style="display:none;">
+  <button class="install-btn" id="installBtn" style="display:none;">📲 ثبّت الموقع كتطبيق</button>
+  <p class="install-hint" id="iosHint" style="display:none;">على الآيفون: اضغط زر المشاركة <strong>⬆️</strong> في Safari ثم اختر <strong>إضافة إلى الشاشة الرئيسية</strong>.</p>
 </div>
 
 <footer>
@@ -1953,6 +1975,34 @@ document.getElementById('scheduleImg').addEventListener('click', ()=>{
 document.getElementById('scheduleLightbox').addEventListener('click', ()=>{
   document.getElementById('scheduleLightbox').classList.remove('show');
 });
+
+
+/* ---------- PWA: service worker + install button ---------- */
+if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){
+  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
+(function(){
+  const wrap = document.getElementById('installWrap');
+  const btn = document.getElementById('installBtn');
+  const hint = document.getElementById('iosHint');
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if(standalone) return;
+  let deferred = null;
+  window.addEventListener('beforeinstallprompt', (e)=>{
+    e.preventDefault(); deferred = e;
+    wrap.style.display = 'block'; btn.style.display = 'inline-block';
+  });
+  btn.addEventListener('click', async ()=>{
+    if(!deferred) return;
+    deferred.prompt();
+    await deferred.userChoice.catch(()=>{});
+    deferred = null; wrap.style.display = 'none';
+  });
+  window.addEventListener('appinstalled', ()=>{ wrap.style.display = 'none'; });
+  if(/iphone|ipad|ipod/i.test(navigator.userAgent)){
+    wrap.style.display = 'block'; hint.style.display = 'block';
+  }
+})();
 
 /* ---- Quiz init ---- */
 async function initQuiz(){
