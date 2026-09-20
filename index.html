@@ -932,6 +932,32 @@
     .review-cta-btns{width:100%;}
     .review-cta-btns button{flex:1; min-width:0;}
   }
+
+  /* ---------- Mobile fit + centering ---------- */
+  html,body{overflow-x:hidden; max-width:100%;}
+  .section-nav-wrap{display:flex; justify-content:center;}
+  .section-nav{max-width:100%; justify-content:center;}
+  .controls{justify-content:center;}
+  .level-tabs{justify-content:center;}
+  .group-title{justify-content:center; text-align:center; flex-wrap:wrap;}
+  .video-intro{text-align:center;}
+  .course-name{text-align:center;}
+  .card-top{justify-content:center;}
+  @media (max-width:700px){
+    .top-inner{justify-content:center; text-align:center; flex-direction:column;}
+    .brand-text{text-align:center;}
+    .brand-text p{margin-left:auto; margin-right:auto;}
+    .logo-img{margin:0 auto;}
+    .section-nav-wrap{padding:0 12px;}
+    .section-nav{width:100%; gap:4px; padding:5px;}
+    .section-btn{flex:1 1 0; min-width:0; flex-direction:column; justify-content:center; text-align:center; gap:2px; padding:8px 4px; font-size:.78rem; line-height:1.35;}
+    .controls{flex-direction:column; align-items:center;}
+    .search-box{width:100%;}
+    .grid{grid-template-columns:1fr;}
+    .schedule-wrap{padding:0 14px;}
+    .schedule-frame{padding:10px;}
+    .disclaimer-wrap{padding:0 14px;}
+  }
 </style>
 </head>
 <body>
