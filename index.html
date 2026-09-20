@@ -310,6 +310,50 @@
     font-style:italic;
   }
 
+  .lectures{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin:4px 0 10px;
+  }
+  .lecture-item{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 12px;
+  }
+  .lecture-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .lecture-title{
+    font-weight:700;
+    font-size:.86rem;
+  }
+  .lecture-download{
+    font-size:.78rem;
+    font-weight:700;
+    color:var(--green-deep);
+    text-decoration:none;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:4px 10px;
+    white-space:nowrap;
+  }
+  .lecture-download:hover{background:var(--green-deep); color:#fff;}
+  .lecture-outline{
+    margin:8px 0 0;
+    padding-inline-start:18px;
+    font-size:.8rem;
+    color:var(--muted);
+    line-height:1.7;
+  }
+  .lecture-outline li{margin-bottom:2px;}
+
   .empty{
     text-align:center;
     padding:60px 20px;
@@ -783,7 +827,11 @@
 /* ---------------- Seed data ---------------- */
 /* Levels/terms are editable groupings; course fields can all be edited in-app. */
 const seedData = [
-  { id:"c1", level:"الفرقة الرابعة - الترم الأول", name:"Business Analytics & Data Mining", doctor:"د. ميار مصطفى", ta:"", day:"الأحد", time:"11:30", room:"", link:"" },
+  { id:"c1", level:"الفرقة الرابعة - الترم الأول", name:"Business Analytics & Data Mining", doctor:"د. ميار مصطفى", ta:"", day:"الأحد", time:"11:30", room:"", link:"",
+    lectures:[
+      { title:"Fundamentals of Business Analytics", file:"https://drive.google.com/file/d/1v4gIllR_rwzIiN5qP0zxS6Fb-VaK-Hse/view",
+        outline:["What is data analytics","What is business analytics","Importance of Business analytics","Business tools & techniques","Real-world applications of business analytics","History evolution of business analytics","Business analytics tools and components","Key elements of business analytics","Concept of data and its types","What is knowledge","What is information","Data classification (structured - unstructured - semi structured)"] }
+    ] },
   { id:"c2", level:"الفرقة الرابعة - الترم الأول", name:"Enterprises Information System", doctor:"د. هاجر", ta:"", day:"السبت", time:"2:30", room:"", link:"" },
   { id:"c3", level:"الفرقة الرابعة - الترم الأول", name:"Public Finance", doctor:"د. خالد تعيلب", ta:"", day:"الأحد", time:"1:00", room:"", link:"" },
   { id:"c4", level:"الفرقة الرابعة - الترم الأول", name:"Feasibility Study of Projects", doctor:"د. خالد تعيلب", ta:"", day:"الأحد", time:"2:30", room:"", link:"" },
@@ -856,6 +904,23 @@ function courseCard(c){
   const hasSchedule = (c.day && c.day.trim()) || (c.time && c.time.trim());
   const hasRoom = c.room && c.room.trim();
   const hasLink = c.link && c.link.trim();
+  const lectures = Array.isArray(c.lectures) ? c.lectures : [];
+
+  const lecturesHtml = lectures.length ? `
+    <div class="lectures">
+      ${lectures.map((lec, i) => `
+        <div class="lecture-item">
+          <div class="lecture-head">
+            <span class="lecture-title">📄 ${escapeHtml(lec.title || `محاضرة ${i+1}`)}</span>
+            ${lec.file ? `<a class="lecture-download" href="${escapeHtml(lec.file)}" target="_blank" rel="noopener">تحميل ⬇</a>` : ''}
+          </div>
+          ${Array.isArray(lec.outline) && lec.outline.length ? `
+            <ul class="lecture-outline">
+              ${lec.outline.map(pt => `<li>${escapeHtml(pt)}</li>`).join('')}
+            </ul>` : ''}
+        </div>
+      `).join('')}
+    </div>` : '';
 
   return `
   <div class="card" data-id="${c.id}">
@@ -870,6 +935,7 @@ function courseCard(c){
       <span class="meta-chip">📅 ${hasSchedule ? `${escapeHtml(c.day||'')} ${escapeHtml(c.time||'')}`.trim() : 'الموعد غير محدد'}</span>
       ${hasRoom ? `<span class="meta-chip">🏛️ ${escapeHtml(c.room)}</span>` : ''}
     </div>
+    ${lecturesHtml}
     <div class="links">
       ${hasLink
         ? `<a class="link-btn" href="${escapeHtml(c.link)}" target="_blank" rel="noopener">فتح ملف المحاضرة ↗</a>`
@@ -926,118 +992,118 @@ document.getElementById('searchInput').addEventListener('input', renderContent);
 /* ---- Question bank (MCQ + True/False) per course id ---- */
 const quizBank = {
   c1: [ // Business Analytics & Data Mining
-    { id:"c1q1", type:"mcq", q:"تعريف Data Analytics حسب المحاضرة هو الأساليب المستخدمة لتحليل البيانات بهدف...",
-      options:["تقليل حجم قواعد البيانات","زيادة الإنتاجية والمكاسب التجارية","تصميم الشبكات","تشفير البيانات"], correct:1,
-      explain:"Data analytics = التقنيات المستخدمة لتحليل البيانات لتحسين الإنتاجية والمكاسب التجارية." },
-    { id:"c1q2", type:"tf", q:"في Data Analytics البيانات بتتسحب من مصادر مختلفة ثم تتنظّف وتتصنّف قبل تحليل الأنماط السلوكية.", correct:true,
-      explain:"البيانات تُستخرج من مصادر متعددة ثم تُنظّف وتُصنّف لتحليل الأنماط السلوكية." },
-    { id:"c1q3", type:"tf", q:"الأدوات والتقنيات المستخدمة في تحليل البيانات ثابتة ولا تختلف من مؤسسة لأخرى.", correct:false,
-      explain:"الأدوات والتقنيات بتختلف حسب المؤسسة أو الفرد." },
-    { id:"c1q4", type:"mcq", q:"Business Analytics هي عملية...",
-      options:["جمع وتحليل وتفسير البيانات لدعم القرارات وتحسين الأداء","تخزين البيانات فقط","برمجة تطبيقات الويب","إدارة شبكات الشركة"], correct:0,
-      explain:"BA = collecting, analyzing, interpreting data لمساعدة المؤسسات على اتخاذ قرارات مدروسة وتحسين أدائها." },
-    { id:"c1q5", type:"mcq", q:"أي من الآتي ليس من أهمية Business Analytics المذكورة في المحاضرة؟",
-      options:["تحسين اتخاذ القرار","زيادة الكفاءة","التنبؤ بالمستقبل","تقليل عدد الموظفين"], correct:3,
-      explain:"الأهمية: تحسين القرار، زيادة الكفاءة، التنبؤ بالمستقبل، تحديد الفرص والمخاطر، تحسين رضا العملاء." },
-    { id:"c1q6", type:"mcq", q:"أي نوع تحليلات يساعد الشركات على توقع الاتجاهات المستقبلية والطلب في السوق؟",
+    { id:"c1q1", type:"mcq", q:"According to the lecture, Data Analytics refers to the techniques used to analyze data in order to...",
+      options:["reduce database size","enhance productivity and business gains","design network infrastructure","encrypt data"], correct:1,
+      explain:"Data analytics refers to the techniques used to analyze data in order to enhance productivity and business gains." },
+    { id:"c1q2", type:"tf", q:"In data analytics, data is extracted from various sources, then cleaned and categorized to analyze different behavioral patterns.", correct:true,
+      explain:"Data is extracted from various sources, then cleaned and categorized to analyze different behavioral patterns." },
+    { id:"c1q3", type:"tf", q:"The techniques and tools employed in data analytics are fixed and never vary between organizations.", correct:false,
+      explain:"The techniques and tools employed vary depending on the organization or individual." },
+    { id:"c1q4", type:"mcq", q:"Business Analytics is the process of...",
+      options:["collecting, analyzing, and interpreting data to help organizations make informed decisions and improve performance","storing data only","designing web applications","managing company networks"], correct:0,
+      explain:"Business analytics is the process of collecting, analyzing, and interpreting data to help organizations make informed decisions and improve their performance." },
+    { id:"c1q5", type:"mcq", q:"Which of the following is NOT listed as an importance of Business Analytics?",
+      options:["Improving decision-making","Increasing efficiency","Forecasting the future","Reducing employee headcount"], correct:3,
+      explain:"Importance of BA: improving decision-making, increasing efficiency, forecasting the future, identifying opportunities and risks, enhancing customer satisfaction." },
+    { id:"c1q6", type:"mcq", q:"Which type of analytics helps companies forecast future trends and market demand?",
       options:["Descriptive","Predictive","Diagnostic","Prescriptive"], correct:1,
-      explain:"Predictive analytics بتساعد على forecasting للاتجاهات المستقبلية والطلب." },
-    { id:"c1q7", type:"tf", q:"من فوائد Business Analytics التعرف على المخاطر المحتملة قبل ما تتحول لمشاكل كبيرة.", correct:true,
-      explain:"Identifying opportunities and risks من أهم فوائد BA." },
-    { id:"c1q8", type:"mcq", q:"أي من الآتي يُعد Software ضمن أدوات Business Analytics؟",
-      options:["Excel و Tableau و Power BI","Data mining","Machine learning","Statistical analysis"], correct:0,
-      explain:"Software: Excel, Tableau, Power BI, Python, SAS, R — أما data mining و ML فهي Techniques." },
-    { id:"c1q9", type:"mcq", q:"أي من الآتي يُصنَّف كـ Technique وليس Software؟",
+      explain:"Predictive analytics helps companies forecast future trends and market demand." },
+    { id:"c1q7", type:"tf", q:"One benefit of Business Analytics is identifying potential risks before they escalate into major problems.", correct:true,
+      explain:"Identifying opportunities and risks enables companies to recognize new opportunities and identify potential risks before they escalate into major problems." },
+    { id:"c1q8", type:"mcq", q:"Which of the following is a Software tool for Business Analytics?",
+      options:["Excel, Tableau, and Power BI","Data mining","Machine learning","Statistical analysis"], correct:0,
+      explain:"Software: such as Excel, Tableau, Power BI, Python, SAS, and R." },
+    { id:"c1q9", type:"mcq", q:"Which of the following is classified as a Technique rather than Software?",
       options:["Power BI","SAS","Machine learning","R"], correct:2,
-      explain:"Techniques: statistical analysis, data mining, machine learning, AI." },
-    { id:"c1q10", type:"mcq", q:"تحليل بيانات الموظفين لتحسين التوظيف والاحتفاظ بالكفاءات هو تطبيق لـ BA في مجال...",
+      explain:"Techniques: such as statistical analysis, data mining, machine learning, and artificial intelligence." },
+    { id:"c1q10", type:"mcq", q:"Analyzing employee data to improve recruitment and retention is a real-world application of BA in...",
       options:["Marketing","Finance","Operations","Human Resources"], correct:3,
-      explain:"HR: تحليل بيانات الموظفين لتحسين recruitment و retention." },
-    { id:"c1q11", type:"mcq", q:"تحسين سلاسل الإمداد وإدارة المخزون يقع تحت تطبيق...",
-      options:["Operations","Finance","Marketing","HR"], correct:0,
+      explain:"Human Resources: analyzing employee data to improve recruitment and retention." },
+    { id:"c1q11", type:"mcq", q:"Optimizing supply chains and inventory management falls under which application?",
+      options:["Operations","Finance","Marketing","Human Resources"], correct:0,
       explain:"Operations: optimizing supply chains and inventory management." },
-    { id:"c1q12", type:"mcq", q:"العصر الأول (First Era) في تطور Business Analytics اتميز بـ...",
-      options:["البيانات الضخمة والذكاء الاصطناعي","الأدوات اليدوية وجداول البيانات","الحوسبة السحابية","الشبكات العصبية"], correct:1,
-      explain:"First Era = Traditional BA باستخدام أدوات يدوية و spreadsheets." },
-    { id:"c1q13", type:"mcq", q:"العصر الثالث (Third Era) في تطور Business Analytics يعتمد على...",
-      options:["Excel والتحليل الإحصائي","الأدوات اليدوية","Big Data والذكاء الاصطناعي وتعلم الآلة","الورق والسجلات"], correct:2,
-      explain:"Third Era = Big Data + AI + Machine Learning لتحليل أعمق وأسرع." },
-    { id:"c1q14", type:"mcq", q:"مكوّنات Business Analytics الثلاثة هي:",
-      options:["البيانات، الأدوات والتقنيات، الخبرة والمعرفة","البيانات، السيرفرات، الإنترنت","التخزين، العرض، الطباعة","الوصفي، التنبؤي، التوجيهي"], correct:0,
-      explain:"Components: Data / Tools and Techniques / Expertise and Knowledge." },
-    { id:"c1q15", type:"mcq", q:"SQL و NoSQL تُصنَّف ضمن أدوات...",
+    { id:"c1q12", type:"mcq", q:"The First Era in the history of Business Analytics was characterized by...",
+      options:["big data and artificial intelligence","manual tools and spreadsheets","cloud computing","neural networks"], correct:1,
+      explain:"First Era: Traditional Business Analytics — using manual tools and spreadsheets for data analysis." },
+    { id:"c1q13", type:"mcq", q:"The Third Era in the evolution of Business Analytics relies on...",
+      options:["Excel and statistical analysis","manual tools","big data and artificial intelligence","paper records"], correct:2,
+      explain:"Third Era: Big Data and Artificial Intelligence — leveraging big data, AI, and machine learning to analyze data more deeply and rapidly." },
+    { id:"c1q14", type:"mcq", q:"The three components of Business Analytics are:",
+      options:["Data, Tools and Techniques, Expertise and Knowledge","Data, Servers, Internet","Storage, Display, Printing","Descriptive, Predictive, Prescriptive"], correct:0,
+      explain:"Components of Business Analytics: Data, Tools and Techniques, and Expertise and Knowledge." },
+    { id:"c1q15", type:"mcq", q:"SQL and NoSQL are classified as...",
       options:["Data management software","Data visualization tools","Predictive analytics platforms","Statistical analysis tools"], correct:0,
-      explain:"Data management software: SQL و NoSQL." },
-    { id:"c1q16", type:"mcq", q:"SAS و SPSS تُصنَّف في المحاضرة كـ...",
-      options:["أدوات تصور بيانات","منصات تحليلات تنبؤية","أدوات إدارة بيانات","لغات برمجة إحصائية"], correct:1,
-      explain:"Predictive analytics platforms: SAS و SPSS." },
-    { id:"c1q17", type:"mcq", q:"ترتيب العناصر الأساسية (Key Elements) لـ Business Analytics هو:",
-      options:["التحليل ← الجمع ← التنظيف ← التصور ← التوصيات","الجمع ← التنظيف ← التحليل ← التصور ← التوصيات","التنظيف ← الجمع ← التصور ← التحليل ← التوصيات","الجمع ← التحليل ← التنظيف ← التوصيات ← التصور"], correct:1,
+      explain:"Data management software: such as SQL and NoSQL." },
+    { id:"c1q16", type:"mcq", q:"SAS and SPSS are classified in the lecture as...",
+      options:["Data visualization tools","Predictive analytics platforms","Data management software","Statistical programming languages"], correct:1,
+      explain:"Predictive analytics platforms: such as SAS and SPSS." },
+    { id:"c1q17", type:"mcq", q:"The correct order of the Key Elements of Business Analytics is:",
+      options:["Analysis → Collection → Cleaning → Visualization → Recommendations","Collection → Cleaning → Analysis → Visualization → Recommendations","Cleaning → Collection → Visualization → Analysis → Recommendations","Collection → Analysis → Cleaning → Recommendations → Visualization"], correct:1,
       explain:"Data Collection → Data Cleaning → Data Analysis → Data Visualization → Providing Recommendations." },
-    { id:"c1q18", type:"tf", q:"الاستبيانات والمقابلات والملاحظة تُعد أدوات لجمع البيانات (Data Collection).", correct:true,
-      explain:"أدوات الجمع: observation, questionnaires, record cards, interviews, reports." },
-    { id:"c1q19", type:"mcq", q:"إزالة البيانات المكررة أو الناقصة وضمان الجودة يمثل خطوة...",
+    { id:"c1q18", type:"tf", q:"Questionnaires, interviews, and observation are tools used for Data Collection.", correct:true,
+      explain:"Data Collection uses various tools such as observation, questionnaires, record cards, interviews, and reports." },
+    { id:"c1q19", type:"mcq", q:"Removing duplicate or incomplete data while ensuring data quality represents which step?",
       options:["Data Collection","Data Cleaning","Data Visualization","Data Analysis"], correct:1,
-      explain:"Data Cleaning = معالجة البيانات لإزالة الأخطاء والتكرار وضمان الجودة." },
-    { id:"c1q20", type:"mcq", q:"في المثال العملي لشركة تجزئة، بيانات المبيعات بتتجمع من...",
-      options:["نظام نقاط البيع POS","نظام CRM فقط","نظام المخزون فقط","وسائل التواصل الاجتماعي"], correct:0,
-      explain:"المبيعات من POS، وبيانات العملاء من CRM، وبيانات المخزون من inventory management system." },
-    { id:"c1q21", type:"mcq", q:"Data حسب المحاضرة تعني...",
-      options:["أي حقائق أو أرقام أو نصوص يمكن معالجتها بالحاسب","النتائج النهائية للتحليل","التوصيات الإدارية","الرسوم البيانية"], correct:0,
+      explain:"Data Cleaning: processing data to eliminate errors and redundancies while ensuring data quality." },
+    { id:"c1q20", type:"mcq", q:"In the retail company practical example, sales data is gathered from...",
+      options:["the point-of-sale (POS) system","the CRM system only","the inventory system only","social media"], correct:0,
+      explain:"Sales data comes from the POS system, customer data from CRM, and inventory data from the inventory management system." },
+    { id:"c1q21", type:"mcq", q:"According to the lecture, Data means...",
+      options:["any facts, numbers, or text that can be processed by a computer","the final results of analysis","management recommendations","charts and graphs"], correct:0,
       explain:"Data: any facts, numbers, or text that can be processed by a computer." },
-    { id:"c1q22", type:"mcq", q:"بيانات المبيعات والتكاليف والمخزون والمرتبات تُصنَّف كـ...",
-      options:["Non-operational data","Metadata","Operational / transactional data","Semi-structured data"], correct:2,
-      explain:"Operational أو transactional data: sales, costs, inventory, payroll, accounting." },
-    { id:"c1q23", type:"mcq", q:"البيانات التي تصف البيانات نفسها مثل تصميم قاعدة البيانات أو قاموس البيانات تسمى...",
+    { id:"c1q22", type:"mcq", q:"Sales, costs, inventory, and payroll data are classified as...",
+      options:["Non-operational data","Metadata","Operational or transactional data","Semi-structured data"], correct:2,
+      explain:"Operational or transactional data: such as sales, costs, inventory, payroll, and accounting." },
+    { id:"c1q23", type:"mcq", q:"Data about the data itself, such as database design or data dictionary definitions, is called...",
       options:["Metadata","Raw data","Big data","Master data"], correct:0,
-      explain:"Metadata = data about the data itself." },
-    { id:"c1q24", type:"mcq", q:"التوقعات وأرقام مبيعات الصناعة والبيانات الاقتصادية الكلية تُصنَّف كـ...",
+      explain:"Metadata: data about the data itself, such as logical database designs or data dictionary definitions." },
+    { id:"c1q24", type:"mcq", q:"Industry sales figures, forecasts, and macroeconomic data are classified as...",
       options:["Operational data","Non-operational data","Metadata","Transactional data"], correct:1,
-      explain:"Non-operational data: industry sales figures, forecasts, macroeconomic data." },
-    { id:"c1q25", type:"mcq", q:"الـ Dataset هو...",
-      options:["مجموعة بيانات مرتبطة تشترك في نفس الخصائص","ملف Excel فقط","قاعدة بيانات علائقية","برنامج تحليل"], correct:0,
-      explain:"Dataset = مجموعات بيانات مرتبطة تشترك في نفس الـ attributes، وكل عنصر فيها يُسمى datum." },
-    { id:"c1q26", type:"tf", q:"كل عنصر منفرد داخل الـ dataset يُسمى \"datum\".", correct:true,
+      explain:"Non-operational data: such as industry sales figures, forecasts, and macroeconomic data." },
+    { id:"c1q25", type:"mcq", q:"A dataset is...",
+      options:["a group of related data that shares the same set of attributes","an Excel file only","a relational database","an analysis program"], correct:0,
+      explain:"Datasets are groups or sets of related data that share the same set of attributes or characteristics." },
+    { id:"c1q26", type:"tf", q:"Each member of the dataset is called a \"datum.\"", correct:true,
       explain:"Each member of the dataset is called a datum." },
-    { id:"c1q27", type:"mcq", q:"حسب تصنيف Data Generation، البيانات تتولّد من...",
-      options:["الإنسان والآلة","الإنترنت والسحابة","الشركات والحكومات","البرمجيات والأجهزة"], correct:0,
-      explain:"Data Generation ينقسم إلى Human و Machine." },
-    { id:"c1q28", type:"mcq", q:"بيانات المستشعرات (sensor data) وبيانات GPS بصيغة XML تُعد أمثلة على بيانات مولّدة بواسطة...",
-      options:["الإنسان","الآلة","المحللين","العملاء"], correct:1,
-      explain:"Machine-generated: web server textual data، smart meter sensor data، GPS XML data." },
-    { id:"c1q29", type:"mcq", q:"الأنماط والعلاقات والارتباطات داخل البيانات تنتج...",
+    { id:"c1q27", type:"mcq", q:"According to Data Generation, data is generated by...",
+      options:["Human and Machine","Internet and Cloud","Companies and Governments","Software and Hardware"], correct:0,
+      explain:"Data Generation branches into Human and Machine." },
+    { id:"c1q28", type:"mcq", q:"Sensor data and GPS data in XML format are examples of data generated by...",
+      options:["Humans","Machines","Analysts","Customers"], correct:1,
+      explain:"Machine-generated data includes web server textual data, smart meter sensor data, and GPS XML data." },
+    { id:"c1q29", type:"mcq", q:"Patterns, correlations, or relationships within data yield...",
       options:["Information","Data","Wisdom","Metadata"], correct:0,
-      explain:"Patterns, correlations, or relationships within data تعطي Information." },
-    { id:"c1q30", type:"mcq", q:"تحويل المعلومات إلى فهم للأنماط التاريخية والاتجاهات المستقبلية يمثل...",
+      explain:"Patterns, correlations, or relationships within all this data can yield information." },
+    { id:"c1q30", type:"mcq", q:"Transforming information into awareness of historical patterns and future trends represents...",
       options:["Data","Information","Knowledge","Metadata"], correct:2,
-      explain:"Information can be transformed into knowledge عن الأنماط التاريخية والاتجاهات المستقبلية." },
-    { id:"c1q31", type:"mcq", q:"في مثال المهندس: كتابة \"السيارة تحتاج 5 جالون لقطع 100 ميل\" تمثل...",
+      explain:"Information can be transformed into knowledge regarding historical patterns and future trends." },
+    { id:"c1q31", type:"mcq", q:"In the engineer example, writing \"the vehicle requires 5 gallons of fuel to travel 100 miles\" represents...",
       options:["Data","Information","Knowledge","Wisdom"], correct:1,
-      explain:"Information هي إجابة على سؤال؛ أما مجرد كتابة الرقم \"5\" فهي Data." },
-    { id:"c1q32", type:"mcq", q:"في هرم DIKW: Knowledge = ...",
+      explain:"Information is typically the answer to a question, while simply writing the number \"5\" is just Data." },
+    { id:"c1q32", type:"mcq", q:"In the DIKW pyramid, Knowledge equals...",
       options:["Data + context","Information + Rules","Knowledge + experience","Data + experience"], correct:1,
-      explain:"Information = Data + context، Knowledge = Information + Rules، Wisdom = Knowledge + experience." },
-    { id:"c1q33", type:"mcq", q:"في هرم DIKW، أعلى مستوى هو...",
+      explain:"Information = Data + context, Knowledge = Information + Rules, Wisdom = Knowledge + experience." },
+    { id:"c1q33", type:"mcq", q:"In the DIKW pyramid, the topmost level is...",
       options:["Knowledge","Information","Wisdom","Data"], correct:2,
-      explain:"Wisdom في القمة وتساوي Knowledge + experience." },
-    { id:"c1q34", type:"mcq", q:"أي من الآتي مثال على Structured Data؟",
-      options:["ملفات الفيديو","جداول Excel وقواعد البيانات العلائقية","تسجيلات صوتية","الصور"], correct:1,
-      explain:"Structured: spreadsheets، relational databases (SQL Server, Oracle, MySQL)، transactional data." },
-    { id:"c1q35", type:"tf", q:"الـ Structured Data سهلة البحث والفلترة باستخدام استعلامات SQL.", correct:true,
-      explain:"من خصائصها: easily searchable and filterable عبر SQL، تنظيم واضح، سهولة التخزين." },
-    { id:"c1q36", type:"mcq", q:"أي من الآتي من خصائص Unstructured Data؟",
-      options:["تتبع مخططًا محددًا (schema)","تنمو أبطأ من المنظمة","حجمها كبير وتحتاج أدوات متقدمة","تُخزَّن بسهولة في جداول"], correct:2,
-      explain:"Unstructured: كبيرة الحجم، لا تتبع schema، وتحتاج أدوات متقدمة زي ML وتحليل النصوص، وتنمو أسرع من المنظمة." },
-    { id:"c1q37", type:"tf", q:"يمكن استخدام NoSQL لتخزين البيانات غير المهيكلة جنبًا إلى جنب مع البيانات المهيكلة.", correct:true,
+      explain:"Wisdom sits at the top of the pyramid and equals Knowledge + experience." },
+    { id:"c1q34", type:"mcq", q:"Which of the following is an example of Structured Data?",
+      options:["Video files","Spreadsheets and relational databases","Audio recordings","Images"], correct:1,
+      explain:"Structured data examples: spreadsheets, relational databases (SQL Server, Oracle, MySQL), and transactional data." },
+    { id:"c1q35", type:"tf", q:"Structured data is easily searchable and filterable using SQL queries.", correct:true,
+      explain:"Characteristics of structured data include being easily searchable and filterable via SQL, clear organization, and easy storage." },
+    { id:"c1q36", type:"mcq", q:"Which of the following is a characteristic of Unstructured Data?",
+      options:["It follows a specific schema","It grows slower than structured data","It is large in volume and requires advanced tools","It is easily stored in tables"], correct:2,
+      explain:"Unstructured data is unstructured, large in volume, requires advanced tools like machine learning and text analysis, and grows faster than structured data." },
+    { id:"c1q37", type:"tf", q:"NoSQL can be used to store unstructured data alongside structured data.", correct:true,
       explain:"NoSQL can be used to store unstructured data alongside structured data." },
-    { id:"c1q38", type:"mcq", q:"استخراج الكلمات المفتاحية والمفاهيم من النصوص لتحويل بيانات غير مهيكلة إلى مهيكلة يسمى...",
+    { id:"c1q38", type:"mcq", q:"Extracting keywords and concepts from text to convert unstructured data into structured data is called...",
       options:["Text Mining","Data Cleaning","Data Visualization","Image Analysis"], correct:0,
       explain:"Text Mining: extracting keywords and concepts from text." },
-    { id:"c1q39", type:"mcq", q:"أي من الآتي مثال على Semi-structured Data؟",
-      options:["ملف MP3","ملفات XML و JSON و RSS feeds","جدول SQL","صورة JPG"], correct:1,
-      explain:"Semi-structured: EDI files، spreadsheets، RSS feeds، sensor data، XML/JSON." },
-    { id:"c1q40", type:"tf", q:"البيانات شبه المهيكلة أسهل في المعالجة من البيانات غير المهيكلة وطبيعتها هرمية أو قائمة على الرسوم البيانية.", correct:true,
-      explain:"Semi-structured: هرمية/graph-based بدل العلائقية، وأسهل في المعالجة من unstructured، وتحتاج معالجة مسبقة زي XML validation." },
+    { id:"c1q39", type:"mcq", q:"Which of the following is an example of Semi-structured Data?",
+      options:["An MP3 file","XML files, JSON files, and RSS feeds","A SQL table","A JPG image"], correct:1,
+      explain:"Semi-structured data examples: EDI files, spreadsheets, RSS feeds, sensor data, XML/JSON." },
+    { id:"c1q40", type:"tf", q:"Semi-structured data is easier to process than unstructured data and is hierarchical or graph-based in nature.", correct:true,
+      explain:"Semi-structured data is hierarchical/graph-based rather than relational, easier to process than unstructured data, and requires specific preprocessing such as XML validation." },
   ],
   c2: [ // Enterprises Information System
   ],
