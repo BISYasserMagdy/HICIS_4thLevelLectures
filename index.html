@@ -1039,61 +1039,69 @@
     margin:0;
     display:flex;
     flex-direction:column;
-    gap:10px;
+    gap:14px;
   }
-  .achievement-row{
-    position:relative;
+  .achievement-group{
     background:#fff;
     border:1px solid var(--line);
-    border-radius:10px;
-    padding:12px 14px 12px 42px;
-    list-style:none;
+    border-radius:12px;
+    padding:12px 14px 10px;
   }
-  .achievement-row::before{
-    content:"•";
-    position:absolute;
-    right:16px;
-    top:10px;
-    color:var(--green-deep);
-    font-size:1.4rem;
-    line-height:1;
-  }
-  .achievement-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    margin-bottom:6px;
-  }
-  .achievement-title{
+  .achievement-group-title{
     color:var(--green-deep);
     font-weight:800;
-    font-size:.95rem;
+    font-size:1rem;
+    margin:0 0 10px;
+    padding-right:14px;
+    position:relative;
   }
-  .achievement-badge{
-    background:var(--gold);
-    color:#fff;
-    border-radius:999px;
-    padding:3px 8px;
-    font-size:.68rem;
-    font-weight:700;
-    white-space:nowrap;
+  .achievement-group-title::before{
+    content:"•";
+    position:absolute;
+    right:0;
+    top:0;
+    color:var(--green-deep);
+    font-size:1.3rem;
+    line-height:1;
   }
-  .achievement-stats{
+  .achievement-sublist{
+    list-style:none;
+    padding:0 10px 0 0;
+    margin:0;
     display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    padding-right:6px;
+    flex-direction:column;
+    gap:8px;
   }
-  .achievement-stat{
+  .achievement-subitem{
     background:var(--cream);
     border:1px solid var(--line);
-    border-radius:8px;
-    padding:5px 8px;
-    font-size:.75rem;
-    color:var(--ink);
+    border-radius:10px;
+    padding:10px 12px 10px 14px;
+    position:relative;
   }
-  .achievement-stat strong{color:var(--green-deep);}
+  .achievement-subitem::before{
+    content:"-";
+    position:absolute;
+    right:8px;
+    top:9px;
+    color:var(--green-deep);
+    font-weight:800;
+  }
+  .achievement-subtitle{
+    display:block;
+    color:var(--green-deep);
+    font-weight:700;
+    font-size:.88rem;
+    margin-bottom:4px;
+    padding-right:12px;
+  }
+  .achievement-submeta{
+    color:var(--muted);
+    font-size:.76rem;
+    line-height:1.7;
+    padding-right:12px;
+  }
+  .achievement-submeta strong{color:var(--green-deep);}
 
   @media (max-width:600px){
     .section-nav-wrap{padding:0 16px;}
@@ -1960,25 +1968,50 @@ function renderAchievementSchedule(){
   const totalQuestions = rows.reduce((sum, row) => sum + row.total, 0);
   const summary = totalAnswered ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
 
-  const items = rows.map((row, index) => `
-    <li class="achievement-row">
-      <div class="achievement-head">
-        <span class="achievement-title">${index + 1}. ${escapeHtml(row.label)}</span>
-        <span class="achievement-badge">${escapeHtml(row.status)}</span>
-      </div>
-      <div class="achievement-stats">
-        <span class="achievement-stat"><strong>${row.answered}</strong> / ${row.total} حل</span>
-        <span class="achievement-stat"><strong>${row.accuracy}%</strong> دقة</span>
-        <span class="achievement-stat"><strong>${row.due}</strong> مستحق</span>
-        <span class="achievement-stat"><strong>${row.mastered}</strong> متقن</span>
-      </div>
-    </li>
-  `).join('');
+  const courseGroups = Object.keys(quizBank).filter(cid => (quizBank[cid] || []).length > 0).map(courseId => {
+    const questions = quizBank[courseId] || [];
+    const partMap = {};
+    questions.forEach(q => {
+      const partLabel = q.lecTitle || `محاضرة ${q.lec || 1}`;
+      if(!partMap[partLabel]){
+        partMap[partLabel] = { label: partLabel, total:0, answered:0, correct:0, due:0, mastered:0 };
+      }
+      const part = partMap[partLabel];
+      part.total += 1;
+      const st = getCardState(q.id);
+      if(st.seen > 0){ part.answered += 1; }
+      if(st.due <= todayStr() && st.seen > 0){ part.due += 1; }
+      if(st.box >= 4){ part.mastered += 1; }
+      const history = loadQuizHistory().filter(entry => entry.courseId === courseId && entry.questionId === q.id);
+      if(history.some(entry => entry.isCorrect)){ part.correct += 1; }
+    });
+
+    const partItems = Object.values(partMap).map(part => {
+      const accuracy = part.answered > 0 ? Math.round((part.correct / part.answered) * 100) : 0;
+      const statusText = part.answered > 0 ? `مستوى الأداء: ${accuracy}% (${part.correct}/${part.answered})` : 'مستوى الأداء: لم تبدأ بعد';
+      return `
+        <li class="achievement-subitem">
+          <span class="achievement-subtitle">${escapeHtml(part.label)}</span>
+          <div class="achievement-submeta">
+            <strong>${statusText}</strong><br>
+            ${part.total} سؤال • ${part.due} مستحق • ${part.mastered} متقن
+          </div>
+        </li>
+      `;
+    }).join('');
+
+    return `
+      <li class="achievement-group">
+        <div class="achievement-group-title">${escapeHtml(courseNameById(courseId))}</div>
+        <ul class="achievement-sublist">${partItems}</ul>
+      </li>
+    `;
+  }).join('');
 
   panel.innerHTML = `
     <div class="report-panel">
       <h3>📅 جدول إنجازك (${totalAnswered} سؤال محلول)</h3>
-      <ul class="achievement-list">${items}</ul>
+      <ul class="achievement-list">${courseGroups}</ul>
       <div class="achievement-stats" style="margin-top:12px;">
         <span class="achievement-stat"><strong>${totalQuestions}</strong> إجمالي أسئلة المادة</span>
         <span class="achievement-stat"><strong>${summary}%</strong> متوسط الدقة</span>
