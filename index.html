@@ -2700,7 +2700,6 @@ function renderVideos(){
         return `
         <div class="video-item">
           <p class="vi-title">▶️ ${escapeHtml(v.title)}</p>
-          ${meta ? `<div class="vi-meta">${escapeHtml(meta)}</div>` : ''}
           <div class="vi-actions">
             <a class="link-btn" href="${escapeHtml(v.url)}" target="_blank" rel="noopener">فتح على يوتيوب ↗</a>
             ${pid ? `<button class="link-btn secondary" data-embed="${escapeHtml(pid)}">تشغيل هنا</button>` : ''}
