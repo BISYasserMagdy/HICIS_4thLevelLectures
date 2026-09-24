@@ -1787,11 +1787,12 @@ function allQuestionsFlat(){
   return out;
 }
 
+function dueQuestionsForCourse(cid){
+  return (quizBank[cid]||[]).filter(q => isDue(q.id));
+}
+
 function dueCountForCourse(cid){
-  return (quizBank[cid]||[]).filter(q => {
-    const st = getCardState(q.id);
-    return st.seen > 0 && st.due <= todayStr();
-  }).length;
+  return dueQuestionsForCourse(cid).length;
 }
 function totalDueCount(){
   return allQuestionsFlat().filter(item => {
@@ -1873,6 +1874,7 @@ function renderQuizHome(){
     const due = dueCountForCourse(cid);
     const newCount = newCountForCourse(cid);
     const mastered = masteredCountForCourse(cid);
+    const courseDueQuestions = dueQuestionsForCourse(cid);
     const lecGroups = {};
     quizBank[cid].forEach(q=>{
       if(!q.lec) return;
@@ -1898,6 +1900,7 @@ function renderQuizHome(){
       <div class="quiz-mode-btns">
         <button class="quiz-mode-btn" data-course="${cid}" data-mode="sequential">سؤال سؤال</button>
         <button class="quiz-mode-btn secondary" data-course="${cid}" data-mode="all">حل الكل مرة واحدة</button>
+        ${due > 0 ? `<button class="quiz-mode-btn review-course-btn" data-course="${cid}" data-mode="sequential">🔁 مراجعة ${due} سؤال</button>` : ''}
       </div>
       <button class="quiz-pdf-btn" data-course="${cid}">🖨️ تحميل الأسئلة PDF (للطباعة)</button>
     </div>`;
@@ -1905,6 +1908,10 @@ function renderQuizHome(){
   list.querySelectorAll('.quiz-mode-btn').forEach(btn=>{
     btn.addEventListener('click', (e)=>{
       e.stopPropagation();
+      if(btn.classList.contains('review-course-btn')){
+        startReviewCourse(btn.dataset.course, btn.dataset.mode);
+        return;
+      }
       startQuizSession(btn.dataset.course, btn.dataset.mode);
     });
   });
@@ -2002,6 +2009,13 @@ function startReviewSession(mode){
   if(items.length === 0) return;
   items.sort(()=>Math.random()-0.5);
   runSession(items, "المراجعة المجدولة", mode);
+}
+
+function startReviewCourse(courseId, mode){
+  const items = dueQuestionsForCourse(courseId).map(q => ({ courseId, question: q }));
+  if(items.length === 0) return;
+  items.sort(()=>Math.random()-0.5);
+  runSession(items, `المراجعة: ${courseNameById(courseId)}`, mode);
 }
 
 function runSession(items, title, mode){
