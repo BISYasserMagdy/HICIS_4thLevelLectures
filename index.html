@@ -1102,6 +1102,17 @@
     padding-right:12px;
   }
   .achievement-submeta strong{color:var(--green-deep);}
+  .achievement-review-list{
+    margin-top:10px;
+    padding:8px 12px;
+    border-radius:8px;
+    background:linear-gradient(135deg,#fff4ea,#fffaf4);
+    border:1px solid rgba(183,125,18,.3);
+    color:var(--muted);
+    font-size:.74rem;
+    line-height:1.7;
+  }
+  .achievement-review-list strong{color:#9a5d00; display:block; margin-bottom:4px;}
 
   @media (max-width:600px){
     .section-nav-wrap{padding:0 16px;}
@@ -1902,46 +1913,67 @@ function renderAchievementSchedule(){
     return;
   }
 
+  const history = loadQuizHistory();
   const totalAnswered = rows.reduce((sum, row) => sum + row.answered, 0);
   const totalCorrect = rows.reduce((sum, row) => sum + row.correct, 0);
   const totalQuestions = rows.reduce((sum, row) => sum + row.total, 0);
-  const summary = totalAnswered ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+  const summary = totalAnswered ? Math.min(100, Math.round((totalCorrect / totalAnswered) * 100)) : 0;
 
   const courseGroups = Object.keys(quizBank).filter(cid => (quizBank[cid] || []).length > 0).map(courseId => {
     const questions = quizBank[courseId] || [];
     const partMap = {};
+    const reviewQuestions = [];
+
     questions.forEach(q => {
+      const qHistory = history.filter(entry => entry.questionId === q.id && entry.courseId === courseId);
+      const lastResult = qHistory.length ? qHistory[qHistory.length - 1].isCorrect : null;
+      const st = getCardState(q.id);
       const partLabel = q.lecTitle || `محاضرة ${q.lec || 1}`;
       if(!partMap[partLabel]){
-        partMap[partLabel] = { label: partLabel, total:0, answered:0, correct:0, due:0, mastered:0 };
+        partMap[partLabel] = { label: partLabel, total:0, answered:0, correct:0, wrong:0, due:0, mastered:0, review:[] };
       }
       const part = partMap[partLabel];
       part.total += 1;
-      const st = getCardState(q.id);
-      if(st.seen > 0){ part.answered += 1; }
-      if(st.due <= todayStr() && st.seen > 0){ part.due += 1; }
+
+      const seen = st.seen > 0 || qHistory.length > 0;
+      if(seen){ part.answered += 1; }
+      if(lastResult === true){ part.correct += 1; }
+      if(lastResult === false){ part.wrong += 1; part.review.push({ id:q.id, text:q.q }); }
+      if(st.due <= todayStr() && seen){ part.due += 1; }
       if(st.box >= 4){ part.mastered += 1; }
-      const history = loadQuizHistory().filter(entry => entry.courseId === courseId && entry.questionId === q.id);
-      if(history.some(entry => entry.isCorrect)){ part.correct += 1; }
+
+      if((lastResult === false) || (seen && st.due <= todayStr())){
+        reviewQuestions.push({ id:q.id, text:q.q, part: partLabel });
+      }
     });
 
     const partItems = Object.values(partMap).map(part => {
-      const accuracy = part.answered > 0 ? Math.round((part.correct / part.answered) * 100) : 0;
+      const accuracy = part.answered > 0 ? Math.min(100, Math.round((part.correct / part.answered) * 100)) : 0;
       const statusText = part.answered > 0 ? `مستوى الأداء: ${accuracy}%` : 'مستوى الأداء: لا توجد بيانات';
+      const reviewText = part.review.length ? ` • يحتاج مراجعة: ${part.review.length}` : ' • لا توجد أخطاء نشطة';
       return `
         <li class="achievement-subitem">
           <span class="achievement-subtitle">${escapeHtml(part.label)}</span>
           <div class="achievement-submeta">
-            <strong>${statusText}</strong>
+            <strong>${statusText}</strong><br>
+            صح: ${part.correct} | خطأ: ${part.wrong}${reviewText}
           </div>
         </li>
       `;
     }).join('');
 
+    const reviewList = reviewQuestions.length ? `
+      <div class="achievement-review-list">
+        <strong>يحتاج مراجعة:</strong>
+        ${reviewQuestions.slice(0, 4).map(item => `<span>${escapeHtml(item.text)}</span>`).join(' • ')}
+      </div>
+    ` : '';
+
     return `
       <li class="achievement-group">
         <div class="achievement-group-title">${escapeHtml(courseNameById(courseId))}</div>
         <ul class="achievement-sublist">${partItems}</ul>
+        ${reviewList}
       </li>
     `;
   }).join('');
