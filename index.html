@@ -1217,8 +1217,6 @@
     </div>
   </div>
 
-  <div id="weeklyReportPanel"></div>
-  <div id="performancePanel"></div>
   <div id="achievementSchedulePanel"></div>
   <div id="quizCourseList" class="quiz-course-grid"></div>
 
@@ -1848,65 +1846,6 @@ function buildWeeklyReport(){
   return report.length ? report : [{ label: 'مستواك ثابت وممتاز', detail: 'أداءك جيد في آخر مراجعة لهذا الأسبوع.', severity: 'جيد جدًا' }];
 }
 
-function renderWeeklyReport(){
-  const report = buildWeeklyReport();
-  const listHtml = report.map((item, index) => `
-    <div class="report-card">
-      <span class="rank">#${index + 1}</span>
-      <strong>${escapeHtml(item.label)}</strong>
-      <small>${escapeHtml(item.detail)} — ${escapeHtml(item.severity)}</small>
-    </div>
-  `).join('');
-
-  const panel = document.getElementById('weeklyReportPanel');
-  if(panel){
-    panel.innerHTML = `
-      <div class="report-panel">
-        <h3>📊 تقرير المراجعة الأسبوعي</h3>
-        <div class="report-grid">${listHtml}</div>
-      </div>
-    `;
-  }
-}
-
-function renderPerformancePanel(){
-  const history = loadQuizHistory();
-  const panel = document.getElementById('performancePanel');
-  if(!panel) return;
-
-  if(history.length === 0){
-    panel.innerHTML = `
-      <div class="report-panel">
-        <h3>📈 تحليل الأداء الحقيقي</h3>
-        <div class="report-grid">
-          <div class="report-card">
-            <span class="rank">#1</span>
-            <strong>لا توجد بيانات بعد</strong>
-            <small>ابدأ بحل بعض الأسئلة لتظهر لك نقاط الضعف والفجوات.</small>
-          </div>
-        </div>
-      </div>
-    `;
-    return;
-  }
-
-  const report = getPerformanceSummary(history);
-  const listHtml = report.map((item, index) => `
-    <div class="report-card">
-      <span class="rank">#${index + 1}</span>
-      <strong>${escapeHtml(item.label)}</strong>
-      <small>${escapeHtml(item.detail)} — ${escapeHtml(item.severity)}</small>
-    </div>
-  `).join('');
-
-  panel.innerHTML = `
-    <div class="report-panel">
-      <h3>📈 تحليل الأداء الحقيقي</h3>
-      <div class="report-grid">${listHtml}</div>
-    </div>
-  `;
-}
-
 function getCourseProgressRows(){
   const history = loadQuizHistory();
   const rows = [];
@@ -2050,8 +1989,23 @@ function courseNameById(cid){
 }
 
 /* ---- Section switching ---- */
+const SECTION_STORAGE_KEY = 'portal_active_section';
+
+function saveActiveSection(){
+  try{ localStorage.setItem(SECTION_STORAGE_KEY, activeSection || 'courses'); }
+  catch(e){ /* ignore */ }
+}
+
+function restoreActiveSection(){
+  try{
+    const saved = localStorage.getItem(SECTION_STORAGE_KEY);
+    return saved && ['courses','quiz','videos'].includes(saved) ? saved : 'courses';
+  }catch(e){ return 'courses'; }
+}
+
 function switchSection(section){
   activeSection = section;
+  saveActiveSection();
   document.querySelectorAll('.section-btn').forEach(b=>{
     b.classList.toggle('active', b.dataset.section === section);
   });
@@ -2104,8 +2058,6 @@ function renderQuizHome(){
     reviewSub.textContent = "جمّعنا لك الأسئلة اللي محتاجة مراجعة دلوقتي من كل المواد.";
   }
 
-  renderWeeklyReport();
-  renderPerformancePanel();
   renderAchievementSchedule();
 
   const list = document.getElementById('quizCourseList');
@@ -2743,6 +2695,8 @@ if('serviceWorker' in navigator && (location.protocol==='https:' || location.hos
 /* ---- Quiz init ---- */
 async function initQuiz(){
   await loadSrsState();
+  activeSection = restoreActiveSection();
+  switchSection(activeSection);
   refreshDueBadge();
 }
 </script>
