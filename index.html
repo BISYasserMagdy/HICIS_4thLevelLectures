@@ -1113,6 +1113,22 @@
     line-height:1.7;
   }
   .achievement-review-list strong{color:#9a5d00; display:block; margin-bottom:4px;}
+  .achievement-review-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:8px;
+    border:none;
+    border-radius:8px;
+    background:var(--green-deep);
+    color:#fff;
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    padding:7px 12px;
+    cursor:pointer;
+    font-size:.75rem;
+  }
+  .achievement-review-btn.secondary{background:#fff; color:var(--green-deep); border:1px solid var(--line);}
 
   @media (max-width:600px){
     .section-nav-wrap{padding:0 16px;}
@@ -1892,6 +1908,26 @@ function getCourseProgressRows(){
   });
 }
 
+function getWrongQuestionsReviewByCourse(courseId, partLabel){
+  const questions = quizBank[courseId] || [];
+  const review = [];
+  questions.forEach(question => {
+    if(partLabel && (question.lecTitle || `محاضرة ${question.lec || 1}`) !== partLabel) return;
+    const qHistory = loadQuizHistory().filter(entry => entry.questionId === question.id && entry.courseId === courseId);
+    const lastResult = qHistory.length ? qHistory[qHistory.length - 1].isCorrect : null;
+    if(lastResult === false){
+      review.push({ courseId, question });
+    }
+  });
+  return review;
+}
+
+function startWrongReviewSession(courseId, partLabel){
+  const items = getWrongQuestionsReviewByCourse(courseId, partLabel).map(item => ({ courseId: item.courseId, question: item.question }));
+  if(items.length === 0) return;
+  runSession(items, `مراجعة الأخطاء: ${courseNameById(courseId)}${partLabel ? ' / ' + partLabel : ''}`, 'sequential');
+}
+
 function renderAchievementSchedule(){
   const panel = document.getElementById('achievementSchedulePanel');
   if(!panel) return;
@@ -1942,8 +1978,8 @@ function renderAchievementSchedule(){
       if(st.due <= todayStr() && seen){ part.due += 1; }
       if(st.box >= 4){ part.mastered += 1; }
 
-      if((lastResult === false) || (seen && st.due <= todayStr())){
-        reviewQuestions.push({ id:q.id, text:q.q, part: partLabel });
+      if(lastResult === false){
+        reviewQuestions.push({ id:q.id, text:q.q, part: partLabel, courseId });
       }
     });
 
@@ -1951,6 +1987,8 @@ function renderAchievementSchedule(){
       const accuracy = part.answered > 0 ? Math.min(100, Math.round((part.correct / part.answered) * 100)) : 0;
       const statusText = part.answered > 0 ? `مستوى الأداء: ${accuracy}%` : 'مستوى الأداء: لا توجد بيانات';
       const reviewText = part.review.length ? ` • يحتاج مراجعة: ${part.review.length}` : ' • لا توجد أخطاء نشطة';
+      const wrongCount = part.review.length;
+      const buttonHtml = wrongCount > 0 ? `<button class="achievement-review-btn secondary" data-review-course="${courseId}" data-review-part="${escapeAttribute(part.label)}">عرض الأسئلة الخاطئة</button>` : '';
       return `
         <li class="achievement-subitem">
           <span class="achievement-subtitle">${escapeHtml(part.label)}</span>
@@ -1958,6 +1996,7 @@ function renderAchievementSchedule(){
             <strong>${statusText}</strong><br>
             صح: ${part.correct} | خطأ: ${part.wrong}${reviewText}
           </div>
+          ${buttonHtml}
         </li>
       `;
     }).join('');
@@ -1988,6 +2027,14 @@ function renderAchievementSchedule(){
       </div>
     </div>
   `;
+
+  panel.querySelectorAll('.achievement-review-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const courseId = btn.dataset.reviewCourse;
+      const partLabel = btn.dataset.reviewPart ? decodeURIComponent(btn.dataset.reviewPart) : '';
+      startWrongReviewSession(courseId, partLabel);
+    });
+  });
 }
 
 function allQuestionsFlat(){
