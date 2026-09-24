@@ -1612,8 +1612,7 @@ function getCardState(qid){
 
 function isDue(qid){
   const st = getCardState(qid);
-  if(!st.seen) return true;
-  return st.due <= todayStr();
+  return st.seen > 0 && st.due <= todayStr();
 }
 
 function newCountForCourse(cid){
@@ -1999,9 +1998,8 @@ function startQuizSession(courseId, mode){
 }
 
 function startReviewSession(mode){
-  const items = allQuestionsFlat().filter(item=>isDue(item.question.id));
+  const items = allQuestionsFlat().filter(item => isDue(item.question.id));
   if(items.length === 0) return;
-  // shuffle
   items.sort(()=>Math.random()-0.5);
   runSession(items, "المراجعة المجدولة", mode);
 }
