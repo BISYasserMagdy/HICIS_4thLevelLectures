@@ -836,6 +836,40 @@
     line-height:1.6;
     margin:0 0 20px;
   }
+  .quiz-q-translation{
+    margin-top:10px;
+    padding:10px 12px;
+    background:#f7f3ea;
+    border:1px solid var(--line);
+    border-radius:10px;
+    color:#3b3b3b;
+    font-size:.86rem;
+    line-height:1.7;
+  }
+  .quiz-q-translation strong{color:var(--green-deep);}
+  .quiz-option-row{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:6px;
+    justify-content:space-between;
+  }
+  .quiz-option-main{flex:1; min-width:0;}
+  .quiz-option-ar{
+    color:var(--muted);
+    font-size:.76rem;
+    background:rgba(21,74,58,.04);
+    border-radius:999px;
+    padding:3px 8px;
+    white-space:normal;
+  }
+  .quiz-feedback .quiz-feedback-ar{
+    display:block;
+    margin-top:8px;
+    color:#2c4a40;
+    font-size:.8rem;
+    line-height:1.8;
+  }
   .quiz-options{display:flex; flex-direction:column; gap:10px;}
   .quiz-opt{
     text-align:right;
@@ -1438,64 +1472,86 @@ const quizBank = {
   c3: [ // Public Finance
     { id:"c3q1", type:"mcq", lec:1, lecTitle:"Public Finance - Part 1", page:3, q:"Public finance is mainly concerned with the study of how the government manages...",
       options:["household income","public revenue and public expenditure","private business accounting","personal savings"], correct:1,
-      explain:"Public finance studies how the state raises revenue and spends it for public welfare and state functions." },
+      explain:"Public finance studies how the state raises revenue and spends it for public welfare and state functions.",
+      translation:{ ar:{ q:"المالية العامة تهتم بشكل أساسي بدراسة كيفية إدارة الحكومة لـ...", options:["دخل الأسرة","إيرادات الدولة والنفقات العامة","المحاسبة التجارية الخاصة","المدخرات الشخصية"], explain:"تدرس المالية العامة كيفية جمع الدولة للإيرادات وإنفاقها لتحقيق الرفاه العام وأداء وظائف الدولة." } } },
     { id:"c3q2", type:"tf", lec:1, lecTitle:"Public Finance - Part 1", page:4, q:"Public finance is broader than private finance because it includes both revenue collection and expenditure decisions at the state level.", correct:true,
-      explain:"Public finance covers fiscal decisions of the government, not only private household or business finance." },
+      explain:"Public finance covers fiscal decisions of the government, not only private household or business finance.",
+      translation:{ ar:{ q:"المالية العامة أوسع من المالية الخاصة لأنها تشمل جمع الإيرادات واتخاذ قرارات الإنفاق على مستوى الدولة.", options:["صح","خطأ"], explain:"المالية العامة تشمل القرارات المالية للدولة، وليس فقط المصاريف والخدمات الخاصة للأسر أو الشركات." } } },
     { id:"c3q3", type:"mcq", lec:1, lecTitle:"Public Finance - Part 1", page:6, q:"Which of the following is a major objective of public finance?",
       options:["Maximizing private profit","Allocating resources for social welfare","Reducing tax complexity only","Increasing household debt"], correct:1,
-      explain:"Public finance aims to allocate resources efficiently and support social welfare through government action." },
+      explain:"Public finance aims to allocate resources efficiently and support social welfare through government action.",
+      translation:{ ar:{ q:"أي من التالي يعد هدفًا رئيسيًا للمالية العامة؟", options:["تعظيم الربح الخاص","تخصيص الموارد للمصالح الاجتماعية","تقليل تعقيد الضرائب فقط","زيادة ديون الأسر"], explain:"تهدف المالية العامة إلى توزيع الموارد بكفاءة ودعم الرفاه الاجتماعي من خلال تدخل الدولة." } } },
     { id:"c3q4", type:"mcq", lec:1, lecTitle:"Public Finance - Part 1", page:8, q:"The main source of government revenue is usually...",
       options:["donations from firms only","taxes and compulsory charges","shareholder dividends","personal loans from banks"], correct:1,
-      explain:"Taxes and compulsory levies are the main sources of public revenue in most economies." },
+      explain:"Taxes and compulsory levies are the main sources of public revenue in most economies.",
+      translation:{ ar:{ q:"المصدر الرئيسي لإيرادات الحكومة عادةً هو...", options:["تبرعات الشركات فقط","الضرائب والرسوم الإلزامية","أرباح المساهمين","قروض الأفراد من البنوك"], explain:"الضرائب والرسوم الإلزامية هي المصادر الرئيسية للإيرادات العامة في معظم الاقتصادات." } } },
     { id:"c3q5", type:"mcq", lec:1, lecTitle:"Public Finance - Part 1", page:10, q:"Public expenditure is mainly used to finance...",
       options:["government administration, defense, education, and welfare","only corporate investments","private family needs","commercial advertising"], correct:0,
-      explain:"Public expenditure funds state functions such as administration, defense, welfare, infrastructure, and services." },
+      explain:"Public expenditure funds state functions such as administration, defense, welfare, infrastructure, and services.",
+      translation:{ ar:{ q:"يستخدم الإنفاق العام بشكل أساسي لتمويل...", options:["الإدارة الحكومية والدفاع والتعليم والرعاية الاجتماعية","الاستثمارات التجارية فقط","احتياجات الأسر الخاصة","الإعلانات التجارية"], explain:"يُستخدم الإنفاق العام لتمويل وظائف الدولة مثل الإدارة والدفاع والرعاية والإنفاق على البنية التحتية والخدمات." } } },
     { id:"c3q6", type:"tf", lec:1, lecTitle:"Public Finance - Part 1", page:12, q:"Public finance is not related to the distribution of income and wealth in society.", correct:false,
-      explain:"The distribution function is one of the key roles of public finance." },
+      explain:"The distribution function is one of the key roles of public finance.",
+      translation:{ ar:{ q:"المالية العامة لا علاقة لها بتوزيع الدخل والثروة في المجتمع.", options:["صح","خطأ"], explain:"وظيفة التوزيع هي واحدة من الأدوار الأساسية للمالية العامة." } } },
     { id:"c3q7", type:"mcq", lec:2, lecTitle:"Public Finance - Part 2", page:15, q:"A government budget is best described as...",
       options:["a list of household expenses","a statement of expected public revenue and expenditure","a company annual report","a private investment plan"], correct:1,
-      explain:"A budget is a government plan showing expected revenue and planned spending over a period." },
+      explain:"A budget is a government plan showing expected revenue and planned spending over a period.",
+      translation:{ ar:{ q:"يمكن وصف الموازنة الحكومية بأنها...", options:["قائمة بنفقات الأسرة","بيان بالإيرادات والنفقات العامة المتوقعة","تقرير سنوي للشركة","خطة استثمار خاصة"], explain:"الموازنة هي خطة حكومية تبين الإيرادات المتوقعة والمصروفات المخططة خلال فترة محددة." } } },
     { id:"c3q8", type:"mcq", lec:2, lecTitle:"Public Finance - Part 2", page:17, q:"Which of the following is a major objective of the budget?",
       options:["Improving private sales","Balancing revenue and expenditure","Reducing all public services","Increasing only imports"], correct:1,
-      explain:"One core objective of the budget is to match public resources to public needs while maintaining balance." },
+      explain:"One core objective of the budget is to match public resources to public needs while maintaining balance.",
+      translation:{ ar:{ q:"أي من التالي يمثل هدفًا رئيسيًا للموازنة؟", options:["تحسين المبيعات الخاصة","موازنة الإيرادات والنفقات","تقليل جميع الخدمات العامة","زيادة الواردات فقط"], explain:"أحد الأهداف الرئيسية للموازنة هو مواءمة الموارد العامة مع الاحتياجات العامة مع الحفاظ على التوازن." } } },
     { id:"c3q9", type:"tf", lec:2, lecTitle:"Public Finance - Part 2", page:18, q:"A balanced budget means government revenue is equal to government expenditure.", correct:true,
-      explain:"A balanced budget occurs when total public revenue equals total public spending for the period." },
+      explain:"A balanced budget occurs when total public revenue equals total public spending for the period.",
+      translation:{ ar:{ q:"الموازنة المتوازنة تعني أن إيرادات الحكومة تساوي نفقاتها.", options:["صح","خطأ"], explain:"الموازنة المتوازنة تحدث عندما تساوي الإيرادات العامة إجمالي النفقات العامة خلال الفترة المحددة." } } },
     { id:"c3q10", type:"mcq", lec:2, lecTitle:"Public Finance - Part 2", page:20, q:"Which item is usually classified as a public revenue source?",
       options:["tax collection","corporate dividends only","employee salaries","personal savings"], correct:0,
-      explain:"Tax collection is a direct and major source of public revenue." },
+      explain:"Tax collection is a direct and major source of public revenue.",
+      translation:{ ar:{ q:"أي عنصر عادةً يُصنّف كمصدر للإيرادات العامة؟", options:["تحصيل الضرائب","أرباح الشركات فقط","رواتب الموظفين","المدخرات الشخصية"], explain:"تحصيل الضرائب هو مصدر مباشر ورئيسي للإيرادات العامة." } } },
     { id:"c3q11", type:"mcq", lec:2, lecTitle:"Public Finance - Part 2", page:22, q:"The difference between public expenditure and public revenue is called...",
       options:["trade deficit","fiscal deficit","stock market gap","bank loan"], correct:1,
-      explain:"When public expenditure exceeds public revenue, the result is a fiscal deficit." },
+      explain:"When public expenditure exceeds public revenue, the result is a fiscal deficit.",
+      translation:{ ar:{ q:"الفرق بين النفقات العامة والإيرادات العامة يطلق عليه...", options:["العجز التجاري","العجز المالي","الفجوة في سوق الأسهم","قرض بنكي"], explain:"عندما تتجاوز النفقات العامة الإيرادات العامة، ينتج عن ذلك عجز مالي." } } },
     { id:"c3q12", type:"mcq", lec:2, lecTitle:"Public Finance - Part 2", page:25, q:"Public goods are characterized by...",
       options:["exclusive consumption and rivalry","non-rivalry and non-excludability","limited supply only","private ownership"], correct:1,
-      explain:"Public goods are non-rival and non-excludable, which means one person's use does not reduce availability to others." },
+      explain:"Public goods are non-rival and non-excludable, which means one person's use does not reduce availability to others.",
+      translation:{ ar:{ q:"السلع العامة تتميز بـ...", options:["الاستهلاك الحصري والمنافسة","عدم المنافسة وعدم الاستبعاد","توافر محدود فقط","ملكية خاصة"], explain:"السلع العامة غير تنافسية وغير مستبعدة، أي أن استخدام شخص واحد لا يقلل من توافرها للآخرين." } } },
     { id:"c3q13", type:"mcq", lec:1, lecTitle:"Public Finance - Part 1", page:5, q:"One major difference between public finance and private finance is that public finance is concerned with...",
       options:["individual household saving only","state-level resource allocation and welfare","profit maximization in a market firm","personal credit management"], correct:1,
-      explain:"Public finance focuses on the government’s role in resource allocation, revenue, and welfare, unlike private finance." },
+      explain:"Public finance focuses on the government’s role in resource allocation, revenue, and welfare, unlike private finance.",
+      translation:{ ar:{ q:"أهم فرق بين المالية العامة والمالية الخاصة هو أن المالية العامة تهتم بـ...", options:["توفير المدخرات الأسرية فقط","تخصيص الموارد على مستوى الدولة والرفاه الاجتماعي","تعظيم الربح في شركة سوقية","إدارة الائتمان الشخصي"], explain:"تركز المالية العامة على دور الحكومة في تخصيص الموارد وجمع الإيرادات وتحقيق الرفاه، بعكس المالية الخاصة." } } },
     { id:"c3q14", type:"tf", lec:1, lecTitle:"Public Finance - Part 1", page:7, q:"The allocation function of public finance helps determine how scarce resources are distributed among social and economic needs.", correct:true,
-      explain:"Allocation is one of the central functions of public finance: deciding how resources are divided among competing public needs." },
+      explain:"Allocation is one of the central functions of public finance: deciding how resources are divided among competing public needs.",
+      translation:{ ar:{ q:"وظيفة التخصيص في المالية العامة تساعد في تحديد كيفية توزيع الموارد النادرة بين الاحتياجات الاجتماعية والاقتصادية.", options:["صح","خطأ"], explain:"وظيفة التخصيص هي واحدة من الوظائف الأساسية للمالية العامة: تحديد كيفية توزيع الموارد بين الاحتياجات المتنافسة." } } },
     { id:"c3q15", type:"mcq", lec:1, lecTitle:"Public Finance - Part 1", page:9, q:"Which function is most closely related to income redistribution?",
       options:["Budgeting function","Distribution function","Production function","Accounting function"], correct:1,
-      explain:"Distribution aims to reduce inequalities by using taxes and public spending to redistribute income and welfare." },
+      explain:"Distribution aims to reduce inequalities by using taxes and public spending to redistribute income and welfare.",
+      translation:{ ar:{ q:"أي وظيفة ترتبط بشكل وثيق بإعادة توزيع الدخل؟", options:["وظيفة الموازنة","وظيفة التوزيع","وظيفة الإنتاج","وظيفة المحاسبة"], explain:"تهدف وظيفة التوزيع إلى تقليل الفروق باستخدام الضرائب والإنفاق العام لإعادة توزيع الدخل والرفاه." } } },
     { id:"c3q16", type:"mcq", lec:1, lecTitle:"Public Finance - Part 1", page:11, q:"What is the main purpose of taxation in public finance?",
       options:["To support private business profit","To generate revenue for government activities","To reduce public service quality","To eliminate all private spending"], correct:1,
-      explain:"Governments collect taxes to finance public services and state functions." },
+      explain:"Governments collect taxes to finance public services and state functions.",
+      translation:{ ar:{ q:"ما الهدف الرئيسي للضرائب في المالية العامة؟", options:["دعم أرباح الأعمال الخاصة","توليد الإيرادات للأنشطة الحكومية","تقليل جودة الخدمات العامة","إلغاء كل الإنفاق الخاص"], explain:"تجمع الحكومات الضرائب لتمويل الخدمات العامة ووظائف الدولة." } } },
     { id:"c3q17", type:"mcq", lec:2, lecTitle:"Public Finance - Part 2", page:16, q:"A budget surplus occurs when...",
       options:["government expenditure is greater than revenue","government revenue is greater than expenditure","taxes are completely absent","government borrows from the public"], correct:1,
-      explain:"A surplus happens when public revenue exceeds spending for the planned period." },
+      explain:"A surplus happens when public revenue exceeds spending for the planned period.",
+      translation:{ ar:{ q:"يحدث فائض الموازنة عندما...", options:["تتجاوز النفقات الحكومية الإيرادات","تتجاوز الإيرادات الحكومية النفقات","تختفي الضرائب تمامًا","تستدين الحكومة من العامة"], explain:"يحدث الفائض عندما تتجاوز الإيرادات العامة النفقات خلال الفترة المخططة." } } },
     { id:"c3q18", type:"mcq", lec:2, lecTitle:"Public Finance - Part 2", page:19, q:"Which of the following is an example of a public expenditure item?",
       options:["salary of a private employee","education and health spending by the state","exclusive club membership","household rent"], correct:1,
-      explain:"Public expenditure includes state spending on education, health, defense, infrastructure, and welfare services." },
+      explain:"Public expenditure includes state spending on education, health, defense, infrastructure, and welfare services.",
+      translation:{ ar:{ q:"أي من التالي يعتبر مثالًا على عنصر من عناصر الإنفاق العام؟", options:["راتب موظف خاص","إنفاق الدولة على التعليم والصحة","عضوية نادي خاص","إيجار منزل"], explain:"يشمل الإنفاق العام إنفاق الدولة على التعليم والصحة والدفاع والبنية التحتية والخدمات الاجتماعية." } } },
     { id:"c3q19", type:"tf", lec:2, lecTitle:"Public Finance - Part 2", page:21, q:"A fiscal deficit usually means the government is spending more than it collects in revenue.", correct:true,
-      explain:"A fiscal deficit is the shortfall between government spending and revenue." },
+      explain:"A fiscal deficit is the shortfall between government spending and revenue.",
+      translation:{ ar:{ q:"العجز المالي عادةً يعني أن الحكومة تنفق أكثر مما تجمعه من الإيرادات.", options:["صح","خطأ"], explain:"العجز المالي هو النقص بين نفقات الحكومة وإيراداتها." } } },
     { id:"c3q20", type:"mcq", lec:2, lecTitle:"Public Finance - Part 2", page:24, q:"Which statement best describes a private good?",
       options:["It is non-excludable and non-rival","It can be consumed by many without reducing availability","It is rival and excludable","It is provided only by the state"], correct:2,
-      explain:"Private goods are usually rival and excludable, meaning consumption by one person reduces availability for another." },
+      explain:"Private goods are usually rival and excludable, meaning consumption by one person reduces availability for another.",
+      translation:{ ar:{ q:"أي عبارة تصف السلعة الخاصة بشكل أفضل؟", options:["غير مستبعدة وغير تنافسية","يمكن أن يستهلكها العديد من الأشخاص دون تقليل التوافر","تنافسية ومستبعدة","يتم توفيرها فقط من خلال الدولة"], explain:"السلع الخاصة غالبًا تكون تنافسية ومستبعدة، أي أن استهلاك شخص ما يقلل التوافر للآخر." } } },
     { id:"c3q21", type:"mcq", lec:2, lecTitle:"Public Finance - Part 2", page:26, q:"Public finance is closely linked to...",
       options:["international sport events only","economic stability and social policy","private family budgets only","commercial accounting rules alone"], correct:1,
-      explain:"Public finance supports economic stability, social welfare, and the efficient functioning of the state." },
+      explain:"Public finance supports economic stability, social welfare, and the efficient functioning of the state.",
+      translation:{ ar:{ q:"ترتبط المالية العامة بشكل وثيق بـ...", options:["الأحداث الرياضية الدولية فقط","الاستقرار الاقتصادي والسياسة الاجتماعية","ميزانيات الأسر فقط","قواعد المحاسبة التجارية وحدها"], explain:"تدعم المالية العامة الاستقرار الاقتصادي والرفاه الاجتماعي والوظائف الفعالة للدولة." } } },
     { id:"c3q22", type:"tf", lec:2, lecTitle:"Public Finance - Part 2", page:28, q:"A government budget helps the state plan its spending and revenue for a specific period.", correct:true,
-      explain:"The budget is a planning tool for public revenue and public expenditure." }
+      explain:"The budget is a planning tool for public revenue and public expenditure.",
+      translation:{ ar:{ q:"تساعد الموازنة الحكومية الدولة على تخطيط نفقاتها وإيراداتها لفترة محددة.", options:["صح","خطأ"], explain:"الموازنة هي أداة تخطيط للإيرادات والنفقات العامة." } } }
   ],
   c4: [ // Feasibility Study of Projects
   ],
@@ -1918,16 +1974,25 @@ function renderQuestion(){
   const item = currentSession.queue[currentSession.idx];
   const q = item.question;
   const progressPct = Math.round((currentSession.idx / currentSession.total) * 100);
+  const qTranslation = q.translation && q.translation.ar ? q.translation.ar : null;
 
   let optionsHtml = '';
   if(q.type === 'mcq'){
-    optionsHtml = `<div class="quiz-options">` + q.options.map((opt, i)=>
-      `<button class="quiz-opt" data-idx="${i}">${escapeHtml(opt)}</button>`
-    ).join('') + `</div>`;
+    optionsHtml = `<div class="quiz-options">` + q.options.map((opt, i)=>{
+      const arOpt = qTranslation && qTranslation.options ? qTranslation.options[i] : null;
+      return `<button class="quiz-opt" data-idx="${i}">
+        <span class="quiz-option-row">
+          <span class="quiz-option-main">${escapeHtml(opt)}</span>
+          ${arOpt ? `<span class="quiz-option-ar">${escapeHtml(arOpt)}</span>` : ''}
+        </span>
+      </button>`;
+    }).join('') + `</div>`;
   }else{
+    const arTrue = qTranslation && qTranslation.options ? qTranslation.options[0] : 'صح';
+    const arFalse = qTranslation && qTranslation.options ? qTranslation.options[1] : 'خطأ';
     optionsHtml = `<div class="tf-row">
-      <button class="quiz-opt" data-val="true">✅ صح</button>
-      <button class="quiz-opt" data-val="false">❌ غلط</button>
+      <button class="quiz-opt" data-val="true"><span class="quiz-option-row"><span class="quiz-option-main">✅ صح</span><span class="quiz-option-ar">${escapeHtml(arTrue)}</span></span></button>
+      <button class="quiz-opt" data-val="false"><span class="quiz-option-row"><span class="quiz-option-main">❌ غلط</span><span class="quiz-option-ar">${escapeHtml(arFalse)}</span></span></button>
     </div>`;
   }
 
@@ -1943,6 +2008,7 @@ function renderQuestion(){
         ${q.lec ? `<span class="quiz-lec-tag">📖 محاضرة ${q.lec}${q.lecTitle ? `: ${escapeHtml(q.lecTitle)}` : ''}</span>` : ''}
         ${q.page ? `<span class="quiz-page-tag">📄 صفحة ${q.page}</span>` : ''}
         <p class="quiz-question">${escapeHtml(q.q)}</p>
+        ${qTranslation && qTranslation.q ? `<div class="quiz-q-translation"><strong>الترجمة:</strong> ${escapeHtml(qTranslation.q)}</div>` : ''}
         ${optionsHtml}
         <div class="quiz-feedback" id="quizFeedback"></div>
         <div class="quiz-actions">
@@ -1976,8 +2042,9 @@ function renderQuestion(){
       }
 
       const fb = document.getElementById('quizFeedback');
+      const arExplain = qTranslation && qTranslation.explain ? `<span class="quiz-feedback-ar">${escapeHtml(qTranslation.explain)}</span>` : '';
       fb.classList.add('show', isCorrect ? 'ok' : 'bad');
-      fb.textContent = (isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. ') + (q.explain || '');
+      fb.innerHTML = `${isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. '}${escapeHtml(q.explain || '')}${arExplain}`;
 
       recordAnswer(q.id, isCorrect);
       if(isCorrect) currentSession.correctInSession += 1;
@@ -1999,15 +2066,24 @@ function renderAllQuestions(){
 
   const questionsHtml = items.map((item, i)=>{
     const q = item.question;
+    const qTranslation = q.translation && q.translation.ar ? q.translation.ar : null;
     let optionsHtml = '';
     if(q.type === 'mcq'){
-      optionsHtml = `<div class="quiz-options" data-qi="${i}">` + q.options.map((opt, oi)=>
-        `<button class="quiz-opt" data-qi="${i}" data-idx="${oi}">${escapeHtml(opt)}</button>`
-      ).join('') + `</div>`;
+      optionsHtml = `<div class="quiz-options" data-qi="${i}">` + q.options.map((opt, oi)=>{
+        const arOpt = qTranslation && qTranslation.options ? qTranslation.options[oi] : null;
+        return `<button class="quiz-opt" data-qi="${i}" data-idx="${oi}">
+          <span class="quiz-option-row">
+            <span class="quiz-option-main">${escapeHtml(opt)}</span>
+            ${arOpt ? `<span class="quiz-option-ar">${escapeHtml(arOpt)}</span>` : ''}
+          </span>
+        </button>`;
+      }).join('') + `</div>`;
     }else{
+      const arTrue = qTranslation && qTranslation.options ? qTranslation.options[0] : 'صح';
+      const arFalse = qTranslation && qTranslation.options ? qTranslation.options[1] : 'خطأ';
       optionsHtml = `<div class="tf-row" data-qi="${i}">
-        <button class="quiz-opt" data-qi="${i}" data-val="true">✅ صح</button>
-        <button class="quiz-opt" data-qi="${i}" data-val="false">❌ غلط</button>
+        <button class="quiz-opt" data-qi="${i}" data-val="true"><span class="quiz-option-row"><span class="quiz-option-main">✅ صح</span><span class="quiz-option-ar">${escapeHtml(arTrue)}</span></span></button>
+        <button class="quiz-opt" data-qi="${i}" data-val="false"><span class="quiz-option-row"><span class="quiz-option-main">❌ غلط</span><span class="quiz-option-ar">${escapeHtml(arFalse)}</span></span></button>
       </div>`;
     }
     return `
@@ -2016,6 +2092,7 @@ function renderAllQuestions(){
         ${q.lec ? `<span class="quiz-lec-tag">📖 محاضرة ${q.lec}${q.lecTitle ? `: ${escapeHtml(q.lecTitle)}` : ''}</span>` : ''}
         ${q.page ? `<span class="quiz-page-tag">📄 صفحة ${q.page}</span>` : ''}
         <p class="quiz-question">${escapeHtml(q.q)}</p>
+        ${qTranslation && qTranslation.q ? `<div class="quiz-q-translation"><strong>الترجمة:</strong> ${escapeHtml(qTranslation.q)}</div>` : ''}
         ${optionsHtml}
         <div class="quiz-feedback" id="quizFeedbackAll-${i}"></div>
       </div>`;
@@ -2082,8 +2159,10 @@ function gradeAllQuestions(){
     });
 
     const fb = document.getElementById(`quizFeedbackAll-${i}`);
+    const qTranslation = q.translation && q.translation.ar ? q.translation.ar : null;
+    const arExplain = qTranslation && qTranslation.explain ? `<span class="quiz-feedback-ar">${escapeHtml(qTranslation.explain)}</span>` : '';
     fb.classList.add('show', isCorrect ? 'ok' : 'bad');
-    fb.textContent = (isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. ') + (q.explain || '');
+    fb.innerHTML = `${isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. '}${escapeHtml(q.explain || '')}${arExplain}`;
   });
 
   currentSession.correctInSession = correct;
