@@ -1033,6 +1033,53 @@
   }
   .report-card strong{display:block; color:var(--green-deep); margin-bottom:4px;}
   .report-card small{color:var(--muted); display:block; line-height:1.7;}
+  .achievement-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:12px;
+  }
+  .achievement-item{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px 14px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .achievement-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+  }
+  .achievement-title{
+    color:var(--green-deep);
+    font-weight:800;
+    font-size:.95rem;
+  }
+  .achievement-badge{
+    background:var(--gold);
+    color:#fff;
+    border-radius:999px;
+    padding:3px 8px;
+    font-size:.68rem;
+    font-weight:700;
+  }
+  .achievement-stats{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .achievement-stat{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:5px 8px;
+    font-size:.75rem;
+    color:var(--ink);
+  }
+  .achievement-stat strong{color:var(--green-deep);}
 
   @media (max-width:600px){
     .section-nav-wrap{padding:0 16px;}
@@ -1150,6 +1197,7 @@
 
   <div id="weeklyReportPanel"></div>
   <div id="performancePanel"></div>
+  <div id="achievementSchedulePanel"></div>
   <div id="quizCourseList" class="quiz-course-grid"></div>
 
   <div id="quizSessionWrap" style="display:none;"></div>
@@ -1837,6 +1885,94 @@ function renderPerformancePanel(){
   `;
 }
 
+function getCourseProgressRows(){
+  const history = loadQuizHistory();
+  const rows = [];
+
+  Object.keys(quizBank).forEach(courseId => {
+    const questions = quizBank[courseId] || [];
+    if(!questions.length) return;
+
+    const courseHistory = history.filter(entry => entry.courseId === courseId);
+    const answeredSet = new Set(courseHistory.map(entry => entry.questionId).filter(Boolean));
+    const answered = answeredSet.size;
+    const correct = courseHistory.filter(entry => entry.isCorrect).length;
+    const accuracy = answered ? Math.round((correct / answered) * 100) : 0;
+    const due = dueCountForCourse(courseId);
+    const mastered = masteredCountForCourse(courseId);
+
+    rows.push({
+      courseId,
+      label: courseNameById(courseId),
+      total: questions.length,
+      answered,
+      correct,
+      due,
+      mastered,
+      accuracy,
+      status: accuracy >= 80 ? 'ممتاز' : accuracy >= 60 ? 'جيد' : accuracy >= 40 ? 'يحتاج مزيد' : 'يحتاج مراجعة'
+    });
+  });
+
+  return rows.sort((a, b) => {
+    if (b.answered !== a.answered) return b.answered - a.answered;
+    return b.accuracy - a.accuracy;
+  });
+}
+
+function renderAchievementSchedule(){
+  const panel = document.getElementById('achievementSchedulePanel');
+  if(!panel) return;
+
+  const rows = getCourseProgressRows();
+  if(rows.length === 0){
+    panel.innerHTML = `
+      <div class="report-panel">
+        <h3>📅 جدول إنجازك</h3>
+        <div class="report-grid">
+          <div class="report-card">
+            <span class="rank">#1</span>
+            <strong>لا يوجد إنجاز بعد</strong>
+            <small>ابدأ بحل أسئلة من أي مادة وسيظهر لك ملخص تقدمك هنا.</small>
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const totalAnswered = rows.reduce((sum, row) => sum + row.answered, 0);
+  const totalCorrect = rows.reduce((sum, row) => sum + row.correct, 0);
+  const totalQuestions = rows.reduce((sum, row) => sum + row.total, 0);
+  const summary = totalAnswered ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+
+  const cards = rows.map((row, index) => `
+    <div class="achievement-item">
+      <div class="achievement-head">
+        <span class="achievement-title">${index + 1}. ${escapeHtml(row.label)}</span>
+        <span class="achievement-badge">${escapeHtml(row.status)}</span>
+      </div>
+      <div class="achievement-stats">
+        <span class="achievement-stat"><strong>${row.answered}</strong> / ${row.total} حل</span>
+        <span class="achievement-stat"><strong>${row.accuracy}%</strong> دقة</span>
+        <span class="achievement-stat"><strong>${row.due}</strong> مستحق</span>
+        <span class="achievement-stat"><strong>${row.mastered}</strong> متقن</span>
+      </div>
+    </div>
+  `).join('');
+
+  panel.innerHTML = `
+    <div class="report-panel">
+      <h3>📅 جدول إنجازك (${totalAnswered} سؤال محلول)</h3>
+      <div class="achievement-grid">${cards}</div>
+      <div class="achievement-stats" style="margin-top:12px;">
+        <span class="achievement-stat"><strong>${totalQuestions}</strong> إجمالي أسئلة المادة</span>
+        <span class="achievement-stat"><strong>${summary}%</strong> متوسط الدقة</span>
+      </div>
+    </div>
+  `;
+}
+
 function allQuestionsFlat(){
   const out = [];
   Object.keys(quizBank).forEach(cid=>{
@@ -1924,6 +2060,7 @@ function renderQuizHome(){
 
   renderWeeklyReport();
   renderPerformancePanel();
+  renderAchievementSchedule();
 
   const list = document.getElementById('quizCourseList');
   const courseIds = Object.keys(quizBank).filter(cid => quizBank[cid].length > 0);
