@@ -2076,16 +2076,18 @@ const SECTION_STORAGE_KEY = 'portal_active_section';
 const VALID_SECTIONS = new Set(['courses', 'quiz', 'videos']);
 
 function saveActiveSection(){
-  try{ localStorage.setItem(SECTION_STORAGE_KEY, activeSection || 'courses'); }
+  try{ localStorage.removeItem(SECTION_STORAGE_KEY); }
   catch(e){ /* ignore */ }
 }
 
 function restoreActiveSection(){
   try{
     const saved = localStorage.getItem(SECTION_STORAGE_KEY);
-    if(!saved) return 'courses';
-    return VALID_SECTIONS.has(saved) ? saved : 'courses';
-  }catch(e){ return 'courses'; }
+    if(saved && VALID_SECTIONS.has(saved)){
+      localStorage.removeItem(SECTION_STORAGE_KEY);
+    }
+  }catch(e){ /* ignore */ }
+  return 'courses';
 }
 
 function switchSection(section){
@@ -2796,7 +2798,7 @@ if('serviceWorker' in navigator){
 async function initQuiz(){
   await loadSrsState();
   activeSection = restoreActiveSection();
-  switchSection(activeSection);
+  switchSection('courses');
   refreshDueBadge();
 }
 </script>
