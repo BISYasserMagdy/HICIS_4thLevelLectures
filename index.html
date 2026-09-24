@@ -2752,8 +2752,22 @@ document.getElementById('scheduleLightbox').addEventListener('click', ()=>{
 
 
 /* ---------- PWA: service worker + install button ---------- */
-if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){
-  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+if('serviceWorker' in navigator){
+  window.addEventListener('load', async ()=>{
+    if(location.hostname === 'localhost' || location.protocol === 'https:'){
+      try {
+        const reg = await navigator.serviceWorker.register('sw.js');
+        if(reg && reg.active && location.hostname !== 'localhost') {
+          await navigator.serviceWorker.getRegistrations().then(rs => Promise.all(rs.map(r => r.unregister())));
+        }
+      }catch(e){ /* ignore */ }
+    } else {
+      try {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.map(reg => reg.unregister()));
+      }catch(e){ /* ignore */ }
+    }
+  });
 }
 (function(){
   const wrap = document.getElementById('installWrap');
