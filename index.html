@@ -1149,6 +1149,7 @@
   </div>
 
   <div id="weeklyReportPanel"></div>
+  <div id="performancePanel"></div>
   <div id="quizCourseList" class="quiz-course-grid"></div>
 
   <div id="quizSessionWrap" style="display:none;"></div>
@@ -1611,7 +1612,12 @@ function getCardState(qid){
 
 function isDue(qid){
   const st = getCardState(qid);
+  if(!st.seen) return true;
   return st.due <= todayStr();
+}
+
+function newCountForCourse(cid){
+  return (quizBank[cid]||[]).filter(q => !getCardState(q.id).seen).length;
 }
 
 function recordAnswer(qid, isCorrect){
@@ -1736,6 +1742,44 @@ function renderWeeklyReport(){
   }
 }
 
+function renderPerformancePanel(){
+  const history = loadQuizHistory();
+  const panel = document.getElementById('performancePanel');
+  if(!panel) return;
+
+  if(history.length === 0){
+    panel.innerHTML = `
+      <div class="report-panel">
+        <h3>📈 تحليل الأداء الحقيقي</h3>
+        <div class="report-grid">
+          <div class="report-card">
+            <span class="rank">#1</span>
+            <strong>لا توجد بيانات بعد</strong>
+            <small>ابدأ بحل بعض الأسئلة لتظهر لك نقاط الضعف والفجوات.</small>
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const report = getPerformanceSummary(history);
+  const listHtml = report.map((item, index) => `
+    <div class="report-card">
+      <span class="rank">#${index + 1}</span>
+      <strong>${escapeHtml(item.label)}</strong>
+      <small>${escapeHtml(item.detail)} — ${escapeHtml(item.severity)}</small>
+    </div>
+  `).join('');
+
+  panel.innerHTML = `
+    <div class="report-panel">
+      <h3>📈 تحليل الأداء الحقيقي</h3>
+      <div class="report-grid">${listHtml}</div>
+    </div>
+  `;
+}
+
 function allQuestionsFlat(){
   const out = [];
   Object.keys(quizBank).forEach(cid=>{
@@ -1745,10 +1789,16 @@ function allQuestionsFlat(){
 }
 
 function dueCountForCourse(cid){
-  return (quizBank[cid]||[]).filter(q=>isDue(q.id)).length;
+  return (quizBank[cid]||[]).filter(q => {
+    const st = getCardState(q.id);
+    return st.seen > 0 && st.due <= todayStr();
+  }).length;
 }
 function totalDueCount(){
-  return allQuestionsFlat().filter(item=>isDue(item.question.id)).length;
+  return allQuestionsFlat().filter(item => {
+    const st = getCardState(item.question.id);
+    return st.seen > 0 && st.due <= todayStr();
+  }).length;
 }
 function masteredCountForCourse(cid){
   return (quizBank[cid]||[]).filter(q=> getCardState(q.id).box >= 4).length;
@@ -1815,12 +1865,14 @@ function renderQuizHome(){
   }
 
   renderWeeklyReport();
+  renderPerformancePanel();
 
   const list = document.getElementById('quizCourseList');
   const courseIds = Object.keys(quizBank).filter(cid => quizBank[cid].length > 0);
   list.innerHTML = courseIds.map(cid=>{
     const total = quizBank[cid].length;
     const due = dueCountForCourse(cid);
+    const newCount = newCountForCourse(cid);
     const mastered = masteredCountForCourse(cid);
     const lecGroups = {};
     quizBank[cid].forEach(q=>{
@@ -1839,6 +1891,7 @@ function renderQuizHome(){
       <h4>${escapeHtml(courseNameById(cid))}</h4>
       <div class="stats">
         <span class="stat-chip">📝 ${total} سؤال</span>
+        ${newCount > 0 ? `<span class="stat-chip">🆕 ${newCount} جديد</span>` : ''}
         ${due > 0 ? `<span class="stat-chip due">⏰ ${due} مستحق</span>` : ''}
         ${mastered > 0 ? `<span class="stat-chip mastered">✅ ${mastered} متقن</span>` : ''}
       </div>
