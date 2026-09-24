@@ -2069,6 +2069,7 @@ function courseNameById(cid){
 
 /* ---- Section switching ---- */
 const SECTION_STORAGE_KEY = 'portal_active_section';
+const VALID_SECTIONS = new Set(['courses', 'quiz', 'videos']);
 
 function saveActiveSection(){
   try{ localStorage.setItem(SECTION_STORAGE_KEY, activeSection || 'courses'); }
@@ -2078,28 +2079,30 @@ function saveActiveSection(){
 function restoreActiveSection(){
   try{
     const saved = localStorage.getItem(SECTION_STORAGE_KEY);
-    return saved && ['courses','quiz','videos'].includes(saved) ? saved : 'courses';
+    if(!saved) return 'courses';
+    return VALID_SECTIONS.has(saved) ? saved : 'courses';
   }catch(e){ return 'courses'; }
 }
 
 function switchSection(section){
-  activeSection = section;
+  const safeSection = VALID_SECTIONS.has(section) ? section : 'courses';
+  activeSection = safeSection;
   saveActiveSection();
   document.querySelectorAll('.section-btn').forEach(b=>{
-    b.classList.toggle('active', b.dataset.section === section);
+    b.classList.toggle('active', b.dataset.section === safeSection);
   });
   const coursesControls = document.getElementById('coursesControls');
   const mainContent = document.getElementById('mainContent');
   const quizSection = document.getElementById('quizSection');
   const videosSection = document.getElementById('videosSection');
-  coursesControls.style.display = section === 'courses' ? '' : 'none';
-  mainContent.style.display = section === 'courses' ? '' : 'none';
-  quizSection.style.display = section === 'quiz' ? 'block' : 'none';
-  videosSection.style.display = section === 'videos' ? 'block' : 'none';
-  if(section === 'quiz'){
+  if(coursesControls) coursesControls.style.display = safeSection === 'courses' ? '' : 'none';
+  if(mainContent) mainContent.style.display = safeSection === 'courses' ? '' : 'none';
+  if(quizSection) quizSection.style.display = safeSection === 'quiz' ? 'block' : 'none';
+  if(videosSection) videosSection.style.display = safeSection === 'videos' ? 'block' : 'none';
+  if(safeSection === 'quiz'){
     endQuizSession(false);
     renderQuizHome();
-  }else if(section === 'videos'){
+  }else if(safeSection === 'videos'){
     renderVideos();
   }
 }
