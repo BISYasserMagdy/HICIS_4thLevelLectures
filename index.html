@@ -1307,13 +1307,15 @@ const DATA_VERSION = "v2";
 
 async function loadCourses(){
   try{
-    const [dataRes, versionRes] = await Promise.all([
-      window.storage.get('courses', true).catch(()=>null),
-      window.storage.get('courses_version', true).catch(()=>null)
-    ]);
-    if(dataRes && dataRes.value && versionRes && versionRes.value === DATA_VERSION){
-      courses = JSON.parse(dataRes.value);
-      return;
+    if(window.storage && typeof window.storage.get === 'function'){
+      const [dataRes, versionRes] = await Promise.all([
+        window.storage.get('courses', true).catch(()=>null),
+        window.storage.get('courses_version', true).catch(()=>null)
+      ]);
+      if(dataRes && dataRes.value && versionRes && versionRes.value === DATA_VERSION){
+        courses = JSON.parse(dataRes.value);
+        return;
+      }
     }
   }catch(e){ /* not found yet */ }
   courses = seedData;
@@ -1322,8 +1324,10 @@ async function loadCourses(){
 
 async function saveCourses(){
   try{
-    await window.storage.set('courses', JSON.stringify(courses), true);
-    await window.storage.set('courses_version', DATA_VERSION, true);
+    if(window.storage && typeof window.storage.set === 'function'){
+      await window.storage.set('courses', JSON.stringify(courses), true);
+      await window.storage.set('courses_version', DATA_VERSION, true);
+    }
   }catch(e){
     console.error('تعذر حفظ البيانات', e);
   }
