@@ -1033,25 +1033,37 @@
   }
   .report-card strong{display:block; color:var(--green-deep); margin-bottom:4px;}
   .report-card small{color:var(--muted); display:block; line-height:1.7;}
-  .achievement-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
-    gap:12px;
-  }
-  .achievement-item{
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:12px;
-    padding:12px 14px;
+  .achievement-list{
+    list-style:none;
+    padding:0;
+    margin:0;
     display:flex;
     flex-direction:column;
-    gap:8px;
+    gap:10px;
+  }
+  .achievement-row{
+    position:relative;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px 14px 12px 42px;
+    list-style:none;
+  }
+  .achievement-row::before{
+    content:"•";
+    position:absolute;
+    right:16px;
+    top:10px;
+    color:var(--green-deep);
+    font-size:1.4rem;
+    line-height:1;
   }
   .achievement-head{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap:8px;
+    gap:12px;
+    margin-bottom:6px;
   }
   .achievement-title{
     color:var(--green-deep);
@@ -1065,11 +1077,13 @@
     padding:3px 8px;
     font-size:.68rem;
     font-weight:700;
+    white-space:nowrap;
   }
   .achievement-stats{
     display:flex;
     flex-wrap:wrap;
     gap:6px;
+    padding-right:6px;
   }
   .achievement-stat{
     background:var(--cream);
@@ -1946,8 +1960,8 @@ function renderAchievementSchedule(){
   const totalQuestions = rows.reduce((sum, row) => sum + row.total, 0);
   const summary = totalAnswered ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
 
-  const cards = rows.map((row, index) => `
-    <div class="achievement-item">
+  const items = rows.map((row, index) => `
+    <li class="achievement-row">
       <div class="achievement-head">
         <span class="achievement-title">${index + 1}. ${escapeHtml(row.label)}</span>
         <span class="achievement-badge">${escapeHtml(row.status)}</span>
@@ -1958,13 +1972,13 @@ function renderAchievementSchedule(){
         <span class="achievement-stat"><strong>${row.due}</strong> مستحق</span>
         <span class="achievement-stat"><strong>${row.mastered}</strong> متقن</span>
       </div>
-    </div>
+    </li>
   `).join('');
 
   panel.innerHTML = `
     <div class="report-panel">
       <h3>📅 جدول إنجازك (${totalAnswered} سؤال محلول)</h3>
-      <div class="achievement-grid">${cards}</div>
+      <ul class="achievement-list">${items}</ul>
       <div class="achievement-stats" style="margin-top:12px;">
         <span class="achievement-stat"><strong>${totalQuestions}</strong> إجمالي أسئلة المادة</span>
         <span class="achievement-stat"><strong>${summary}%</strong> متوسط الدقة</span>
