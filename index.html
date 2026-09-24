@@ -1577,15 +1577,73 @@ function addDays(dateStr, days){
   return d.toISOString().slice(0,10);
 }
 
+function normalizeSrsState(raw){
+  const out = {};
+  if(!raw || typeof raw !== 'object') return out;
+  Object.entries(raw).forEach(([qid, st]) => {
+    if(!st || typeof st !== 'object') return;
+    const seen = Number(st.seen) || 0;
+    const box = Math.max(1, Math.min(5, Number(st.box) || 1));
+    const due = st.due || todayStr();
+    out[qid] = {
+      box,
+      due,
+      seen,
+      correctCount: Number(st.correctCount) || 0,
+      wrongCount: Number(st.wrongCount) || 0
+    };
+  });
+  return out;
+}
+
+function rebuildSrsStateFromHistory(history){
+  const rebuilt = {};
+  history.forEach(entry => {
+    if(!entry || !entry.questionId) return;
+    const qid = entry.questionId;
+    const st = rebuilt[qid] || { box:1, due: todayStr(), seen:0, correctCount:0, wrongCount:0 };
+    st.seen = Math.max(st.seen, 1);
+    st.correctCount += entry.isCorrect ? 1 : 0;
+    st.wrongCount += entry.isCorrect ? 0 : 1;
+    st.box = Math.min(5, Math.max(1, 1 + (entry.isCorrect ? st.correctCount - 1 : 0)));
+    st.due = addDays(todayStr(), BOX_INTERVAL_DAYS[st.box]);
+    rebuilt[qid] = st;
+  });
+  return rebuilt;
+}
+
 async function loadSrsState(){
   try{
-    const res = await window.storage.get('srs_state', false);
-    if(res && res.value){ srsState = JSON.parse(res.value); return; }
+    let parsed = null;
+    if(window.storage && typeof window.storage.get === 'function'){
+      const res = await window.storage.get('srs_state', false);
+      if(res && res.value){ parsed = JSON.parse(res.value); }
+    }
+    if(!parsed){
+      const fallbackRaw = localStorage.getItem('srs_state_fallback');
+      if(fallbackRaw){ parsed = JSON.parse(fallbackRaw); }
+    }
+    if(parsed){
+      srsState = normalizeSrsState(parsed);
+      return;
+    }
+    const history = loadQuizHistory();
+    if(history && history.length){
+      srsState = rebuildSrsStateFromHistory(history);
+      saveSrsState();
+      return;
+    }
   }catch(e){ /* not found yet */ }
   srsState = {};
 }
 async function saveSrsState(){
-  try{ await window.storage.set('srs_state', JSON.stringify(srsState), false); }
+  try{
+    const payload = JSON.stringify(srsState);
+    if(window.storage && typeof window.storage.set === 'function'){
+      await window.storage.set('srs_state', payload, false);
+    }
+    localStorage.setItem('srs_state_fallback', payload);
+  }
   catch(e){ console.error('تعذر حفظ تقدم المراجعة', e); }
 }
 
