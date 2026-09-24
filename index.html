@@ -1066,7 +1066,7 @@
   }
   .achievement-sublist{
     list-style:none;
-    padding:0 10px 0 0;
+    padding:0;
     margin:0;
     display:flex;
     flex-direction:column;
@@ -1076,7 +1076,7 @@
     background:var(--cream);
     border:1px solid var(--line);
     border-radius:10px;
-    padding:10px 12px 10px 14px;
+    padding:10px 12px 10px 16px;
     position:relative;
   }
   .achievement-subitem::before{
@@ -1098,7 +1098,7 @@
   .achievement-submeta{
     color:var(--muted);
     font-size:.76rem;
-    line-height:1.7;
+    line-height:1.5;
     padding-right:12px;
   }
   .achievement-submeta strong{color:var(--green-deep);}
@@ -1988,13 +1988,12 @@ function renderAchievementSchedule(){
 
     const partItems = Object.values(partMap).map(part => {
       const accuracy = part.answered > 0 ? Math.round((part.correct / part.answered) * 100) : 0;
-      const statusText = part.answered > 0 ? `مستوى الأداء: ${accuracy}% (${part.correct}/${part.answered})` : 'مستوى الأداء: لم تبدأ بعد';
+      const statusText = part.answered > 0 ? `مستوى الأداء: ${accuracy}%` : 'مستوى الأداء: لا توجد بيانات';
       return `
         <li class="achievement-subitem">
           <span class="achievement-subtitle">${escapeHtml(part.label)}</span>
           <div class="achievement-submeta">
-            <strong>${statusText}</strong><br>
-            ${part.total} سؤال • ${part.due} مستحق • ${part.mastered} متقن
+            <strong>${statusText}</strong>
           </div>
         </li>
       `;
