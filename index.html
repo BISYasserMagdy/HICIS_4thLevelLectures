@@ -1244,7 +1244,7 @@
     </div>
   </div>
 
-  <div id="achievementSchedulePanel"></div>
+  <div id="achievementSchedulePanel" style="display:none;"></div>
   <div id="quizCourseList" class="quiz-course-grid"></div>
 
   <div id="quizSessionWrap" style="display:none;"></div>
@@ -2076,39 +2076,49 @@ const SECTION_STORAGE_KEY = 'portal_active_section';
 const VALID_SECTIONS = new Set(['courses', 'quiz', 'videos']);
 
 function saveActiveSection(){
-  try{ localStorage.removeItem(SECTION_STORAGE_KEY); }
-  catch(e){ /* ignore */ }
+  try{
+    if(activeSection && VALID_SECTIONS.has(activeSection)){
+      localStorage.setItem(SECTION_STORAGE_KEY, activeSection);
+    } else {
+      localStorage.removeItem(SECTION_STORAGE_KEY);
+    }
+  }catch(e){ /* ignore */ }
 }
 
 function restoreActiveSection(){
   try{
     const saved = localStorage.getItem(SECTION_STORAGE_KEY);
-    if(saved && VALID_SECTIONS.has(saved)){
+    if(!saved || !VALID_SECTIONS.has(saved)){
       localStorage.removeItem(SECTION_STORAGE_KEY);
+      return 'courses';
     }
-  }catch(e){ /* ignore */ }
-  return 'courses';
+    return saved;
+  }catch(e){ return 'courses'; }
 }
 
 function switchSection(section){
   const safeSection = VALID_SECTIONS.has(section) ? section : 'courses';
   activeSection = safeSection;
   saveActiveSection();
+
   document.querySelectorAll('.section-btn').forEach(b=>{
     b.classList.toggle('active', b.dataset.section === safeSection);
   });
+
   const coursesControls = document.getElementById('coursesControls');
   const mainContent = document.getElementById('mainContent');
   const quizSection = document.getElementById('quizSection');
   const videosSection = document.getElementById('videosSection');
+
   if(coursesControls) coursesControls.style.display = safeSection === 'courses' ? '' : 'none';
   if(mainContent) mainContent.style.display = safeSection === 'courses' ? '' : 'none';
   if(quizSection) quizSection.style.display = safeSection === 'quiz' ? 'block' : 'none';
   if(videosSection) videosSection.style.display = safeSection === 'videos' ? 'block' : 'none';
+
   if(safeSection === 'quiz'){
     endQuizSession(false);
     renderQuizHome();
-  }else if(safeSection === 'videos'){
+  } else if(safeSection === 'videos'){
     renderVideos();
   }
 }
@@ -2146,7 +2156,8 @@ function renderQuizHome(){
     reviewSub.textContent = "جمّعنا لك الأسئلة اللي محتاجة مراجعة دلوقتي من كل المواد.";
   }
 
-  renderAchievementSchedule();
+  const panel = document.getElementById('achievementSchedulePanel');
+  if(panel){ panel.style.display = 'none'; }
 
   const list = document.getElementById('quizCourseList');
   const courseIds = Object.keys(quizBank).filter(cid => quizBank[cid].length > 0);
@@ -2798,7 +2809,7 @@ if('serviceWorker' in navigator){
 async function initQuiz(){
   await loadSrsState();
   activeSection = restoreActiveSection();
-  switchSection('courses');
+  switchSection(activeSection);
   refreshDueBadge();
 }
 </script>
