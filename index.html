@@ -2076,8 +2076,26 @@ function startReviewCourse(courseId, mode){
   runSession(items, `المراجعة: ${courseNameById(courseId)}`, mode);
 }
 
+function getQuestionLanguageText(q, lang){
+  const ar = q.translation && q.translation.ar ? q.translation.ar : null;
+  if(lang === 'en') return q.q;
+  return ar && ar.q ? ar.q : q.q;
+}
+
+function getQuestionOptionText(q, lang, idx){
+  const ar = q.translation && q.translation.ar ? q.translation.ar : null;
+  if(lang === 'en') return q.options[idx];
+  return ar && ar.options && ar.options[idx] ? ar.options[idx] : q.options[idx];
+}
+
+function getQuestionExplanation(q, lang){
+  const ar = q.translation && q.translation.ar ? q.translation.ar : null;
+  if(lang === 'en') return q.explain || '';
+  return ar && ar.explain ? ar.explain : (q.explain || '');
+}
+
 function runSession(items, title, mode){
-  currentSession = { title, queue: items, idx:0, correctInSession:0, total: items.length, mode: mode || 'sequential', answers:{}, graded:false };
+  currentSession = { title, queue: items, idx:0, correctInSession:0, total: items.length, mode: mode || 'sequential', answers:{}, graded:false, lang:'ar' };
   document.getElementById('quizCourseList').style.display = 'none';
   document.getElementById('quizSessionWrap').style.display = '';
   if(currentSession.mode === 'all'){
@@ -2101,13 +2119,13 @@ function renderQuestion(){
   const item = currentSession.queue[currentSession.idx];
   const q = item.question;
   const progressPct = Math.round((currentSession.idx / currentSession.total) * 100);
-  const qTranslation = q.translation && q.translation.ar ? q.translation.ar : null;
-  const questionText = qTranslation && qTranslation.q ? qTranslation.q : q.q;
+  const lang = currentSession.lang || 'ar';
+  const questionText = getQuestionLanguageText(q, lang);
 
   let optionsHtml = '';
   if(q.type === 'mcq'){
     optionsHtml = `<div class="quiz-options">` + q.options.map((opt, i)=>{
-      const displayOpt = qTranslation && qTranslation.options && qTranslation.options[i] ? qTranslation.options[i] : opt;
+      const displayOpt = getQuestionOptionText(q, lang, i);
       return `<button class="quiz-opt" data-idx="${i}">
         <span class="quiz-option-row">
           <span class="quiz-option-main">${escapeHtml(displayOpt)}</span>
@@ -2115,11 +2133,11 @@ function renderQuestion(){
       </button>`;
     }).join('') + `</div>`;
   }else{
-    const arTrue = qTranslation && qTranslation.options ? qTranslation.options[0] : 'صح';
-    const arFalse = qTranslation && qTranslation.options ? qTranslation.options[1] : 'خطأ';
+    const trueLabel = lang === 'en' ? 'True' : 'صح';
+    const falseLabel = lang === 'en' ? 'False' : 'خطأ';
     optionsHtml = `<div class="tf-row">
-      <button class="quiz-opt" data-val="true"><span class="quiz-option-row"><span class="quiz-option-main">${escapeHtml(arTrue)}</span></span></button>
-      <button class="quiz-opt" data-val="false"><span class="quiz-option-row"><span class="quiz-option-main">${escapeHtml(arFalse)}</span></span></button>
+      <button class="quiz-opt" data-val="true"><span class="quiz-option-row"><span class="quiz-option-main">${escapeHtml(trueLabel)}</span></span></button>
+      <button class="quiz-opt" data-val="false"><span class="quiz-option-row"><span class="quiz-option-main">${escapeHtml(falseLabel)}</span></span></button>
     </div>`;
   }
 
@@ -2127,23 +2145,28 @@ function renderQuestion(){
     <div class="quiz-session">
       <div class="quiz-topbar">
         <button class="quiz-back" id="quizBackBtn">← رجوع للقائمة</button>
+        <button class="quiz-lang-toggle" id="quizToggleLangBtn">${lang === 'ar' ? 'English' : 'العربية'}</button>
         <span class="quiz-progress-text">${currentSession.idx + 1} / ${currentSession.total} — ${escapeHtml(currentSession.title)}</span>
       </div>
       <div class="progress-bar"><div class="progress-bar-fill" style="width:${progressPct}%"></div></div>
       <div class="quiz-card">
-        <span class="quiz-type-tag">${q.type === 'mcq' ? 'اختيار من متعدد' : 'صح أم غلط'}</span>
+        <span class="quiz-type-tag">${q.type === 'mcq' ? (lang === 'en' ? 'Multiple choice' : 'اختيار من متعدد') : (lang === 'en' ? 'True / False' : 'صح أم غلط')}</span>
         ${q.lec ? `<span class="quiz-lec-tag">📖 محاضرة ${q.lec}${q.lecTitle ? `: ${escapeHtml(q.lecTitle)}` : ''}</span>` : ''}
         ${q.page ? `<span class="quiz-page-tag">📄 صفحة ${q.page}</span>` : ''}
         <p class="quiz-question">${escapeHtml(questionText)}</p>
         ${optionsHtml}
         <div class="quiz-feedback" id="quizFeedback"></div>
         <div class="quiz-actions">
-          <button class="quiz-next-btn" id="quizNextBtn">${currentSession.idx + 1 === currentSession.total ? 'عرض النتيجة' : 'السؤال التالي'}</button>
+          <button class="quiz-next-btn" id="quizNextBtn">${currentSession.idx + 1 === currentSession.total ? 'عرض النتيجة' : (lang === 'en' ? 'Next question' : 'السؤال التالي')}</button>
         </div>
       </div>
     </div>`;
 
   document.getElementById('quizBackBtn').addEventListener('click', ()=> endQuizSession());
+  document.getElementById('quizToggleLangBtn').addEventListener('click', ()=>{
+    currentSession.lang = currentSession.lang === 'ar' ? 'en' : 'ar';
+    renderQuestion();
+  });
 
   const optButtons = wrap.querySelectorAll('.quiz-opt');
   optButtons.forEach(btn=>{
@@ -2168,9 +2191,10 @@ function renderQuestion(){
       }
 
       const fb = document.getElementById('quizFeedback');
-      const arExplain = qTranslation && qTranslation.explain ? `<span class="quiz-feedback-ar">${escapeHtml(qTranslation.explain)}</span>` : '';
+      const explanationText = getQuestionExplanation(q, currentSession.lang || 'ar');
+      const feedbackPrefix = currentSession.lang === 'en' ? (isCorrect ? '✅ Correct! ' : '❌ Incorrect. ') : (isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. ');
       fb.classList.add('show', isCorrect ? 'ok' : 'bad');
-      fb.innerHTML = `${isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. '}${escapeHtml(q.explain || '')}${arExplain}`;
+      fb.innerHTML = `${feedbackPrefix}${escapeHtml(explanationText)}`;
 
       recordAnswer(q.id, isCorrect);
       if(isCorrect) currentSession.correctInSession += 1;
@@ -2192,12 +2216,12 @@ function renderAllQuestions(){
 
   const questionsHtml = items.map((item, i)=>{
     const q = item.question;
-    const qTranslation = q.translation && q.translation.ar ? q.translation.ar : null;
-    const questionText = qTranslation && qTranslation.q ? qTranslation.q : q.q;
+    const lang = currentSession.lang || 'ar';
+    const questionText = getQuestionLanguageText(q, lang);
     let optionsHtml = '';
     if(q.type === 'mcq'){
       optionsHtml = `<div class="quiz-options" data-qi="${i}">` + q.options.map((opt, oi)=>{
-        const displayOpt = qTranslation && qTranslation.options && qTranslation.options[oi] ? qTranslation.options[oi] : opt;
+        const displayOpt = getQuestionOptionText(q, lang, oi);
         return `<button class="quiz-opt" data-qi="${i}" data-idx="${oi}">
           <span class="quiz-option-row">
             <span class="quiz-option-main">${escapeHtml(displayOpt)}</span>
@@ -2205,16 +2229,16 @@ function renderAllQuestions(){
         </button>`;
       }).join('') + `</div>`;
     }else{
-      const arTrue = qTranslation && qTranslation.options ? qTranslation.options[0] : 'صح';
-      const arFalse = qTranslation && qTranslation.options ? qTranslation.options[1] : 'خطأ';
+      const trueLabel = lang === 'en' ? 'True' : 'صح';
+      const falseLabel = lang === 'en' ? 'False' : 'خطأ';
       optionsHtml = `<div class="tf-row" data-qi="${i}">
-        <button class="quiz-opt" data-qi="${i}" data-val="true"><span class="quiz-option-row"><span class="quiz-option-main">${escapeHtml(arTrue)}</span></span></button>
-        <button class="quiz-opt" data-qi="${i}" data-val="false"><span class="quiz-option-row"><span class="quiz-option-main">${escapeHtml(arFalse)}</span></span></button>
+        <button class="quiz-opt" data-qi="${i}" data-val="true"><span class="quiz-option-row"><span class="quiz-option-main">${escapeHtml(trueLabel)}</span></span></button>
+        <button class="quiz-opt" data-qi="${i}" data-val="false"><span class="quiz-option-row"><span class="quiz-option-main">${escapeHtml(falseLabel)}</span></span></button>
       </div>`;
     }
     return `
       <div class="quiz-card quiz-card-all" id="qcard-${i}">
-        <span class="quiz-type-tag">${i+1}. ${q.type === 'mcq' ? 'اختيار من متعدد' : 'صح أم غلط'}</span>
+        <span class="quiz-type-tag">${i+1}. ${q.type === 'mcq' ? (lang === 'en' ? 'Multiple choice' : 'اختيار من متعدد') : (lang === 'en' ? 'True / False' : 'صح أم غلط')}</span>
         ${q.lec ? `<span class="quiz-lec-tag">📖 محاضرة ${q.lec}${q.lecTitle ? `: ${escapeHtml(q.lecTitle)}` : ''}</span>` : ''}
         ${q.page ? `<span class="quiz-page-tag">📄 صفحة ${q.page}</span>` : ''}
         <p class="quiz-question">${escapeHtml(questionText)}</p>
@@ -2227,6 +2251,7 @@ function renderAllQuestions(){
     <div class="quiz-session">
       <div class="quiz-topbar">
         <button class="quiz-back" id="quizBackBtn">← رجوع للقائمة</button>
+        <button class="quiz-lang-toggle" id="quizToggleLangBtn">${currentSession.lang === 'ar' ? 'English' : 'العربية'}</button>
         <span class="quiz-progress-text">${items.length} سؤال — ${escapeHtml(currentSession.title)} (حل الكل مرة واحدة)</span>
       </div>
       <div id="quizAllAnsweredBar" class="quiz-all-answered-bar">جاوبت 0 / ${items.length}</div>
@@ -2237,6 +2262,10 @@ function renderAllQuestions(){
     </div>`;
 
   document.getElementById('quizBackBtn').addEventListener('click', ()=> endQuizSession());
+  document.getElementById('quizToggleLangBtn').addEventListener('click', ()=>{
+    currentSession.lang = currentSession.lang === 'ar' ? 'en' : 'ar';
+    renderAllQuestions();
+  });
 
   wrap.querySelectorAll('.quiz-opt').forEach(btn=>{
     btn.addEventListener('click', ()=>{
@@ -2284,10 +2313,10 @@ function gradeAllQuestions(){
     });
 
     const fb = document.getElementById(`quizFeedbackAll-${i}`);
-    const qTranslation = q.translation && q.translation.ar ? q.translation.ar : null;
-    const arExplain = qTranslation && qTranslation.explain ? `<span class="quiz-feedback-ar">${escapeHtml(qTranslation.explain)}</span>` : '';
+    const explanationText = getQuestionExplanation(q, currentSession.lang || 'ar');
+    const feedbackPrefix = currentSession.lang === 'en' ? (isCorrect ? '✅ Correct! ' : '❌ Incorrect. ') : (isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. ');
     fb.classList.add('show', isCorrect ? 'ok' : 'bad');
-    fb.innerHTML = `${isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. '}${escapeHtml(q.explain || '')}${arExplain}`;
+    fb.innerHTML = `${feedbackPrefix}${escapeHtml(explanationText)}`;
   });
 
   currentSession.correctInSession = correct;
