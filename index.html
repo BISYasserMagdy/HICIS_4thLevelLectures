@@ -1930,17 +1930,21 @@ function downloadQuizPdf(courseId){
   const courseName = courseNameById(courseId);
 
   const questionsHtml = questions.map((q, i) => {
+    const qTranslation = q.translation && q.translation.ar ? q.translation.ar : null;
+    const questionText = qTranslation && qTranslation.q ? qTranslation.q : q.q;
     const optionsHtml = q.type === 'mcq'
-      ? `<ol type="a" class="pq-options">${q.options.map((opt, oi)=>
-          `<li class="${oi === q.correct ? 'pq-correct' : ''}">${escapeHtml(opt)}${oi === q.correct ? ' ✅' : ''}</li>`).join('')}</ol>`
+      ? `<ol type="a" class="pq-options">${q.options.map((opt, oi)=>{
+          const displayOpt = qTranslation && qTranslation.options && qTranslation.options[oi] ? qTranslation.options[oi] : opt;
+          return `<li class="${oi === q.correct ? 'pq-correct' : ''}">${escapeHtml(displayOpt)}${oi === q.correct ? ' ✅' : ''}</li>`;
+        }).join('')}</ol>`
       : `<div class="pq-options">
-          <span class="${q.correct === true ? 'pq-correct' : ''}">✅ صح${q.correct === true ? ' ✔' : ''}</span>
+          <span class="${q.correct === true ? 'pq-correct' : ''}">${escapeHtml(qTranslation && qTranslation.options ? qTranslation.options[0] : 'صح')}${q.correct === true ? ' ✔' : ''}</span>
           &nbsp;&nbsp;
-          <span class="${q.correct === false ? 'pq-correct' : ''}">❌ غلط${q.correct === false ? ' ✔' : ''}</span>
+          <span class="${q.correct === false ? 'pq-correct' : ''}">${escapeHtml(qTranslation && qTranslation.options ? qTranslation.options[1] : 'خطأ')}${q.correct === false ? ' ✔' : ''}</span>
         </div>`;
     return `
       <div class="pq-item">
-        <p class="pq-q"><strong>${i+1}.</strong> ${escapeHtml(q.q)}
+        <p class="pq-q"><strong>${i+1}.</strong> ${escapeHtml(questionText)}
           ${q.lec ? `<span class="pq-tag">محاضرة ${q.lec}${q.lecTitle ? ': ' + escapeHtml(q.lecTitle) : ''}</span>` : ''}
           ${q.page ? `<span class="pq-tag">صفحة ${q.page}</span>` : ''}
         </p>
@@ -2028,15 +2032,15 @@ function renderQuestion(){
   const q = item.question;
   const progressPct = Math.round((currentSession.idx / currentSession.total) * 100);
   const qTranslation = q.translation && q.translation.ar ? q.translation.ar : null;
+  const questionText = qTranslation && qTranslation.q ? qTranslation.q : q.q;
 
   let optionsHtml = '';
   if(q.type === 'mcq'){
     optionsHtml = `<div class="quiz-options">` + q.options.map((opt, i)=>{
-      const arOpt = qTranslation && qTranslation.options ? qTranslation.options[i] : null;
+      const displayOpt = qTranslation && qTranslation.options && qTranslation.options[i] ? qTranslation.options[i] : opt;
       return `<button class="quiz-opt" data-idx="${i}">
         <span class="quiz-option-row">
-          <span class="quiz-option-main">${escapeHtml(opt)}</span>
-          ${arOpt ? `<span class="quiz-option-ar">${escapeHtml(arOpt)}</span>` : ''}
+          <span class="quiz-option-main">${escapeHtml(displayOpt)}</span>
         </span>
       </button>`;
     }).join('') + `</div>`;
@@ -2044,8 +2048,8 @@ function renderQuestion(){
     const arTrue = qTranslation && qTranslation.options ? qTranslation.options[0] : 'صح';
     const arFalse = qTranslation && qTranslation.options ? qTranslation.options[1] : 'خطأ';
     optionsHtml = `<div class="tf-row">
-      <button class="quiz-opt" data-val="true"><span class="quiz-option-row"><span class="quiz-option-main">✅ صح</span><span class="quiz-option-ar">${escapeHtml(arTrue)}</span></span></button>
-      <button class="quiz-opt" data-val="false"><span class="quiz-option-row"><span class="quiz-option-main">❌ غلط</span><span class="quiz-option-ar">${escapeHtml(arFalse)}</span></span></button>
+      <button class="quiz-opt" data-val="true"><span class="quiz-option-row"><span class="quiz-option-main">${escapeHtml(arTrue)}</span></span></button>
+      <button class="quiz-opt" data-val="false"><span class="quiz-option-row"><span class="quiz-option-main">${escapeHtml(arFalse)}</span></span></button>
     </div>`;
   }
 
@@ -2060,8 +2064,7 @@ function renderQuestion(){
         <span class="quiz-type-tag">${q.type === 'mcq' ? 'اختيار من متعدد' : 'صح أم غلط'}</span>
         ${q.lec ? `<span class="quiz-lec-tag">📖 محاضرة ${q.lec}${q.lecTitle ? `: ${escapeHtml(q.lecTitle)}` : ''}</span>` : ''}
         ${q.page ? `<span class="quiz-page-tag">📄 صفحة ${q.page}</span>` : ''}
-        <p class="quiz-question">${escapeHtml(q.q)}</p>
-        ${qTranslation && qTranslation.q ? `<div class="quiz-q-translation"><strong>الترجمة:</strong> ${escapeHtml(qTranslation.q)}</div>` : ''}
+        <p class="quiz-question">${escapeHtml(questionText)}</p>
         ${optionsHtml}
         <div class="quiz-feedback" id="quizFeedback"></div>
         <div class="quiz-actions">
@@ -2120,14 +2123,14 @@ function renderAllQuestions(){
   const questionsHtml = items.map((item, i)=>{
     const q = item.question;
     const qTranslation = q.translation && q.translation.ar ? q.translation.ar : null;
+    const questionText = qTranslation && qTranslation.q ? qTranslation.q : q.q;
     let optionsHtml = '';
     if(q.type === 'mcq'){
       optionsHtml = `<div class="quiz-options" data-qi="${i}">` + q.options.map((opt, oi)=>{
-        const arOpt = qTranslation && qTranslation.options ? qTranslation.options[oi] : null;
+        const displayOpt = qTranslation && qTranslation.options && qTranslation.options[oi] ? qTranslation.options[oi] : opt;
         return `<button class="quiz-opt" data-qi="${i}" data-idx="${oi}">
           <span class="quiz-option-row">
-            <span class="quiz-option-main">${escapeHtml(opt)}</span>
-            ${arOpt ? `<span class="quiz-option-ar">${escapeHtml(arOpt)}</span>` : ''}
+            <span class="quiz-option-main">${escapeHtml(displayOpt)}</span>
           </span>
         </button>`;
       }).join('') + `</div>`;
@@ -2135,8 +2138,8 @@ function renderAllQuestions(){
       const arTrue = qTranslation && qTranslation.options ? qTranslation.options[0] : 'صح';
       const arFalse = qTranslation && qTranslation.options ? qTranslation.options[1] : 'خطأ';
       optionsHtml = `<div class="tf-row" data-qi="${i}">
-        <button class="quiz-opt" data-qi="${i}" data-val="true"><span class="quiz-option-row"><span class="quiz-option-main">✅ صح</span><span class="quiz-option-ar">${escapeHtml(arTrue)}</span></span></button>
-        <button class="quiz-opt" data-qi="${i}" data-val="false"><span class="quiz-option-row"><span class="quiz-option-main">❌ غلط</span><span class="quiz-option-ar">${escapeHtml(arFalse)}</span></span></button>
+        <button class="quiz-opt" data-qi="${i}" data-val="true"><span class="quiz-option-row"><span class="quiz-option-main">${escapeHtml(arTrue)}</span></span></button>
+        <button class="quiz-opt" data-qi="${i}" data-val="false"><span class="quiz-option-row"><span class="quiz-option-main">${escapeHtml(arFalse)}</span></span></button>
       </div>`;
     }
     return `
@@ -2144,8 +2147,7 @@ function renderAllQuestions(){
         <span class="quiz-type-tag">${i+1}. ${q.type === 'mcq' ? 'اختيار من متعدد' : 'صح أم غلط'}</span>
         ${q.lec ? `<span class="quiz-lec-tag">📖 محاضرة ${q.lec}${q.lecTitle ? `: ${escapeHtml(q.lecTitle)}` : ''}</span>` : ''}
         ${q.page ? `<span class="quiz-page-tag">📄 صفحة ${q.page}</span>` : ''}
-        <p class="quiz-question">${escapeHtml(q.q)}</p>
-        ${qTranslation && qTranslation.q ? `<div class="quiz-q-translation"><strong>الترجمة:</strong> ${escapeHtml(qTranslation.q)}</div>` : ''}
+        <p class="quiz-question">${escapeHtml(questionText)}</p>
         ${optionsHtml}
         <div class="quiz-feedback" id="quizFeedbackAll-${i}"></div>
       </div>`;
