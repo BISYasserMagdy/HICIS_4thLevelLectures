@@ -1573,62 +1573,37 @@ const quizBank = {
     { id:"c1q40", type:"tf", lec:1, lecTitle:"Fundamentals of Business Analytics", page:30, q:"Semi-structured data is easier to process than unstructured data and is hierarchical or graph-based in nature.", correct:true,
       explain:"Semi-structured data is hierarchical/graph-based rather than relational, easier to process than unstructured data, and requires specific preprocessing such as XML validation." },
   ],
-  c2: [ // Enterprise Information System
-    { id:"c2q1", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"What is an enterprise?",
-      options:["A small task performed by one employee","An organization that coordinates people, processes, and resources to achieve objectives","A computer network only","A financial report"], correct:1,
-      explain:"An enterprise is an organization that coordinates people, processes, information, and resources to achieve specific objectives." },
-    { id:"c2q2", type:"tf", lec:1, lecTitle:"Enterprise Information System", q:"An enterprise can include business activities, departments, people, and resources working together.", correct:true,
-      explain:"An enterprise is a complete organization made up of coordinated activities, departments, people, and resources." },
-    { id:"c2q3", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"Which characteristic means that an enterprise works toward defined results?",
-      options:["Goal orientation","Randomness","Isolation","Lack of structure"], correct:0,
-      explain:"Goal orientation means that the enterprise operates to achieve defined objectives and results." },
-    { id:"c2q4", type:"tf", lec:1, lecTitle:"Enterprise Information System", q:"An enterprise must always be a large multinational company.", correct:false,
-      explain:"An enterprise may be small, medium, or large. Enterprise refers to the organization and its coordinated activities, not only its size." },
-    { id:"c2q5", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"Which of the following is a common objective of an enterprise?",
-      options:["Increasing customer value and achieving sustainable growth","Eliminating all business processes","Avoiding all information","Preventing cooperation between departments"], correct:0,
-      explain:"Enterprises commonly aim to create customer value, improve performance, earn profit, and achieve sustainable growth." },
-    { id:"c2q6", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"Which department is mainly responsible for recruiting and developing employees?",
-      options:["Human Resources","Production","Sales","Information Technology"], correct:0,
-      explain:"The Human Resources department manages recruitment, training, performance, and employee development." },
-    { id:"c2q7", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"Which department is primarily concerned with recording revenues, expenses, and financial transactions?",
-      options:["Accounting and Finance","Marketing","Production","Human Resources"], correct:0,
-      explain:"Accounting and Finance record and manage financial transactions, budgets, revenues, expenses, and reports." },
-    { id:"c2q8", type:"tf", lec:1, lecTitle:"Enterprise Information System", q:"Departments in an enterprise should exchange information to support coordination and decision-making.", correct:true,
-      explain:"Information sharing between departments improves coordination, reduces duplication, and supports better decisions." },
-    { id:"c2q9", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"Which is a type of enterprise based on ownership?",
-      options:["Private enterprise","Keyboard enterprise","Temporary file enterprise","Unstructured enterprise"], correct:0,
-      explain:"Private enterprise is a type classified by ownership. Other ownership types include public and nonprofit enterprises." },
-    { id:"c2q10", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"A multinational enterprise operates...",
-      options:["in one department only","in more than one country","without employees","without any business process"], correct:1,
-      explain:"A multinational enterprise conducts operations or business activities in more than one country." },
-    { id:"c2q11", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"Which information system records routine day-to-day business transactions?",
-      options:["Transaction Processing System (TPS)","Executive Support System (ESS)","Decision Support System (DSS)","Office presentation system"], correct:0,
-      explain:"A Transaction Processing System records and processes routine transactions such as sales, purchases, and payments." },
-    { id:"c2q12", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"Which system provides managers with summarized reports for monitoring operations?",
-      options:["Management Information System (MIS)","Transaction Processing System (TPS)","Payroll card","File compression system"], correct:0,
-      explain:"An MIS converts operational data into summarized reports that help managers monitor and control the organization." },
-    { id:"c2q13", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"A Decision Support System (DSS) is mainly used to...",
-      options:["support analysis and semi-structured decisions","replace every employee","store passwords only","print invoices without data"], correct:0,
-      explain:"A DSS uses data and analytical models to support managers in analyzing alternatives and making decisions." },
-    { id:"c2q14", type:"tf", lec:1, lecTitle:"Enterprise Information System", q:"An Executive Support System is designed to provide high-level managers with strategic information.", correct:true,
-      explain:"Executive Support Systems present summarized internal and external information for strategic decision-making by senior executives." },
-    { id:"c2q15", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"What is an ERP system?",
-      options:["An integrated system that manages and connects core business processes","A system used only for email","A separate spreadsheet for every employee","A system that works without shared data"], correct:0,
-      explain:"ERP is an integrated enterprise-wide system that connects core processes and uses shared data across departments." },
-    { id:"c2q16", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"What is one important benefit of an ERP system?",
-      options:["Creating isolated data silos","Providing a single source of integrated information","Increasing duplicate data entry","Preventing management reports"], correct:1,
-      explain:"ERP reduces information silos by integrating data and processes, creating a more consistent source of information." },
-    { id:"c2q17", type:"tf", lec:1, lecTitle:"Enterprise Information System", q:"ERP integration can improve coordination between departments such as sales, inventory, purchasing, and finance.", correct:true,
-      explain:"ERP connects departments and allows a transaction in one area to update relevant information in other areas." },
-    { id:"c2q18", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"Which ERP type is hosted and managed by a provider and accessed over the internet?",
-      options:["Cloud ERP","On-premises ERP","Manual ERP","Paper-based ERP"], correct:0,
-      explain:"Cloud ERP is hosted and managed by a service provider and accessed through the internet." },
-    { id:"c2q19", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"Which of the following is an ERP component?",
-      options:["Shared database","Unrelated personal notes","A department with no data","A disconnected calculator"], correct:0,
-      explain:"A shared database is a core ERP component because it stores and makes organizational data available to integrated modules." },
-    { id:"c2q20", type:"mcq", lec:1, lecTitle:"Enterprise Information System", q:"Which set contains common ERP modules?",
-      options:["Finance, Human Resources, Sales, Inventory, and Purchasing","Music, games, and wallpapers only","Camera, microphone, and speaker only","Keyboard, mouse, and monitor only"], correct:0,
-      explain:"Common ERP modules include Finance, Human Resources, Sales, Inventory, Purchasing, Production, and Supply Chain Management." }
+  c2: [ // Enterprise Information System - Lecture 2 source PDF
+    { id:"c2q1", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:2, q:"What is an institutional system?", options:["An organization established to accomplish a type of work or achieve a goal","A computer application used only for accounting","A collection of unrelated individuals","A product sold in a market"], correct:0, explain:"An institutional system is an organization established to accomplish work, provide services, implement a program or idea, or achieve an educational, functional, or social goal." },
+    { id:"c2q2", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:3, q:"Which characteristic is listed for institutions?", options:["Striving to achieve operational flexibility and reduce costs","Avoiding innovation","Having no customer contact","Operating without specialization"], correct:0, explain:"The lecture lists striving for operational flexibility and reducing costs as an institutional characteristic." },
+    { id:"c2q3", type:"tf", lec:1, lecTitle:"Enterprise Information System", page:3, q:"Institutions are distinguished by effectiveness and efficiency.", correct:true, explain:"Effectiveness and efficiency are among the institutional characteristics listed in the lecture." },
+    { id:"c2q4", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:3, q:"Which characteristic contributes to achieving quality?", options:["Specialization in a specific field","Avoiding direct contact with customers","Reducing market presence","Rejecting successful experiences"], correct:0, explain:"The lecture states that specialization in a specific field contributes to achieving quality." },
+    { id:"c2q5", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:4, q:"Which is an objective of an institution?", options:["Developing production","Eliminating market competition","Reducing profits","Increasing production costs"], correct:0, explain:"Developing production is one of the institutional objectives listed in the lecture." },
+    { id:"c2q6", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:4, q:"Why can an institution increase its profits according to the lecture?", options:["Because production costs are lower than selling prices","Because it stops production","Because it avoids the market","Because it increases all costs"], correct:0, explain:"The lecture explains that profits increase when production costs are lower than selling prices." },
+    { id:"c2q7", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:5, q:"Which of the following is a basic function of an institution?", options:["Production function","Personnel function","Legal affairs function","Public relations function"], correct:0, explain:"The basic functions include production, marketing, and finance. Personnel, legal affairs, and public relations are subordinate functions." },
+    { id:"c2q8", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:5, q:"In the production system diagram, which are examples of inputs?", options:["Primary materials, employment, and technologies","Goods and services only","Reports and indicators","Customers and investors only"], correct:0, explain:"The production system inputs shown are primary materials, employment, and technologies." },
+    { id:"c2q9", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:5, q:"Which are outputs of the production system?", options:["Goods and services","Primary materials and technologies","Budgets and training data","Legal affairs and public relations"], correct:0, explain:"The production system produces outputs such as goods and services." },
+    { id:"c2q10", type:"tf", lec:1, lecTitle:"Enterprise Information System", page:6, q:"Failure to perform the marketing function effectively can lead to the organization's failure and inability to survive.", correct:true, explain:"The lecture states that ineffective marketing can lead to organizational failure and the inability to ensure continuity and survival." },
+    { id:"c2q11", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:6, q:"Which is a subordinate function of an institution?", options:["Personnel function","Production function","Marketing function","Finance function"], correct:0, explain:"The subordinate functions are personnel, legal affairs, and public relations." },
+    { id:"c2q12", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:6, q:"What is the objective of subordinate functions?", options:["To reduce the workload placed on primary functions","To replace all primary functions","To eliminate production","To prevent public relations"], correct:0, explain:"The objective of subordinate functions is to reduce the workload placed on the primary functions." },
+    { id:"c2q13", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:6, q:"The public relations function helps the institution by...", options:["Improving its image among the public","Producing primary materials","Preparing financial budgets only","Managing employee payroll only"], correct:0, explain:"The lecture describes public relations as improving the organization's image among the public." },
+    { id:"c2q14", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:7, q:"Which type of enterprise produces its own products independently?", options:["Sole proprietorships","Joint production enterprises","Complementary enterprises","Joint ownership enterprises"], correct:0, explain:"A sole proprietorship produces its own products independently." },
+    { id:"c2q15", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:7, q:"Joint production enterprises are enterprises that...", options:["Share products with one another","Never cooperate","Only provide public relations","Operate without products"], correct:0, explain:"Joint production enterprises share products with one another, such as in cotton production." },
+    { id:"c2q16", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:7, q:"What characterizes complementary enterprises?", options:["The raw materials from one product contribute to another enterprise's new product","They produce independently without inputs","They are linked only by ownership","They avoid production relationships"], correct:0, explain:"Complementary enterprises use raw materials from a specific product of one enterprise to contribute to a new product of another." },
+    { id:"c2q17", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:8, q:"Which system makes information available to users inside and outside the organization upon request in the form of reports?", options:["Transaction Processing Systems","Management Information Systems","Decision Support Systems","Production systems"], correct:0, explain:"According to the lecture, Transaction Processing Systems make information available to internal and external users upon request in reports." },
+    { id:"c2q18", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:8, q:"Management Information Systems provide managers with information in the form of...", options:["Indicators and reports","Raw materials and technologies","Products and services","Legal contracts only"], correct:0, explain:"MIS provide indicators and reports that help managers perform planning and control functions." },
+    { id:"c2q19", type:"tf", lec:1, lecTitle:"Enterprise Information System", page:8, q:"Decision Support Systems assist managers in making non-structural, non-recurring decisions.", correct:true, explain:"The lecture defines DSS as systems designed to assist managers with non-structural and non-recurring decisions." },
+    { id:"c2q20", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:9, q:"What is an Enterprise Resource Planning system?", options:["An integrated software system that organizes and unifies core processes and functions","A system used only for public relations","A separate application for each employee","A system that does not process data"], correct:0, explain:"ERP is an integrated software system that organizes and unifies the management and processing of various core processes and functions." },
+    { id:"c2q21", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:9, q:"Which departments can be integrated by an ERP system according to the lecture?", options:["Production, inventory, sales, accounting, and human resources","Only marketing and public relations","Only legal affairs","Only external customers"], correct:0, explain:"ERP integrates data and processes from departments such as production, inventory, sales, accounting, and human resources." },
+    { id:"c2q22", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:10, q:"Which is an importance of an ERP system?", options:["Process integration","Increasing data isolation","Reducing visibility","Preventing planning"], correct:0, explain:"Process integration is one of the listed benefits of ERP systems." },
+    { id:"c2q23", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:10, q:"Comprehensive visibility in ERP means...", options:["Combining data from various departments into consolidated reports","Hiding data from managers","Using one department's data only","Removing all reports"], correct:0, explain:"Comprehensive visibility combines data from various departments into consolidated reports." },
+    { id:"c2q24", type:"tf", lec:1, lecTitle:"Enterprise Information System", page:10, q:"ERP can improve customer experience by delivering better and faster services.", correct:true, explain:"Improved customer experience through better and faster services is listed as an ERP benefit." },
+    { id:"c2q25", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:11, q:"Which ERP type is a software suite used on workstations at the company's site?", options:["On-premise systems","Cloud-based systems","Open source systems","External reporting systems"], correct:0, explain:"On-premise systems are software suites used on workstations at the company's site." },
+    { id:"c2q26", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:11, q:"Which ERP type enables access anytime and anywhere?", options:["Cloud-based systems","On-premise systems","Paper-based systems","Production systems"], correct:0, explain:"Cloud-based ERP systems enable access anytime and anywhere." },
+    { id:"c2q27", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:12, q:"Which ERP component manages employee payroll, performance, and training data?", options:["Human Resources Management","Customer Relationship Management","Project Management","Reports and Analysis"], correct:0, explain:"Human Resources Management handles employee payroll, performance, and training data." },
+    { id:"c2q28", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:12, q:"Which component facilitates the management of customer-related information?", options:["Customer Relationship Management","Resource Planning","Financial Management","Operations Management"], correct:0, explain:"Customer Relationship Management facilitates the management of customer-related information." },
+    { id:"c2q29", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:12, q:"Which component identifies and allocates resources among departments and projects?", options:["Resource Planning","Financial Management","Human Resources Management","Reports and Analysis"], correct:0, explain:"Resource Planning identifies and allocates resources among departments and projects." },
+    { id:"c2q30", type:"tf", lec:1, lecTitle:"Enterprise Information System", page:12, q:"Integration and databases allow different organizational units to exchange data seamlessly and in a unified way.", correct:true, explain:"Integration and databases enable different units to exchange data seamlessly and in a unified way." }
   ],
   c3: [ // Public Finance
     { id:"c3q1", type:"mcq", lec:1, lecTitle:"Public Finance - Part 1", page:3, q:"Public finance is mainly concerned with the study of how the government manages...",
@@ -2414,20 +2389,53 @@ const businessAnalyticsTranslations = {
   c1q40: { q:"البيانات شبه المنظمة أسهل في المعالجة من البيانات غير المنظمة، وطبيعتها هرمية أو رسومية.", options:["صح","خطأ"], explain:"البيانات شبه المنظمة هرمية أو بيانية بطبيعتها، أسهل في المعالجة من البيانات غير المنظمة، وتتطلب معالجة خاصة مثل التحقق من XML." }
 };
 
+const enterpriseInformationTranslations = {
+  c2q1: { q:"ما هو النظام المؤسسي؟", options:["منظمة أُنشئت لإنجاز نوع من العمل أو تحقيق هدف","تطبيق حاسوبي يستخدم للمحاسبة فقط","مجموعة من أفراد غير مترابطين","منتج يُباع في السوق"], explain:"النظام المؤسسي هو منظمة أُنشئت لإنجاز عمل أو تقديم خدمات أو تنفيذ برنامج أو فكرة أو تحقيق هدف تعليمي أو وظيفي أو اجتماعي." },
+  c2q2: { q:"أي خاصية من الخصائص التالية ذُكرت للمؤسسات؟", options:["السعي لتحقيق المرونة التشغيلية وتقليل التكاليف","تجنب الابتكار","عدم التواصل مع العملاء","العمل دون تخصص"], explain:"ذكرت المحاضرة السعي لتحقيق المرونة التشغيلية وتقليل التكاليف كإحدى خصائص المؤسسات." },
+  c2q3: { q:"تتميز المؤسسات بالفعالية والكفاءة.", options:["صح","خطأ"], explain:"الفعالية والكفاءة من خصائص المؤسسات المذكورة في المحاضرة." },
+  c2q4: { q:"أي خاصية تساهم في تحقيق الجودة؟", options:["التخصص في مجال محدد","تجنب التواصل المباشر مع العملاء","تقليل الوجود في السوق","رفض الاستفادة من التجارب الناجحة"], explain:"توضح المحاضرة أن التخصص في مجال محدد يساهم في تحقيق الجودة." },
+  c2q5: { q:"أي مما يلي يعد هدفًا من أهداف المؤسسة؟", options:["تطوير الإنتاج","إلغاء المنافسة في السوق","تقليل الأرباح","زيادة تكاليف الإنتاج"], explain:"تطوير الإنتاج أحد أهداف المؤسسات المذكورة في المحاضرة." },
+  c2q6: { q:"لماذا تستطيع المؤسسة زيادة أرباحها وفقًا للمحاضرة؟", options:["لأن تكاليف الإنتاج أقل من أسعار البيع","لأنها توقف الإنتاج","لأنها تتجنب السوق","لأنها تزيد كل التكاليف"], explain:"توضح المحاضرة أن الأرباح تزيد عندما تكون تكاليف الإنتاج أقل من أسعار البيع." },
+  c2q7: { q:"أي مما يلي وظيفة أساسية للمؤسسة؟", options:["وظيفة الإنتاج","وظيفة شؤون العاملين","وظيفة الشؤون القانونية","وظيفة العلاقات العامة"], explain:"الوظائف الأساسية هي الإنتاج والتسويق والتمويل، أما شؤون العاملين والشؤون القانونية والعلاقات العامة فهي وظائف فرعية." },
+  c2q8: { q:"في مخطط نظام الإنتاج، ما أمثلة المدخلات؟", options:["المواد الأولية والعمالة والتكنولوجيا","السلع والخدمات فقط","التقارير والمؤشرات","العملاء والمستثمرون فقط"], explain:"مدخلات نظام الإنتاج الموضحة هي المواد الأولية والعمالة والتكنولوجيا." },
+  c2q9: { q:"ما مخرجات نظام الإنتاج؟", options:["السلع والخدمات","المواد الأولية والتكنولوجيا","التقارير وبيانات التدريب","الشؤون القانونية والعلاقات العامة"], explain:"ينتج نظام الإنتاج مخرجات مثل السلع والخدمات." },
+  c2q10: { q:"قد يؤدي الفشل في أداء وظيفة التسويق بفاعلية إلى فشل المنظمة وعدم قدرتها على الاستمرار والبقاء.", options:["صح","خطأ"], explain:"تذكر المحاضرة أن ضعف أداء التسويق قد يؤدي إلى فشل المنظمة وعدم ضمان استمراريتها وبقائها." },
+  c2q11: { q:"أي مما يلي وظيفة فرعية للمؤسسة؟", options:["وظيفة شؤون العاملين","وظيفة الإنتاج","وظيفة التسويق","وظيفة التمويل"], explain:"الوظائف الفرعية هي شؤون العاملين والشؤون القانونية والعلاقات العامة." },
+  c2q12: { q:"ما هدف الوظائف الفرعية؟", options:["تقليل عبء العمل الواقع على الوظائف الأساسية","استبدال كل الوظائف الأساسية","إلغاء الإنتاج","منع العلاقات العامة"], explain:"تهدف الوظائف الفرعية إلى تقليل عبء العمل الواقع على الوظائف الأساسية." },
+  c2q13: { q:"تساعد وظيفة العلاقات العامة المؤسسة في...", options:["تحسين صورتها لدى الجمهور","إنتاج المواد الأولية","إعداد الميزانيات المالية فقط","إدارة رواتب الموظفين فقط"], explain:"توضح المحاضرة أن العلاقات العامة تعمل على تحسين صورة المنظمة لدى الجمهور." },
+  c2q14: { q:"أي نوع من المؤسسات ينتج منتجاته بشكل مستقل؟", options:["مؤسسات الإنتاج الفردي","مؤسسات الإنتاج المشترك","المؤسسات المتكاملة","مؤسسات الملكية المشتركة"], explain:"مؤسسة الإنتاج الفردي تنتج منتجاتها بشكل مستقل." },
+  c2q15: { q:"مؤسسات الإنتاج المشترك هي المؤسسات التي...", options:["تتشارك المنتجات مع بعضها","لا تتعاون أبدًا","تقدم العلاقات العامة فقط","تعمل دون منتجات"], explain:"مؤسسات الإنتاج المشترك تتشارك المنتجات مع بعضها، مثل إنتاج القطن." },
+  c2q16: { q:"ما الذي يميز المؤسسات المتكاملة؟", options:["استخدام خامات منتج من مؤسسة للمساهمة في منتج جديد لمؤسسة أخرى","الإنتاج بشكل مستقل دون مدخلات","ارتباطها بالملكية فقط","تجنب علاقات الإنتاج"], explain:"تستخدم المؤسسات المتكاملة خامات منتج معين من مؤسسة للمساهمة في إنتاج منتج جديد لمؤسسة أخرى." },
+  c2q17: { q:"أي نظام يتيح المعلومات للمستخدمين داخل المنظمة وخارجها عند الطلب في صورة تقارير؟", options:["نظم معالجة المعاملات","نظم المعلومات الإدارية","نظم دعم القرار","نظم الإنتاج"], explain:"وفقًا للمحاضرة، تتيح نظم معالجة المعاملات المعلومات للمستخدمين الداخليين والخارجيين عند الطلب في صورة تقارير." },
+  c2q18: { q:"توفر نظم المعلومات الإدارية للمديرين المعلومات في صورة...", options:["مؤشرات وتقارير","مواد أولية وتكنولوجيا","منتجات وخدمات","عقود قانونية فقط"], explain:"توفر نظم المعلومات الإدارية مؤشرات وتقارير تساعد المديرين في وظائف التخطيط والرقابة." },
+  c2q19: { q:"تساعد نظم دعم القرار المديرين في اتخاذ قرارات غير هيكلية وغير متكررة.", options:["صح","خطأ"], explain:"تعرف المحاضرة نظم دعم القرار بأنها نظم مصممة لمساعدة المديرين في القرارات غير الهيكلية وغير المتكررة." },
+  c2q20: { q:"ما هو نظام تخطيط موارد المؤسسة؟", options:["نظام برمجي متكامل ينظم ويوحد العمليات والوظائف الأساسية","نظام يستخدم للعلاقات العامة فقط","تطبيق منفصل لكل موظف","نظام لا يعالج البيانات"], explain:"ERP نظام برمجي متكامل ينظم ويوحد إدارة ومعالجة مختلف العمليات والوظائف الأساسية." },
+  c2q21: { q:"ما الأقسام التي يمكن لنظام ERP دمجها وفقًا للمحاضرة؟", options:["الإنتاج والمخزون والمبيعات والمحاسبة والموارد البشرية","التسويق والعلاقات العامة فقط","الشؤون القانونية فقط","العملاء الخارجيون فقط"], explain:"يدمج ERP البيانات والعمليات من أقسام مثل الإنتاج والمخزون والمبيعات والمحاسبة والموارد البشرية." },
+  c2q22: { q:"أي مما يلي من أهمية نظام ERP؟", options:["تكامل العمليات","زيادة عزل البيانات","تقليل وضوح المعلومات","منع التخطيط"], explain:"تكامل العمليات من فوائد أنظمة ERP المذكورة في المحاضرة." },
+  c2q23: { q:"ماذا تعني الرؤية الشاملة في ERP؟", options:["دمج بيانات الأقسام المختلفة في تقارير موحدة","إخفاء البيانات عن المديرين","استخدام بيانات قسم واحد فقط","إلغاء جميع التقارير"], explain:"تعني الرؤية الشاملة دمج بيانات الأقسام المختلفة في تقارير موحدة." },
+  c2q24: { q:"يمكن لـ ERP تحسين تجربة العملاء من خلال تقديم خدمات أفضل وأسرع.", options:["صح","خطأ"], explain:"تحسين تجربة العملاء عن طريق تقديم خدمات أفضل وأسرع من فوائد ERP المذكورة." },
+  c2q25: { q:"أي نوع من ERP هو مجموعة برمجيات تستخدم على محطات العمل في مقر الشركة؟", options:["الأنظمة المحلية On-premise","الأنظمة السحابية","الأنظمة مفتوحة المصدر","أنظمة التقارير الخارجية"], explain:"الأنظمة المحلية هي مجموعة برمجيات تستخدم على محطات العمل في مقر الشركة." },
+  c2q26: { q:"أي نوع من ERP يتيح الوصول في أي وقت ومن أي مكان؟", options:["الأنظمة السحابية","الأنظمة المحلية","الأنظمة الورقية","نظم الإنتاج"], explain:"تتيح أنظمة ERP السحابية الوصول في أي وقت ومن أي مكان." },
+  c2q27: { q:"أي مكون من مكونات ERP يدير بيانات رواتب الموظفين وأدائهم وتدريبهم؟", options:["إدارة الموارد البشرية","إدارة علاقات العملاء","إدارة المشروعات","التقارير والتحليل"], explain:"تتعامل إدارة الموارد البشرية مع بيانات رواتب الموظفين والأداء والتدريب." },
+  c2q28: { q:"أي مكون يسهل إدارة المعلومات المتعلقة بالعملاء؟", options:["إدارة علاقات العملاء","تخطيط الموارد","الإدارة المالية","إدارة العمليات"], explain:"تسهل إدارة علاقات العملاء إدارة المعلومات المتعلقة بالعملاء." },
+  c2q29: { q:"أي مكون يحدد الموارد ويوزعها بين الأقسام والمشروعات؟", options:["تخطيط الموارد","الإدارة المالية","إدارة الموارد البشرية","التقارير والتحليل"], explain:"يحدد تخطيط الموارد الموارد ويوزعها بين الأقسام والمشروعات." },
+  c2q30: { q:"تسمح التكاملية وقواعد البيانات للوحدات التنظيمية المختلفة بتبادل البيانات بسلاسة وبطريقة موحدة.", options:["صح","خطأ"], explain:"تمكن التكاملية وقواعد البيانات الوحدات المختلفة من تبادل البيانات بسلاسة وبطريقة موحدة." }
+};
+
 function getQuestionLanguageText(q, lang){
-  const ar = q.translation && q.translation.ar ? q.translation.ar : (businessAnalyticsTranslations[q.id] || null);
+  const ar = q.translation && q.translation.ar ? q.translation.ar : (businessAnalyticsTranslations[q.id] || enterpriseInformationTranslations[q.id] || null);
   if(lang === 'en') return q.q;
   return ar && ar.q ? ar.q : q.q;
 }
 
 function getQuestionOptionText(q, lang, idx){
-  const ar = q.translation && q.translation.ar ? q.translation.ar : (businessAnalyticsTranslations[q.id] || null);
+  const ar = q.translation && q.translation.ar ? q.translation.ar : (businessAnalyticsTranslations[q.id] || enterpriseInformationTranslations[q.id] || null);
   if(lang === 'en') return q.options[idx];
   return ar && ar.options && ar.options[idx] ? ar.options[idx] : q.options[idx];
 }
 
 function getQuestionExplanation(q, lang){
-  const ar = q.translation && q.translation.ar ? q.translation.ar : (businessAnalyticsTranslations[q.id] || null);
+  const ar = q.translation && q.translation.ar ? q.translation.ar : (businessAnalyticsTranslations[q.id] || enterpriseInformationTranslations[q.id] || null);
   if(lang === 'en') return q.explain || '';
   return ar && ar.explain ? ar.explain : (q.explain || '');
 }
