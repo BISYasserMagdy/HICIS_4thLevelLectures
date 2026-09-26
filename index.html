@@ -306,6 +306,7 @@
     transition:background .15s ease;
   }
   .link-btn:hover{background:var(--green);}
+  .lecture-open-btn{margin-top:8px; width:100%; justify-content:center;}
   .link-btn.secondary{
     background:#fff;
     color:var(--green-deep);
@@ -1376,7 +1377,9 @@ function courseCard(c){
 
   const lecturesHtml = lectures.length ? `
     <div class="lectures">
-      ${lectures.map((lec, i) => `
+      ${lectures.map((lec, i) => {
+        const openUrl = lec.link || (lec.file ? lec.file.replace(/uc\?export=download&id=([^&]+)/, 'file/d/$1/view') : '');
+        return `
         <div class="lecture-item">
           <div class="lecture-head">
             <span class="lecture-title">📄 ${escapeHtml(lec.title || `محاضرة ${i+1}`)}</span>
@@ -1386,8 +1389,9 @@ function courseCard(c){
             <ul class="lecture-outline">
               ${lec.outline.map(pt => `<li>${escapeHtml(pt)}</li>`).join('')}
             </ul>` : ''}
+          ${openUrl ? `<a class="link-btn lecture-open-btn" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener">فتح ملف المحاضرة ↗</a>` : ''}
         </div>
-      `).join('')}
+      `;}).join('')}
     </div>` : '';
 
   return `
@@ -1404,11 +1408,12 @@ function courseCard(c){
       ${hasRoom ? `<span class="meta-chip">🏛️ ${escapeHtml(c.room)}</span>` : ''}
     </div>
     ${lecturesHtml}
+    ${lectures.length ? '' : `
     <div class="links">
       ${hasLink
         ? `<a class="link-btn" href="${escapeHtml(c.link)}" target="_blank" rel="noopener">فتح ملف المحاضرة ↗</a>`
         : `<span class="no-link">لا يوجد رابط للمحاضرة بعد</span>`}
-    </div>
+    </div>`}
   </div>`;
 }
 
