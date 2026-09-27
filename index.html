@@ -1225,9 +1225,10 @@
   .interactive-rating{border:1px solid var(--line); background:#fff; color:var(--green-deep);}
   .interactive-rating.known{border-color:#3f9d67; background:#e6f2ea; color:#1e6b45;}
   .interactive-rating.review{border-color:#dcb877; background:#fdf6e3; color:#76551b;}
-  .gamification-panel{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:22px; max-width:760px;}
-  .gamification-panel h2{font:700 1.1rem 'Cairo',sans-serif; color:var(--green-deep); margin:0 0 4px;}
-  .gamification-panel p{color:var(--muted); margin:0 0 14px; font-size:.9rem;}
+  .gamification-intro{margin-bottom:18px;}
+  .gamification-intro h2{font:700 1.1rem 'Cairo',sans-serif; color:var(--green-deep); margin:0 0 4px;}
+  .gamification-intro p{color:var(--muted); margin:0; font-size:.9rem;}
+  .gamification-course-card .course-note{color:var(--muted); font-size:.82rem; margin:0 0 12px;}
   .gamification-mode-buttons{display:flex; flex-wrap:wrap; gap:10px;}
   @media (max-width:600px){.interactive-match-grid{grid-template-columns:1fr;}.interactive-card{padding:18px;}.interactive-flashcard{min-height:180px; padding:22px 16px;}}
 </style>
@@ -1305,13 +1306,12 @@
 </main>
 
 <main id="gamificationSection" style="display:none;">
-  <div id="gamificationHome" class="gamification-panel">
-    <h2>تدريب تفاعلي</h2>
-    <p>تجربة أولى لمادة Business Analytics &amp; Data Mining</p>
-    <div class="gamification-mode-buttons">
-      <button type="button" class="interactive-mode-btn" data-gamification-mode="matching">🔗 توصيل المفهوم بتعريفه</button>
-      <button type="button" class="interactive-mode-btn secondary" data-gamification-mode="flashcards">🗂️ بطاقات تعليمية</button>
+  <div id="gamificationHome">
+    <div class="gamification-intro">
+      <h2>تدريب تفاعلي</h2>
+      <p>اختر المادة ثم طريقة التدريب.</p>
     </div>
+    <div id="gamificationCourseList" class="quiz-course-grid"></div>
   </div>
   <div id="gamificationSessionWrap" style="display:none;"></div>
 </main>
@@ -2286,8 +2286,8 @@ document.getElementById('sectionNav').addEventListener('click', (e)=>{
   switchSection(btn.dataset.section);
 });
 document.getElementById('gamificationHome').addEventListener('click', (e)=>{
-  const button = e.target.closest('[data-gamification-mode]');
-  if(button) startGamificationActivity(button.dataset.gamificationMode);
+  const button = e.target.closest('[data-gamification-course][data-gamification-mode]');
+  if(button) startGamificationActivity(button.dataset.gamificationCourse, button.dataset.gamificationMode);
 });
 
 /* ---- Quiz home (course list + due badge) ---- */
@@ -2640,7 +2640,9 @@ function getQuestionExplanation(q, lang){
 }
 
 const gamificationContent = {
-  matching:[
+  c1:{
+    name:'Business Analytics & Data Mining',
+    matching:[
     {front:{ar:'البيانات المنظمة',en:'Structured data'}, back:{ar:'بيانات تتبع مخططًا ثابتًا ويمكن البحث فيها باستخدام SQL.',en:'Data that follows a fixed schema and can be queried with SQL.'}},
     {front:{ar:'البيانات غير المنظمة',en:'Unstructured data'}, back:{ar:'بيانات بلا مخطط ثابت، مثل النصوص والصور ومقاطع الفيديو.',en:'Data without a fixed schema, such as text, images, and video.'}},
     {front:{ar:'البيانات شبه المنظمة',en:'Semi-structured data'}, back:{ar:'بيانات تستخدم وسومًا أو مفاتيح للتنظيم، مثل XML وJSON.',en:'Data organized with tags or keys, such as XML and JSON.'}},
@@ -2648,7 +2650,7 @@ const gamificationContent = {
     {front:{ar:'جمع البيانات الأولية',en:'Primary data collection'}, back:{ar:'جمع الباحث للبيانات مباشرةً من مصدرها الأصلي.',en:'The researcher collects data directly from its original source.'}},
     {front:{ar:'جمع البيانات الثانوية',en:'Secondary data collection'}, back:{ar:'استخدام بيانات سبق أن جمعتها مصادر أخرى.',en:'Using data that was previously collected by other sources.'}}
   ],
-  flashcards:[
+    flashcards:[
     {front:{ar:'ما المقصود بتحليلات الأعمال؟',en:'What is business analytics?'}, back:{ar:'جمع البيانات وتحليلها وتفسيرها لمساعدة المؤسسات على اتخاذ قرارات أفضل وتحسين الأداء.',en:'Collecting, analyzing, and interpreting data to help organizations make better decisions and improve performance.'}},
     {front:{ar:'ما وظيفة التحليل التنبؤي؟',en:'What does predictive analytics do?'}, back:{ar:'يستخدم البيانات للتنبؤ بالاتجاهات والنتائج المستقبلية.',en:'It uses data to forecast future trends and outcomes.'}},
     {front:{ar:'ما المقصود بتنظيف البيانات؟',en:'What is data cleaning?'}, back:{ar:'اكتشاف الأخطاء والتكرار والبيانات غير المكتملة ومعالجتها لتحسين الجودة.',en:'Finding and handling errors, duplicates, and incomplete data to improve quality.'}},
@@ -2657,20 +2659,122 @@ const gamificationContent = {
     {front:{ar:'ما الذي يميز المقابلة المنظمة؟',en:'What distinguishes a structured interview?'}, back:{ar:'مجموعة أسئلة محددة تُطرح بالترتيب نفسه على جميع المشاركين.',en:'A fixed set of questions asked in the same order to all participants.'}},
     {front:{ar:'ما هو مخزن البيانات (Data Warehouse)؟',en:'What is a data warehouse?'}, back:{ar:'مخزن منظم للبيانات التاريخية، مُهيأ للاستعلامات والتقارير والتحليل.',en:'An organized store of historical data designed for queries, reports, and analysis.'}},
     {front:{ar:'ما المقصود بمستودع البيانات (Data Repository)؟',en:'What is a data repository?'}, back:{ar:'مكان عام لحفظ البيانات وإدارتها، وقد يحتوي أنواعًا مختلفة من البيانات.',en:'A general place to store and manage data, potentially in different forms.'}}
-  ]
+    ]
+  },
+  c2:{
+    name:'Enterprise Information System',
+    matching:[
+      {front:{ar:'نظم معالجة المعاملات (TPS)',en:'Transaction Processing Systems (TPS)'}, back:{ar:'تسجل المعاملات اليومية وتوفر معلوماتها عند الطلب.',en:'Record routine transactions and provide their information on request.'}},
+      {front:{ar:'نظم المعلومات الإدارية (MIS)',en:'Management Information Systems (MIS)'}, back:{ar:'تقدم للمديرين مؤشرات وتقارير للتخطيط والرقابة.',en:'Provide managers with indicators and reports for planning and control.'}},
+      {front:{ar:'نظم دعم القرار (DSS)',en:'Decision Support Systems (DSS)'}, back:{ar:'تساعد المديرين في القرارات غير الهيكلية وغير المتكررة.',en:'Assist managers with unstructured and non-routine decisions.'}},
+      {front:{ar:'نظام تخطيط موارد المؤسسة (ERP)',en:'Enterprise Resource Planning (ERP)'}, back:{ar:'نظام متكامل يوحد إدارة العمليات والوظائف الأساسية.',en:'An integrated system that unifies core processes and functions.'}},
+      {front:{ar:'ERP محلي (On-premise)',en:'On-premise ERP'}, back:{ar:'يُستخدم على أجهزة العمل داخل مقر الشركة.',en:'Runs on workstations at the company site.'}},
+      {front:{ar:'ERP سحابي',en:'Cloud ERP'}, back:{ar:'يتيح الوصول للنظام عبر الإنترنت من أماكن مختلفة.',en:'Allows access to the system over the internet from different locations.'}}
+    ],
+    flashcards:[
+      {front:{ar:'ما المقصود بالمؤسسة؟',en:'What is an enterprise?'}, back:{ar:'منظمة أُنشئت لإنجاز عمل أو تقديم خدمة أو تحقيق هدف.',en:'An organization established to do work, provide a service, or achieve a goal.'}},
+      {front:{ar:'ما الوظائف الأساسية للمؤسسة؟',en:'What are an enterprise’s core functions?'}, back:{ar:'الإنتاج والتسويق والتمويل.',en:'Production, marketing, and finance.'}},
+      {front:{ar:'ما أمثلة الوظائف الفرعية؟',en:'What are examples of supporting functions?'}, back:{ar:'شؤون العاملين والشؤون القانونية والعلاقات العامة.',en:'Personnel, legal affairs, and public relations.'}},
+      {front:{ar:'ما فائدة تكامل الأقسام في ERP؟',en:'Why integrate departments with ERP?'}, back:{ar:'توحيد البيانات والعمليات وتسهيل تبادل المعلومات بين الأقسام.',en:'To unify data and processes and make information exchange between departments easier.'}},
+      {front:{ar:'ما الفرق بين ERP السحابي والمحلي؟',en:'How do cloud and on-premise ERP differ?'}, back:{ar:'السحابي يُتاح عبر الإنترنت، والمحلي يعمل على أجهزة داخل مقر الشركة.',en:'Cloud ERP is accessed online; on-premise ERP runs on workstations at the company site.'}},
+      {front:{ar:'ما وظيفة إدارة علاقات العملاء (CRM)؟',en:'What does Customer Relationship Management (CRM) do?'}, back:{ar:'إدارة المعلومات والعمليات المتعلقة بالعملاء.',en:'Manages customer-related information and processes.'}},
+      {front:{ar:'كيف تساعد نظم المعلومات الإدارية المديرين؟',en:'How do MIS help managers?'}, back:{ar:'بتوفير مؤشرات وتقارير تدعم التخطيط والرقابة.',en:'By providing indicators and reports that support planning and control.'}},
+      {front:{ar:'ما أمثلة مدخلات نظام الإنتاج؟',en:'What are examples of production-system inputs?'}, back:{ar:'المواد الأولية والعمالة والتكنولوجيا.',en:'Raw materials, labor, and technology.'}}
+    ]
+  },
+  c3:{
+    name:'Public Finance',
+    matching:[
+      {front:{ar:'المالية العامة',en:'Public finance'}, back:{ar:'دراسة إيرادات الدولة ونفقاتها وكيفية إدارتها.',en:'The study of how the state raises revenue and manages expenditure.'}},
+      {front:{ar:'الإيرادات العامة',en:'Public revenue'}, back:{ar:'الأموال التي تحصل عليها الدولة، ومنها الضرائب والرسوم.',en:'Funds received by the state, including taxes and compulsory charges.'}},
+      {front:{ar:'النفقات العامة',en:'Public expenditure'}, back:{ar:'أموال تنفقها الدولة لتمويل خدماتها ووظائفها.',en:'Spending by the state to fund public services and functions.'}},
+      {front:{ar:'الموازنة العامة',en:'Government budget'}, back:{ar:'خطة تقديرية لإيرادات الدولة ونفقاتها خلال فترة محددة.',en:'A plan of expected government revenue and expenditure over a period.'}},
+      {front:{ar:'الموازنة المتوازنة',en:'Balanced budget'}, back:{ar:'تساوي إجمالي الإيرادات العامة مع إجمالي النفقات.',en:'Total public revenue equals total public expenditure.'}},
+      {front:{ar:'وظيفة إعادة التوزيع',en:'Redistribution function'}, back:{ar:'استخدام السياسات المالية للتأثير في توزيع الدخل والثروة.',en:'Using fiscal policies to influence the distribution of income and wealth.'}}
+    ],
+    flashcards:[
+      {front:{ar:'ما الهدف الأساسي للمالية العامة؟',en:'What is a central aim of public finance?'}, back:{ar:'إدارة موارد الدولة ونفقاتها لدعم الوظائف العامة والرفاه الاجتماعي.',en:'Managing state resources and spending to support public functions and social welfare.'}},
+      {front:{ar:'ما المصدر الرئيسي للإيرادات الحكومية عادةً؟',en:'What is usually a main source of government revenue?'}, back:{ar:'الضرائب والرسوم الإلزامية.',en:'Taxes and compulsory charges.'}},
+      {front:{ar:'على ماذا يُنفق المال العام؟',en:'What does public expenditure fund?'}, back:{ar:'وظائف الدولة وخدمات مثل الإدارة والدفاع والتعليم والرعاية.',en:'State functions and services such as administration, defense, education, and welfare.'}},
+      {front:{ar:'ما المقصود بعجز الموازنة؟',en:'What is a budget deficit?'}, back:{ar:'أن تتجاوز النفقات العامة الإيرادات العامة خلال فترة معينة.',en:'Public expenditure exceeds public revenue over a given period.'}},
+      {front:{ar:'ما المقصود بفائض الموازنة؟',en:'What is a budget surplus?'}, back:{ar:'أن تتجاوز الإيرادات العامة النفقات العامة خلال فترة معينة.',en:'Public revenue exceeds public expenditure over a given period.'}},
+      {front:{ar:'كيف تدعم الموازنة التخطيط؟',en:'How does a budget support planning?'}, back:{ar:'بتقدير الإيرادات وتحديد أوجه الإنفاق لفترة قادمة.',en:'By estimating revenue and setting planned expenditure for an upcoming period.'}},
+      {front:{ar:'ما وظيفة التوزيع في المالية العامة؟',en:'What is the distribution function in public finance?'}, back:{ar:'التأثير في توزيع الدخل والثروة داخل المجتمع.',en:'Influencing how income and wealth are distributed in society.'}},
+      {front:{ar:'كيف ترتبط المالية العامة بالاستقرار الاقتصادي؟',en:'How is public finance related to economic stability?'}, back:{ar:'تؤثر قرارات الإيرادات والإنفاق الحكومية في النشاط الاقتصادي والاستقرار.',en:'Government revenue and spending decisions affect economic activity and stability.'}}
+    ]
+  },
+  c4:{
+    name:'Feasibility Study of Projects',
+    matching:[
+      {front:{ar:'دراسة الجدوى',en:'Feasibility study'}, back:{ar:'تقييم منظم لمدى قابلية المشروع للتنفيذ قبل الالتزام به.',en:'A structured assessment of whether a project is viable before committing to it.'}},
+      {front:{ar:'الجدوى السوقية',en:'Market feasibility'}, back:{ar:'تدرس العملاء والطلب والمنافسة وفرصة بيع المنتج أو الخدمة.',en:'Examines customers, demand, competition, and the opportunity to sell.'}},
+      {front:{ar:'الجدوى الفنية',en:'Technical feasibility'}, back:{ar:'تقيّم التقنية والموارد والقدرة التشغيلية اللازمة للمشروع.',en:'Evaluates the technology, resources, and operational capacity a project needs.'}},
+      {front:{ar:'الجدوى المالية',en:'Financial feasibility'}, back:{ar:'تقدّر التكاليف والتمويل والإيرادات والعائد المالي المتوقع.',en:'Estimates costs, funding, revenue, and expected financial return.'}},
+      {front:{ar:'الجدوى القانونية',en:'Legal feasibility'}, back:{ar:'تتحقق من توافق المشروع مع القوانين والتراخيص المطلوبة.',en:'Checks whether the project meets applicable laws and licensing requirements.'}},
+      {front:{ar:'الجدوى الاقتصادية',en:'Economic feasibility'}, back:{ar:'تقيّم كفاءة استخدام الموارد والمنافع الاقتصادية المتوقعة.',en:'Assesses efficient resource use and expected economic benefits.'}}
+    ],
+    flashcards:[
+      {front:{ar:'لماذا تُجرى دراسة الجدوى قبل بدء المشروع؟',en:'Why conduct a feasibility study before starting a project?'}, back:{ar:'لتقليل عدم اليقين ومساعدة أصحاب القرار على تحديد ما إذا كان المشروع قابلًا للتنفيذ.',en:'To reduce uncertainty and help decision-makers determine whether a project is viable.'}},
+      {front:{ar:'ما السؤال الرئيسي في دراسة الجدوى السوقية؟',en:'What is the main question in market feasibility?'}, back:{ar:'هل يوجد طلب وعملاء محتملون وفرصة تنافسية للمنتج أو الخدمة؟',en:'Is there demand, a potential customer base, and a competitive opportunity?' }},
+      {front:{ar:'ما الذي تفحصه الجدوى الفنية؟',en:'What does technical feasibility examine?'}, back:{ar:'توفر التقنية والموارد والمهارات والقدرة على تشغيل المشروع.',en:'The availability of technology, resources, skills, and operational capacity.'}},
+      {front:{ar:'ما الذي تقدّره الجدوى المالية؟',en:'What does financial feasibility estimate?'}, back:{ar:'تكاليف المشروع واحتياجات التمويل والإيرادات والعائد المتوقع.',en:'Project costs, funding needs, revenue, and expected return.'}},
+      {front:{ar:'لماذا تُراجع المتطلبات القانونية؟',en:'Why review legal requirements?'}, back:{ar:'للتأكد من أن التنفيذ والتشغيل يلتزمان بالقوانين والتراخيص.',en:'To ensure implementation and operation comply with laws and licenses.'}},
+      {front:{ar:'هل دراسة الجدوى هي خطة العمل نفسها؟',en:'Is a feasibility study the same as a business plan?'}, back:{ar:'لا؛ دراسة الجدوى تقيّم صلاحية الفكرة، أما خطة العمل فتشرح كيفية تنفيذها وإدارتها.',en:'No. A feasibility study evaluates the idea; a business plan explains how to implement and manage it.'}},
+      {front:{ar:'ما أحد حدود دراسة الجدوى؟',en:'What is one limitation of a feasibility study?'}, back:{ar:'تعتمد على افتراضات وتقديرات قد تتغير مع تغير السوق والظروف.',en:'It relies on assumptions and estimates that may change with market conditions.'}},
+      {front:{ar:'ماذا تساعد نتائج دراسة الجدوى صاحب المشروع أن يقرر؟',en:'What can feasibility findings help an owner decide?'}, back:{ar:'المضي قدمًا أو تعديل الفكرة أو إيقاف المشروع.',en:'Whether to proceed, revise the idea, or stop the project.'}}
+    ]
+  },
+  c5:{
+    name:'Applied Statistics',
+    note:'مفاهيم تأسيسية عامة؛ لا يوجد مخطط محاضرات للمادة في الموقع حاليًا.',
+    matching:[
+      {front:{ar:'المجتمع الإحصائي',en:'Population'}, back:{ar:'جميع الأفراد أو العناصر محل الدراسة.',en:'The complete set of individuals or items being studied.'}},
+      {front:{ar:'العينة',en:'Sample'}, back:{ar:'جزء من المجتمع يُجمع عنه البيانات لتمثيل المجتمع.',en:'A subset of a population from which data is collected.'}},
+      {front:{ar:'المتوسط الحسابي',en:'Mean'}, back:{ar:'مجموع القيم مقسومًا على عددها.',en:'The sum of the values divided by their count.'}},
+      {front:{ar:'الوسيط',en:'Median'}, back:{ar:'القيمة الواقعة في المنتصف بعد ترتيب البيانات.',en:'The middle value after the data are ordered.'}},
+      {front:{ar:'المنوال',en:'Mode'}, back:{ar:'القيمة الأكثر تكرارًا في مجموعة البيانات.',en:'The value that occurs most often in a dataset.'}},
+      {front:{ar:'الانحراف المعياري',en:'Standard deviation'}, back:{ar:'مقياس يوضح مدى تشتت القيم حول المتوسط.',en:'A measure of how spread out values are around the mean.'}}
+    ],
+    flashcards:[
+      {front:{ar:'ما الفرق بين الإحصاء الوصفي والاستدلالي؟',en:'How do descriptive and inferential statistics differ?'}, back:{ar:'الوصفي يلخص البيانات، والاستدلالي يستخدم عينة لاستخلاص استنتاجات عن المجتمع.',en:'Descriptive statistics summarize data; inferential statistics use a sample to draw conclusions about a population.'}},
+      {front:{ar:'كيف نحسب المدى؟',en:'How do you calculate the range?'}, back:{ar:'نطرح أصغر قيمة من أكبر قيمة.',en:'Subtract the smallest value from the largest.'}},
+      {front:{ar:'ماذا يقيس التباين؟',en:'What does variance measure?'}, back:{ar:'مقدار تشتت القيم حول المتوسط باستخدام مربعات الانحرافات.',en:'The spread of values around the mean using squared deviations.'}},
+      {front:{ar:'ماذا تعني علاقة الارتباط بين متغيرين؟',en:'What does correlation between two variables mean?'}, back:{ar:'وجود ارتباط في تغيرهما، لكنه لا يثبت وحده أن أحدهما سبب الآخر.',en:'They vary in relation to each other, but this alone does not prove causation.'}},
+      {front:{ar:'ما القيمة المتطرفة؟',en:'What is an outlier?'}, back:{ar:'قيمة تختلف بوضوح عن النمط العام لبقية البيانات.',en:'A value that differs markedly from the general pattern of the other data.'}},
+      {front:{ar:'لماذا نستخدم عينة بدلًا من دراسة المجتمع كله؟',en:'Why use a sample instead of studying an entire population?'}, back:{ar:'لتقليل الوقت والتكلفة والجهد، مع اختيارها بطريقة مناسبة.',en:'To reduce time, cost, and effort, provided it is selected appropriately.'}},
+      {front:{ar:'هل المتوسط والوسيط يتأثران بالقيم المتطرفة بنفس الطريقة؟',en:'Are the mean and median affected equally by outliers?'}, back:{ar:'لا؛ المتوسط يتأثر عادةً أكثر، بينما يكون الوسيط أكثر مقاومة لها.',en:'No. The mean is usually more affected, while the median is more resistant.'}},
+      {front:{ar:'متى يكون المنوال مفيدًا؟',en:'When is the mode useful?'}, back:{ar:'لتحديد القيمة الأكثر شيوعًا، ويمكن استخدامه مع البيانات النوعية أيضًا.',en:'To identify the most common value; it can also be used with categorical data.'}}
+    ]
+  }
 };
 
 function renderGamificationHome(){
+  const list = document.getElementById('gamificationCourseList');
+  list.innerHTML = Object.entries(gamificationContent).map(([courseId, course])=>`
+    <div class="quiz-course-card gamification-course-card">
+      <h4>${escapeHtml(course.name)}</h4>
+      ${course.note ? `<p class="course-note">${escapeHtml(course.note)}</p>` : ''}
+      <div class="stats">
+        <span class="stat-chip">🔗 ${course.matching.length} توصيلات</span>
+        <span class="stat-chip">🗂️ ${course.flashcards.length} بطاقات</span>
+      </div>
+      <div class="gamification-mode-buttons">
+        <button type="button" class="interactive-mode-btn" data-gamification-course="${courseId}" data-gamification-mode="matching">توصيل المفهوم بتعريفه</button>
+        <button type="button" class="interactive-mode-btn secondary" data-gamification-course="${courseId}" data-gamification-mode="flashcards">بطاقات تعليمية</button>
+      </div>
+    </div>`).join('');
   document.getElementById('gamificationHome').style.display = '';
   document.getElementById('gamificationSessionWrap').style.display = 'none';
 }
 
-function startGamificationActivity(mode){
-  const content = gamificationContent[mode];
+function startGamificationActivity(courseId, mode){
+  const course = gamificationContent[courseId];
+  const content = course && course[mode];
   if(!content) return;
   const items = [...content].sort(()=>Math.random()-0.5);
   gamificationSession = {
-    mode, items, answerOrder:mode === 'matching' ? items.map((_, i)=>i).sort(()=>Math.random()-0.5) : [],
+    courseId, courseName:course.name, mode, items,
+    answerOrder:mode === 'matching' ? items.map((_, i)=>i).sort(()=>Math.random()-0.5) : [],
     idx:0, score:0, lang:'ar', selectedLeft:null, selectedRight:null,
     matched:new Set(), missed:new Set(), feedback:'', feedbackType:'', resolving:false, revealed:false
   };
@@ -2745,7 +2849,7 @@ function renderGamificationActivity(){
       <div class="quiz-topbar interactive-topbar">
         <button class="quiz-back" id="gamificationBackBtn">${lang === 'en' ? '← Activities' : '← قائمة الأنشطة'}</button>
         <button class="quiz-lang-toggle" id="gamificationLangBtn">${lang === 'ar' ? 'English' : 'العربية'}</button>
-        <span class="quiz-progress-text">Business Analytics &amp; Data Mining — ${session.mode === 'matching' ? (lang === 'en' ? 'Matching' : 'توصيل') : (lang === 'en' ? 'Flashcards' : 'بطاقات تعليمية')} · ${progressCount} / ${total}</span>
+        <span class="quiz-progress-text">${escapeHtml(session.courseName)} — ${session.mode === 'matching' ? (lang === 'en' ? 'Matching' : 'توصيل') : (lang === 'en' ? 'Flashcards' : 'بطاقات تعليمية')} · ${progressCount} / ${total}</span>
       </div>
       <div class="progress-bar"><div class="progress-bar-fill" style="width:${progressPct}%"></div></div>
       <div class="interactive-card">${activityHtml}</div>
@@ -2819,7 +2923,7 @@ function renderGamificationSummary(){
         <button type="button" class="link-btn secondary" id="gamificationDoneBtn">العودة للأنشطة</button>
       </div>
     </div></div>`;
-  document.getElementById('gamificationRetryBtn').addEventListener('click', ()=>startGamificationActivity(session.mode));
+  document.getElementById('gamificationRetryBtn').addEventListener('click', ()=>startGamificationActivity(session.courseId, session.mode));
   document.getElementById('gamificationDoneBtn').addEventListener('click', endGamificationActivity);
 }
 
