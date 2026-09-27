@@ -1183,6 +1183,21 @@
     .section-nav-wrap{flex-direction:column;}
     .install-wrap{width:100%; text-align:center;}
   }
+
+  /* ---------- Page viewer modal ---------- */
+  .pv-modal{position:fixed; inset:0; background:rgba(0,0,0,.75); display:none; align-items:center; justify-content:center; z-index:200; padding:18px;}
+  .pv-modal.show{display:flex;}
+  .pv-box{position:relative; width:min(900px,100%); height:min(85vh,780px); background:#111; border-radius:14px; overflow:hidden; box-shadow:0 20px 50px -20px rgba(0,0,0,.6);}
+  .pv-box iframe{width:100%; height:100%; border:0;}
+  .pv-box img{width:100%; height:100%; object-fit:contain; background:#111; display:block;}
+  .pv-close{position:absolute; top:8px; left:8px; z-index:2; background:rgba(0,0,0,.55); color:#fff; border:none; width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer;}
+  #pageViewerFallback{color:#eee; padding:30px; text-align:center; font-size:.95rem;}
+  .show-page-btn{margin-top:10px; display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:.82rem; border-radius:999px; border:1.5px solid var(--gold); background:var(--cream); color:var(--green-deep); font-weight:700; cursor:pointer;}
+  .show-page-btn:hover{background:var(--gold-light);}
+
+  /* ---------- Per-lecture quiz cards ---------- */
+  .quiz-lec-card{border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-top:12px; background:var(--cream);}
+  .quiz-lec-card h5{margin:0 0 8px; font-size:.95rem; color:var(--green-deep); font-family:'Cairo',sans-serif;}
 </style>
 </head>
 <body>
@@ -1276,8 +1291,18 @@
   معهد أبوقير العليا للعلوم التجارية (حاسبات ونظم معلومات سابقًا) — جدول المحاضرات
 </footer>
 
+<div class="pv-modal" id="pageViewerModal">
+  <div class="pv-box">
+    <button class="pv-close" aria-label="إغلاق">✕</button>
+    <img id="pageViewerImg" src="" alt="صفحة المحاضرة" style="display:none;">
+    <iframe id="pageViewerFrame" src="about:blank" allow="autoplay"></iframe>
+    <div id="pageViewerFallback" style="display:none;"></div>
+  </div>
+</div>
 
 
+
+<script src="lecture_pages_c1.js"></script>
 <script>
 /* ---------------- Seed data ---------------- */
 /* Levels/terms are editable groupings; course fields can all be edited in-app. */
@@ -2221,6 +2246,64 @@ function refreshDueBadge(){
   }
 }
 
+
+function lectureFileForQuestion(courseId, lecNum){
+  const course = (typeof seedData !== 'undefined' ? seedData : []).find(c=>c.id===courseId);
+  if(!course || !course.lectures || !lecNum) return null;
+  const lec = course.lectures[lecNum-1];
+  return lec ? lec.file : null;
+}
+function driveFileId(url){
+  if(!url) return null;
+  const m = /\/d\/([^/]+)/.exec(url) || /[?&]id=([^&]+)/.exec(url);
+  return m ? m[1] : null;
+}
+function localPageImage(courseId, lecNum, page){
+  const bank = window.lecturePageImages && window.lecturePageImages[courseId];
+  if(!bank) return null;
+  const lecBank = bank[String(lecNum || 1)];
+  if(!lecBank) return null;
+  return lecBank[String(page)] || null;
+}
+function openPageViewer(courseId, lecNum, page){
+  const modal = document.getElementById('pageViewerModal');
+  const frame = document.getElementById('pageViewerFrame');
+  const fallback = document.getElementById('pageViewerFallback');
+  const img = document.getElementById('pageViewerImg');
+
+  const localB64 = localPageImage(courseId, lecNum, page);
+  if(localB64){
+    frame.style.display = 'none';
+    fallback.style.display = 'none';
+    img.style.display = 'block';
+    img.src = `data:image/jpeg;base64,${localB64}`;
+    modal.classList.add('show');
+    return;
+  }
+
+  const fileUrl = lectureFileForQuestion(courseId, lecNum);
+  const fid = driveFileId(fileUrl);
+  img.style.display = 'none';
+  if(!fid){
+    frame.style.display='none';
+    fallback.style.display='block';
+    fallback.innerHTML = 'مفيش صورة أو ملف مرتبط بالمحاضرة دي.';
+    modal.classList.add('show');
+    return;
+  }
+  frame.style.display='block';
+  fallback.style.display='none';
+  frame.src = `https://drive.google.com/file/d/${fid}/preview#page=${page||1}`;
+  modal.classList.add('show');
+}
+document.getElementById('pageViewerModal').addEventListener('click',(e)=>{
+  if(e.target.id === 'pageViewerModal' || e.target.classList.contains('pv-close')){
+    document.getElementById('pageViewerModal').classList.remove('show');
+    document.getElementById('pageViewerFrame').src = 'about:blank';
+    document.getElementById('pageViewerImg').src = '';
+  }
+});
+
 function renderQuizHome(){
   refreshDueBadge();
   const dueTotal = totalDueCount();
@@ -2249,16 +2332,24 @@ function renderQuizHome(){
     const courseDueQuestions = dueQuestionsForCourse(cid);
     const lecGroups = {};
     quizBank[cid].forEach(q=>{
-      if(!q.lec) return;
-      const key = q.lec;
+      const key = q.lec || 0;
       if(!lecGroups[key]) lecGroups[key] = { title:q.lecTitle||'', count:0 };
       lecGroups[key].count += 1;
     });
     const lecKeys = Object.keys(lecGroups).sort((a,b)=>a-b);
-    const lecBreakdownHtml = lecKeys.length ? `
-      <div class="quiz-lec-breakdown">
-        ${lecKeys.map(k=> `<span class="lec-breakdown-item">محاضرة ${k}${lecGroups[k].title ? `: ${escapeHtml(lecGroups[k].title)}` : ''} — ${lecGroups[k].count} سؤال</span>`).join('')}
-      </div>` : '';
+    const hasMultipleLectures = lecKeys.filter(k=>k!=="0").length > 1;
+    const lecCardsHtml = hasMultipleLectures ? lecKeys.map(k=>{
+      const g = lecGroups[k];
+      const lecLabel = k === "0" ? '' : `محاضرة ${k}${g.title ? `: ${escapeHtml(g.title)}` : ''}`;
+      return `
+      <div class="quiz-lec-card" data-course="${cid}" data-lec="${k}">
+        <h5>${lecLabel || 'أسئلة عامة'} — ${g.count} سؤال</h5>
+        <div class="quiz-mode-btns">
+          <button class="quiz-mode-btn" data-course="${cid}" data-lec="${k}" data-mode="sequential">سؤال سؤال</button>
+          <button class="quiz-mode-btn secondary" data-course="${cid}" data-lec="${k}" data-mode="all">حل الكل مرة واحدة</button>
+        </div>
+      </div>`;
+    }).join('') : '';
     return `
     <div class="quiz-course-card" data-course="${cid}">
       <h4>${escapeHtml(courseNameById(cid))}</h4>
@@ -2268,12 +2359,12 @@ function renderQuizHome(){
         ${due > 0 ? `<span class="stat-chip due">⏰ ${due} مستحق</span>` : ''}
         ${mastered > 0 ? `<span class="stat-chip mastered">✅ ${mastered} متقن</span>` : ''}
       </div>
-      ${lecBreakdownHtml}
+      ${due > 0 ? `<div class="quiz-mode-btns"><button class="quiz-mode-btn review-course-btn" data-course="${cid}" data-mode="sequential">🔁 مراجعة ${due} سؤال</button></div>` : ''}
+      ${hasMultipleLectures ? lecCardsHtml : `
       <div class="quiz-mode-btns">
         <button class="quiz-mode-btn" data-course="${cid}" data-mode="sequential">سؤال سؤال</button>
         <button class="quiz-mode-btn secondary" data-course="${cid}" data-mode="all">حل الكل مرة واحدة</button>
-        ${due > 0 ? `<button class="quiz-mode-btn review-course-btn" data-course="${cid}" data-mode="sequential">🔁 مراجعة ${due} سؤال</button>` : ''}
-      </div>
+      </div>`}
       <button class="quiz-pdf-btn" data-course="${cid}">🖨️ تحميل الأسئلة PDF (للطباعة)</button>
     </div>`;
   }).join('');
@@ -2284,7 +2375,8 @@ function renderQuizHome(){
         startReviewCourse(btn.dataset.course, btn.dataset.mode);
         return;
       }
-      startQuizSession(btn.dataset.course, btn.dataset.mode);
+      const lec = btn.dataset.lec;
+      startQuizSession(btn.dataset.course, btn.dataset.mode, lec && lec !== "0" ? Number(lec) : null);
     });
   });
   list.querySelectorAll('.quiz-pdf-btn').forEach(btn=>{
@@ -2371,9 +2463,16 @@ function downloadQuizPdf(courseId){
 }
 
 
-function startQuizSession(courseId, mode){
-  const items = quizBank[courseId].map(q=>({courseId, question:q}));
-  runSession(items, `اختبار: ${courseNameById(courseId)}`, mode);
+function startQuizSession(courseId, mode, lecFilter){
+  let qs = quizBank[courseId];
+  let title = `اختبار: ${courseNameById(courseId)}`;
+  if(lecFilter){
+    qs = qs.filter(q => q.lec === lecFilter);
+    const lecTitle = qs[0] && qs[0].lecTitle;
+    title = `اختبار: ${courseNameById(courseId)} — محاضرة ${lecFilter}${lecTitle ? ': ' + lecTitle : ''}`;
+  }
+  const items = qs.map(q=>({courseId, question:q}));
+  runSession(items, title, mode);
 }
 
 function startReviewSession(mode){
@@ -2584,7 +2683,12 @@ function renderQuestion(){
       const explanationText = getQuestionExplanation(q, currentSession.lang || 'ar');
       const feedbackPrefix = currentSession.lang === 'en' ? (isCorrect ? '✅ Correct! ' : '❌ Incorrect. ') : (isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. ');
       fb.classList.add('show', isCorrect ? 'ok' : 'bad');
-      fb.innerHTML = `${feedbackPrefix}${escapeHtml(explanationText)}`;
+      fb.innerHTML = `${feedbackPrefix}${escapeHtml(explanationText)}` +
+        (q.page ? `<button class="show-page-btn" id="showPageBtn">🖼️ عرض صفحة ${q.page} من المحاضرة</button>` : '');
+      const showPageBtn = document.getElementById('showPageBtn');
+      if(showPageBtn){
+        showPageBtn.addEventListener('click', ()=> openPageViewer(item.courseId, q.lec, q.page));
+      }
 
       recordAnswer(q.id, isCorrect);
       if(isCorrect) currentSession.correctInSession += 1;
@@ -2706,7 +2810,16 @@ function gradeAllQuestions(){
     const explanationText = getQuestionExplanation(q, currentSession.lang || 'ar');
     const feedbackPrefix = currentSession.lang === 'en' ? (isCorrect ? '✅ Correct! ' : '❌ Incorrect. ') : (isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. ');
     fb.classList.add('show', isCorrect ? 'ok' : 'bad');
-    fb.innerHTML = `${feedbackPrefix}${escapeHtml(explanationText)}`;
+    fb.innerHTML = `${feedbackPrefix}${escapeHtml(explanationText)}` +
+      (q.page ? `<button class="show-page-btn" data-qi="${i}">🖼️ عرض صفحة ${q.page} من المحاضرة</button>` : '');
+  });
+
+  document.querySelectorAll('#quizSessionWrap .show-page-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const qi = Number(btn.dataset.qi);
+      const q = items[qi].question;
+      openPageViewer(items[qi].courseId, q.lec, q.page);
+    });
   });
 
   currentSession.correctInSession = correct;
