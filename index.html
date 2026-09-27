@@ -1198,6 +1198,38 @@
   /* ---------- Per-lecture quiz cards ---------- */
   .quiz-lec-card{border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-top:12px; background:var(--cream);}
   .quiz-lec-card h5{margin:0 0 8px; font-size:.95rem; color:var(--green-deep); font-family:'Cairo',sans-serif;}
+  .interactive-mode-group{margin-top:14px; padding:12px; border:1px solid #d8e5dc; border-radius:10px; background:#f1f7f2;}
+  .interactive-mode-label{margin:0 0 8px; color:var(--green-deep); font-size:.82rem; font-weight:700;}
+  .interactive-mode-btns{display:flex; gap:8px; flex-wrap:wrap;}
+  .interactive-mode-btn{flex:1; min-width:150px; min-height:42px; border:1px solid var(--green-deep); border-radius:8px; background:var(--green-deep); color:#fff; font:700 .86rem 'Tajawal',sans-serif; cursor:pointer; padding:8px 12px;}
+  .interactive-mode-btn.secondary{background:#fff; color:var(--green-deep);}
+  .interactive-mode-btn:hover{background:var(--green); color:#fff;}
+  .interactive-topbar{flex-wrap:wrap;}
+  .interactive-card{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:24px; box-shadow:0 10px 30px -18px rgba(20,40,30,.3);}
+  .interactive-match-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .interactive-match-column h3{font:700 .9rem 'Cairo',sans-serif; color:var(--green-deep); margin:0 0 8px;}
+  .interactive-match-list{display:flex; flex-direction:column; gap:8px;}
+  .interactive-match-item{width:100%; min-height:58px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--ink); padding:10px 12px; text-align:right; font:500 .86rem 'Tajawal',sans-serif; line-height:1.6; cursor:pointer; overflow-wrap:anywhere;}
+  .interactive-match-item:hover:not(:disabled){border-color:var(--gold); background:var(--cream);}
+  .interactive-match-item.selected{border-color:var(--gold); background:#fdf6e3;}
+  .interactive-match-item.matched{border-color:#8bb99a; background:#e6f2ea; color:#1e6b45;}
+  .interactive-match-item.wrong{border-color:#d9634f; background:#fbe9e7; color:#a13b28;}
+  .interactive-match-item:disabled{cursor:default; opacity:1;}
+  .interactive-flashcard{min-height:210px; display:flex; flex-direction:column; justify-content:center; text-align:center; background:linear-gradient(145deg,#fffdf8,#f2f7f1); border:1px solid var(--line); border-radius:12px; padding:28px 22px;}
+  .interactive-flashcard .flash-prompt{font:700 1.18rem 'Cairo',sans-serif; color:var(--green-deep); margin:0; line-height:1.8; overflow-wrap:anywhere;}
+  .interactive-flashcard .flash-answer{font-size:1.02rem; font-weight:700; margin:18px 0 0; line-height:1.8; overflow-wrap:anywhere;}
+  .interactive-flashcard .flash-explanation{font-size:.88rem; color:var(--muted); margin:8px 0 0; line-height:1.8;}
+  .interactive-controls{display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin-top:16px;}
+  .interactive-controls button{min-height:42px; padding:9px 16px; border-radius:8px; font:700 .88rem 'Tajawal',sans-serif; cursor:pointer;}
+  .interactive-reveal{border:0; background:var(--green-deep); color:#fff;}
+  .interactive-rating{border:1px solid var(--line); background:#fff; color:var(--green-deep);}
+  .interactive-rating.known{border-color:#3f9d67; background:#e6f2ea; color:#1e6b45;}
+  .interactive-rating.review{border-color:#dcb877; background:#fdf6e3; color:#76551b;}
+  .gamification-panel{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:22px; max-width:760px;}
+  .gamification-panel h2{font:700 1.1rem 'Cairo',sans-serif; color:var(--green-deep); margin:0 0 4px;}
+  .gamification-panel p{color:var(--muted); margin:0 0 14px; font-size:.9rem;}
+  .gamification-mode-buttons{display:flex; flex-wrap:wrap; gap:10px;}
+  @media (max-width:600px){.interactive-match-grid{grid-template-columns:1fr;}.interactive-card{padding:18px;}.interactive-flashcard{min-height:180px; padding:22px 16px;}}
 </style>
 </head>
 <body>
@@ -1218,6 +1250,7 @@
   <div class="section-nav" id="sectionNav">
     <button class="section-btn active" data-section="courses">📚 المحاضرات</button>
     <button class="section-btn" data-section="quiz">🧠 اختبارات وتدريب <span class="badge" id="dueBadge" style="display:none;">0</span></button>
+    <button class="section-btn" data-section="gamification">🎮 تدريب تفاعلي</button>
     <button class="section-btn" data-section="videos">🎬 فيديوهات مقترحة</button>
   </div>
   <div class="install-wrap" id="installWrap" style="display:none;">
@@ -1269,6 +1302,18 @@
 <main id="videosSection">
   <p class="video-intro">🎬 قوايم تشغيل ومقترحات فيديوهات لشرح المواد — اختار المادة وشاهد الشرح.</p>
   <div id="videosList"></div>
+</main>
+
+<main id="gamificationSection" style="display:none;">
+  <div id="gamificationHome" class="gamification-panel">
+    <h2>تدريب تفاعلي</h2>
+    <p>تجربة أولى لمادة Business Analytics &amp; Data Mining</p>
+    <div class="gamification-mode-buttons">
+      <button type="button" class="interactive-mode-btn" data-gamification-mode="matching">🔗 توصيل المفهوم بتعريفه</button>
+      <button type="button" class="interactive-mode-btn secondary" data-gamification-mode="flashcards">🗂️ بطاقات تعليمية</button>
+    </div>
+  </div>
+  <div id="gamificationSessionWrap" style="display:none;"></div>
 </main>
 
 <section class="schedule-wrap" id="scheduleWrap">
@@ -1771,6 +1816,7 @@ const quizBank = {
 const BOX_INTERVAL_DAYS = {1:0, 2:1, 3:3, 4:7, 5:14};
 let srsState = {};      // { questionId: {box, due (ISO date), seen, correctCount, wrongCount} }
 let currentSession = null; // { queue:[{courseId, question}], idx, answered, correctInSession, total }
+let gamificationSession = null;
 let activeSection = 'courses';
 
 function todayStr(){
@@ -2179,7 +2225,7 @@ function courseNameById(cid){
 
 /* ---- Section switching ---- */
 const SECTION_STORAGE_KEY = 'portal_active_section';
-const VALID_SECTIONS = new Set(['courses', 'quiz', 'videos']);
+const VALID_SECTIONS = new Set(['courses', 'quiz', 'gamification', 'videos']);
 
 function saveActiveSection(){
   try{
@@ -2214,11 +2260,13 @@ function switchSection(section){
   const coursesControls = document.getElementById('coursesControls');
   const mainContent = document.getElementById('mainContent');
   const quizSection = document.getElementById('quizSection');
+  const gamificationSection = document.getElementById('gamificationSection');
   const videosSection = document.getElementById('videosSection');
 
   if(coursesControls) coursesControls.style.display = safeSection === 'courses' ? '' : 'none';
   if(mainContent) mainContent.style.display = safeSection === 'courses' ? '' : 'none';
   if(quizSection) quizSection.style.display = safeSection === 'quiz' ? 'block' : 'none';
+  if(gamificationSection) gamificationSection.style.display = safeSection === 'gamification' ? 'block' : 'none';
   if(videosSection) videosSection.style.display = safeSection === 'videos' ? 'block' : 'none';
 
   if(safeSection === 'quiz'){
@@ -2226,6 +2274,9 @@ function switchSection(section){
     renderQuizHome();
   } else if(safeSection === 'videos'){
     renderVideos();
+  } else if(safeSection === 'gamification'){
+    if(gamificationSession) renderGamificationActivity();
+    else renderGamificationHome();
   }
 }
 
@@ -2233,6 +2284,10 @@ document.getElementById('sectionNav').addEventListener('click', (e)=>{
   const btn = e.target.closest('.section-btn');
   if(!btn) return;
   switchSection(btn.dataset.section);
+});
+document.getElementById('gamificationHome').addEventListener('click', (e)=>{
+  const button = e.target.closest('[data-gamification-mode]');
+  if(button) startGamificationActivity(button.dataset.gamificationMode);
 });
 
 /* ---- Quiz home (course list + due badge) ---- */
@@ -2582,6 +2637,190 @@ function getQuestionExplanation(q, lang){
   const ar = q.translation && q.translation.ar ? q.translation.ar : (businessAnalyticsTranslations[q.id] || enterpriseInformationTranslations[q.id] || null);
   if(lang === 'en') return q.explain || '';
   return ar && ar.explain ? ar.explain : (q.explain || '');
+}
+
+const gamificationContent = {
+  matching:[
+    {front:{ar:'البيانات المنظمة',en:'Structured data'}, back:{ar:'بيانات تتبع مخططًا ثابتًا ويمكن البحث فيها باستخدام SQL.',en:'Data that follows a fixed schema and can be queried with SQL.'}},
+    {front:{ar:'البيانات غير المنظمة',en:'Unstructured data'}, back:{ar:'بيانات بلا مخطط ثابت، مثل النصوص والصور ومقاطع الفيديو.',en:'Data without a fixed schema, such as text, images, and video.'}},
+    {front:{ar:'البيانات شبه المنظمة',en:'Semi-structured data'}, back:{ar:'بيانات تستخدم وسومًا أو مفاتيح للتنظيم، مثل XML وJSON.',en:'Data organized with tags or keys, such as XML and JSON.'}},
+    {front:{ar:'البيانات الوصفية',en:'Metadata'}, back:{ar:'معلومات تصف بيانات أخرى، مثل تعريفات قاموس البيانات.',en:'Information that describes other data, such as data dictionary definitions.'}},
+    {front:{ar:'جمع البيانات الأولية',en:'Primary data collection'}, back:{ar:'جمع الباحث للبيانات مباشرةً من مصدرها الأصلي.',en:'The researcher collects data directly from its original source.'}},
+    {front:{ar:'جمع البيانات الثانوية',en:'Secondary data collection'}, back:{ar:'استخدام بيانات سبق أن جمعتها مصادر أخرى.',en:'Using data that was previously collected by other sources.'}}
+  ],
+  flashcards:[
+    {front:{ar:'ما المقصود بتحليلات الأعمال؟',en:'What is business analytics?'}, back:{ar:'جمع البيانات وتحليلها وتفسيرها لمساعدة المؤسسات على اتخاذ قرارات أفضل وتحسين الأداء.',en:'Collecting, analyzing, and interpreting data to help organizations make better decisions and improve performance.'}},
+    {front:{ar:'ما وظيفة التحليل التنبؤي؟',en:'What does predictive analytics do?'}, back:{ar:'يستخدم البيانات للتنبؤ بالاتجاهات والنتائج المستقبلية.',en:'It uses data to forecast future trends and outcomes.'}},
+    {front:{ar:'ما المقصود بتنظيف البيانات؟',en:'What is data cleaning?'}, back:{ar:'اكتشاف الأخطاء والتكرار والبيانات غير المكتملة ومعالجتها لتحسين الجودة.',en:'Finding and handling errors, duplicates, and incomplete data to improve quality.'}},
+    {front:{ar:'ما الهدف من تصور البيانات؟',en:'What is the purpose of data visualization?'}, back:{ar:'عرض البيانات والتحليل بصريًا لتسهيل فهم الأنماط والنتائج.',en:'Presenting data and analysis visually to make patterns and findings easier to understand.'}},
+    {front:{ar:'ما المتغير المستقل في التجربة؟',en:'What is the independent variable in an experiment?'}, back:{ar:'المتغير الذي يتحكم فيه الباحث أو يغيّره لدراسة تأثيره.',en:'The variable the researcher controls or changes to study its effect.'}},
+    {front:{ar:'ما الذي يميز المقابلة المنظمة؟',en:'What distinguishes a structured interview?'}, back:{ar:'مجموعة أسئلة محددة تُطرح بالترتيب نفسه على جميع المشاركين.',en:'A fixed set of questions asked in the same order to all participants.'}},
+    {front:{ar:'ما هو مخزن البيانات (Data Warehouse)؟',en:'What is a data warehouse?'}, back:{ar:'مخزن منظم للبيانات التاريخية، مُهيأ للاستعلامات والتقارير والتحليل.',en:'An organized store of historical data designed for queries, reports, and analysis.'}},
+    {front:{ar:'ما المقصود بمستودع البيانات (Data Repository)؟',en:'What is a data repository?'}, back:{ar:'مكان عام لحفظ البيانات وإدارتها، وقد يحتوي أنواعًا مختلفة من البيانات.',en:'A general place to store and manage data, potentially in different forms.'}}
+  ]
+};
+
+function renderGamificationHome(){
+  document.getElementById('gamificationHome').style.display = '';
+  document.getElementById('gamificationSessionWrap').style.display = 'none';
+}
+
+function startGamificationActivity(mode){
+  const content = gamificationContent[mode];
+  if(!content) return;
+  const items = [...content].sort(()=>Math.random()-0.5);
+  gamificationSession = {
+    mode, items, answerOrder:mode === 'matching' ? items.map((_, i)=>i).sort(()=>Math.random()-0.5) : [],
+    idx:0, score:0, lang:'ar', selectedLeft:null, selectedRight:null,
+    matched:new Set(), missed:new Set(), feedback:'', feedbackType:'', resolving:false, revealed:false
+  };
+  document.getElementById('gamificationHome').style.display = 'none';
+  document.getElementById('gamificationSessionWrap').style.display = '';
+  renderGamificationActivity();
+}
+
+function endGamificationActivity(){
+  gamificationSession = null;
+  renderGamificationHome();
+}
+
+function renderGamificationActivity(){
+  const session = gamificationSession;
+  if(!session) return;
+  if(session.mode === 'matching' && session.matched.size === session.items.length){
+    renderGamificationSummary();
+    return;
+  }
+  if(session.mode === 'flashcards' && session.idx >= session.items.length){
+    renderGamificationSummary();
+    return;
+  }
+
+  const wrap = document.getElementById('gamificationSessionWrap');
+  const lang = session.lang;
+  const total = session.items.length;
+  const progressCount = session.mode === 'matching' ? session.matched.size : session.idx;
+  const progressPct = Math.round(progressCount / total * 100);
+  let activityHtml;
+  if(session.mode === 'matching'){
+    activityHtml = `
+      <div class="interactive-match-grid">
+        <section class="interactive-match-column"><h3>${lang === 'en' ? 'Concepts' : 'المفاهيم'}</h3>
+          <div class="interactive-match-list">${session.items.map((item, i)=>{
+            const classes = ['interactive-match-item'];
+            if(session.selectedLeft === i) classes.push('selected');
+            if(session.matched.has(i)) classes.push('matched');
+            if(session.resolving && session.selectedLeft === i) classes.push('wrong');
+            return `<button type="button" class="${classes.join(' ')}" data-match-side="left" data-match-index="${i}" aria-pressed="${session.selectedLeft === i}" ${session.matched.has(i) || session.resolving ? 'disabled' : ''}>${escapeHtml(item.front[lang])}</button>`;
+          }).join('')}</div>
+        </section>
+        <section class="interactive-match-column"><h3>${lang === 'en' ? 'Definitions' : 'التعريفات'}</h3>
+          <div class="interactive-match-list">${session.answerOrder.map(i=>{
+            const item = session.items[i];
+            const classes = ['interactive-match-item'];
+            if(session.selectedRight === i) classes.push('selected');
+            if(session.matched.has(i)) classes.push('matched');
+            if(session.resolving && session.selectedRight === i) classes.push('wrong');
+            return `<button type="button" class="${classes.join(' ')}" data-match-side="right" data-match-index="${i}" aria-pressed="${session.selectedRight === i}" ${session.matched.has(i) || session.resolving ? 'disabled' : ''}>${escapeHtml(item.back[lang])}</button>`;
+          }).join('')}</div>
+        </section>
+      </div>
+      <p class="quiz-feedback show ${session.feedbackType}" aria-live="polite">${escapeHtml(session.feedback || (lang === 'en' ? 'Choose a concept, then its definition.' : 'اختار مفهوم وبعده التعريف المناسب.'))}</p>`;
+  }else{
+    const item = session.items[session.idx];
+    activityHtml = `
+      <article class="interactive-flashcard">
+        <p class="flash-prompt">${escapeHtml(item.front[lang])}</p>
+        ${session.revealed ? `<p class="flash-answer">${escapeHtml(item.back[lang])}</p>${item.note ? `<p class="flash-explanation">${escapeHtml(item.note[lang])}</p>` : ''}` : ''}
+      </article>
+      <div class="interactive-controls">
+        ${session.revealed
+          ? `<button type="button" class="interactive-rating review" data-rate="false">${lang === 'en' ? 'Review again' : 'أحتاج لمراجعتها'}</button><button type="button" class="interactive-rating known" data-rate="true">${lang === 'en' ? 'I knew it' : 'عرفتها'}</button>`
+          : `<button type="button" class="interactive-reveal" id="revealFlashcardBtn">${lang === 'en' ? 'Reveal answer' : 'اكشف الإجابة'}</button>`}
+      </div>`;
+  }
+
+  wrap.innerHTML = `
+    <div class="quiz-session">
+      <div class="quiz-topbar interactive-topbar">
+        <button class="quiz-back" id="gamificationBackBtn">${lang === 'en' ? '← Activities' : '← قائمة الأنشطة'}</button>
+        <button class="quiz-lang-toggle" id="gamificationLangBtn">${lang === 'ar' ? 'English' : 'العربية'}</button>
+        <span class="quiz-progress-text">Business Analytics &amp; Data Mining — ${session.mode === 'matching' ? (lang === 'en' ? 'Matching' : 'توصيل') : (lang === 'en' ? 'Flashcards' : 'بطاقات تعليمية')} · ${progressCount} / ${total}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-bar-fill" style="width:${progressPct}%"></div></div>
+      <div class="interactive-card">${activityHtml}</div>
+    </div>`;
+
+  document.getElementById('gamificationBackBtn').addEventListener('click', endGamificationActivity);
+  document.getElementById('gamificationLangBtn').addEventListener('click', ()=>{
+    session.lang = session.lang === 'ar' ? 'en' : 'ar';
+    renderGamificationActivity();
+  });
+  wrap.querySelectorAll('[data-match-side]').forEach(button=>{
+    button.addEventListener('click', ()=>{
+      if(session.resolving) return;
+      const index = Number(button.dataset.matchIndex);
+      if(button.dataset.matchSide === 'left') session.selectedLeft = index;
+      else session.selectedRight = index;
+      if(session.selectedLeft !== null && session.selectedRight !== null){
+        if(session.selectedLeft === session.selectedRight){
+          session.matched.add(index);
+          session.score += 1;
+          session.feedback = lang === 'en' ? 'Correct match!' : 'توصيل صحيح!';
+          session.feedbackType = 'ok';
+          session.selectedLeft = null;
+          session.selectedRight = null;
+        }else{
+          session.missed.add(session.selectedLeft);
+          session.feedback = lang === 'en' ? 'Not a match. Try again.' : 'التوصيل غير صحيح، حاول مرة أخرى.';
+          session.feedbackType = 'bad';
+          session.resolving = true;
+          const sessionRef = session;
+          setTimeout(()=>{
+            if(gamificationSession !== sessionRef) return;
+            session.resolving = false;
+            session.selectedLeft = null;
+            session.selectedRight = null;
+            session.feedback = '';
+            renderGamificationActivity();
+          }, 650);
+        }
+      }
+      renderGamificationActivity();
+    });
+  });
+  const revealButton = document.getElementById('revealFlashcardBtn');
+  if(revealButton) revealButton.addEventListener('click', ()=>{
+    session.revealed = true;
+    renderGamificationActivity();
+  });
+  wrap.querySelectorAll('[data-rate]').forEach(button=>{
+    button.addEventListener('click', ()=>{
+      if(button.dataset.rate === 'true') session.score += 1;
+      session.idx += 1;
+      session.revealed = false;
+      renderGamificationActivity();
+    });
+  });
+}
+
+function renderGamificationSummary(){
+  const session = gamificationSession;
+  const total = session.items.length;
+  const score = session.mode === 'matching' ? total - session.missed.size : session.score;
+  const title = session.mode === 'matching' ? 'التوصيل' : 'البطاقات التعليمية';
+  document.getElementById('gamificationSessionWrap').innerHTML = `
+    <div class="quiz-session"><div class="quiz-summary">
+      <div>🧠</div><h2 class="heading">انتهت جولة ${title}</h2>
+      <div class="score">${score} / ${total}</div>
+      <p>${session.mode === 'matching' ? 'مفاهيم وصلتَها بشكل صحيح من أول محاولة' : 'بطاقات قيّمتها على أنك عرفتها'}</p>
+      <div class="interactive-controls">
+        <button type="button" class="link-btn" id="gamificationRetryBtn">جولة جديدة</button>
+        <button type="button" class="link-btn secondary" id="gamificationDoneBtn">العودة للأنشطة</button>
+      </div>
+    </div></div>`;
+  document.getElementById('gamificationRetryBtn').addEventListener('click', ()=>startGamificationActivity(session.mode));
+  document.getElementById('gamificationDoneBtn').addEventListener('click', endGamificationActivity);
 }
 
 function runSession(items, title, mode){
