@@ -1817,7 +1817,6 @@ const BOX_INTERVAL_DAYS = {1:0, 2:1, 3:3, 4:7, 5:14};
 let srsState = {};      // { questionId: {box, due (ISO date), seen, correctCount, wrongCount} }
 let currentSession = null; // { queue:[{courseId, question}], idx, answered, correctInSession, total }
 let gamificationSession = null;
-let matchingAudioContext = null;
 let activeSection = 'courses';
 
 function todayStr(){
@@ -2820,36 +2819,17 @@ function endGamificationActivity(){
 }
 
 function playMatchFeedback(isCorrect){
-  const AudioContextType = window.AudioContext || window.webkitAudioContext;
-  if(!AudioContextType) return;
-  try{
-    if(!matchingAudioContext) matchingAudioContext = new AudioContextType();
-    const audio = matchingAudioContext;
-    if(audio.state === 'suspended') audio.resume().catch(()=>{});
-    const startAt = audio.currentTime;
-    const tones = isCorrect
-      ? [{frequency:587.33, offset:0, duration:.07}, {frequency:739.99, offset:.075, duration:.085}]
-      : [{frequency:260, endFrequency:210, offset:0, duration:.11}];
-    tones.forEach(tone=>{
-      const oscillator = audio.createOscillator();
-      const volume = audio.createGain();
-      const toneStart = startAt + tone.offset;
-      const toneEnd = toneStart + tone.duration;
-      oscillator.type = isCorrect ? 'sine' : 'triangle';
-      oscillator.frequency.setValueAtTime(tone.frequency, toneStart);
-      if(tone.endFrequency) oscillator.frequency.exponentialRampToValueAtTime(tone.endFrequency, toneEnd);
-      volume.gain.setValueAtTime(.0001, toneStart);
-      volume.gain.exponentialRampToValueAtTime(isCorrect ? .025 : .018, toneStart + .012);
-      volume.gain.exponentialRampToValueAtTime(.0001, toneEnd);
-      oscillator.connect(volume);
-      volume.connect(audio.destination);
-      oscillator.start(toneStart);
-      oscillator.stop(toneEnd + .01);
-    });
-  }catch(error){
-    matchingAudioContext = null;
-  }
+  const audio = isCorrect
+    ? matchingCorrectAudio
+    : matchingWrongAudio;
+  audio.currentTime = 0;
+  audio.play().catch(()=>{});
 }
+
+const matchingCorrectAudio = new Audio('./dragon-studio-correct-472358.mp3');
+const matchingWrongAudio = new Audio('./universfield-wrong-answer-126515.mp3');
+matchingCorrectAudio.volume = 0.16;
+matchingWrongAudio.volume = 0.16;
 
 function renderGamificationActivity(){
   const session = gamificationSession;
