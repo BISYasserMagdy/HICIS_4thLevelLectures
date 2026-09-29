@@ -1210,7 +1210,13 @@
   .pv-box img{width:100%; height:100%; object-fit:contain; background:#111; display:block;}
   .pv-close{position:absolute; top:8px; left:8px; z-index:2; background:rgba(0,0,0,.55); color:#fff; border:none; width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer;}
   #pageViewerFallback{color:#eee; padding:30px; text-align:center; font-size:.95rem;}
-  .show-page-btn{margin-top:10px; display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:.82rem; border-radius:999px; border:1.5px solid var(--gold); background:var(--cream); color:var(--green-deep); font-weight:700; cursor:pointer;}
+  .explain-video{margin-top:14px; border-top:1px dashed var(--line); padding-top:12px;}
+  .ev-label{font-weight:800; color:var(--green-deep); font-size:.9rem; margin-bottom:8px;}
+  .ev-frame{position:relative; padding-top:56.25%; border-radius:10px; overflow:hidden; background:#000;}
+  .ev-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .ev-note{font-size:.78rem; color:var(--muted); margin-top:6px;}
+  .ev-note a{color:var(--green); font-weight:700;}
+    .show-page-btn{margin-top:10px; display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:.82rem; border-radius:999px; border:1.5px solid var(--gold); background:var(--cream); color:var(--green-deep); font-weight:700; cursor:pointer;}
   .show-page-btn:hover{background:var(--gold-light);}
 
   /* ---------- Per-lecture quiz cards ---------- */
@@ -1827,7 +1833,7 @@ const quizBank = {
   ],
   c5: [ // Applied Statistics
     { id:"c5q1", type:"mcq", lec:1, lecTitle:"Grouped Frequency Distribution", q:"For the grouped frequency distribution below, find the Mean.", table:{headers:["Sets","Frequency (F)"], rows:[["10-20","4"],["20-30","8"],["30-40","12"],["40-50","6"]]}, options:["31.67","32.5","30","28.33"], correct:0, explain:"Mean = Σ(f×midpoint)/N = (4×15 + 8×25 + 12×35 + 6×45)/30 = 950/30 = 31.67" },
-    { id:"c5q2", type:"mcq", lec:1, lecTitle:"Grouped Frequency Distribution", q:"For the grouped frequency distribution below, find the Median.", table:{headers:["Sets","Frequency (F)"], rows:[["10-20","4"],["20-30","8"],["30-40","12"],["40-50","6"]]}, options:["32.5","31.67","30","35"], correct:0, explain:"N/2 = 15, median class is 30-40 (cumulative freq before it = 12, f = 12). Median = L + ((N/2 - CF)/f)×h = 30 + ((15-12)/12)×10 = 32.5" },
+    { id:"c5q2", type:"mcq", lec:1, lecTitle:"Grouped Frequency Distribution", q:"For the grouped frequency distribution below, find the Median.", table:{headers:["Sets","Frequency (F)"], rows:[["10-20","4"],["20-30","8"],["30-40","12"],["40-50","6"]]}, options:["32.5","31.67","30","35"], correct:0, explain:"N/2 = 15, median class is 30-40 (cumulative freq before it = 12, f = 12). Median = L + ((N/2 - CF)/f)×h = 30 + ((15-12)/12)×10 = 32.5", video:"https://notebook.google.com/notebook/5fe2bfb2-d8b4-46a3-a51a-5ac9e46c60b4/artifact/8123545f-ccd7-4f74-942b-a68a90de2e59" },
     { id:"c5q3", type:"mcq", lec:1, lecTitle:"Grouped Frequency Distribution", q:"For the grouped frequency distribution below, find the Mean.", table:{headers:["Sets","Frequency (F)"], rows:[["0-10","5"],["10-20","8"],["20-30","15"],["30-40","12"],["40-50","10"]]}, options:["27.8","28","26.5","30.2"], correct:0, explain:"Mean = Σ(f×midpoint)/N = (5×5 + 8×15 + 15×25 + 12×35 + 10×45)/50 = 1390/50 = 27.8" },
     { id:"c5q4", type:"mcq", lec:1, lecTitle:"Grouped Frequency Distribution", q:"For the grouped frequency distribution below, find the Median.", table:{headers:["Sets","Frequency (F)"], rows:[["0-10","5"],["10-20","8"],["20-30","15"],["30-40","12"],["40-50","10"]]}, options:["28","27.8","25","30"], correct:0, explain:"N/2 = 25, median class is 20-30 (cumulative freq before it = 13, f = 15). Median = L + ((N/2 - CF)/f)×h = 20 + ((25-13)/15)×10 = 28" },
     { id:"c5q5", type:"mcq", lec:1, lecTitle:"Grouped Frequency Distribution", q:"For the grouped frequency distribution below, find the Mean.", table:{headers:["Sets","Frequency (F)"], rows:[["20-30","6"],["30-40","9"],["40-50","15"],["50-60","12"],["60-70","8"]]}, options:["46.4","46.67","45","48.2"], correct:0, explain:"Mean = Σ(f×midpoint)/N = (6×25 + 9×35 + 15×45 + 12×55 + 8×65)/50 = 2320/50 = 46.4" },
@@ -3024,6 +3030,17 @@ function renderQuestionTable(q){
   const rows = q.table.rows.map(r=>`<tr>${r.map(c=>`<td>${escapeHtml(String(c))}</td>`).join('')}</tr>`).join('');
   return `<table class="quiz-data-table">${head}${rows}</table>`;
 }
+
+function videoEmbedHtml(q, uid){
+  if(!q.video) return '';
+  return `
+    <div class="explain-video" id="explainVideo-${uid}">
+      <div class="ev-label">🎬 شرح بالفيديو لطريقة الحل</div>
+      <div class="ev-frame"><iframe src="${escapeHtml(q.video)}" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe></div>
+      <div class="ev-note">لو الفيديو مش بيظهر: <a href="${escapeHtml(q.video)}" target="_blank" rel="noopener">افتحه في تبويب جديد ↗</a></div>
+    </div>`;
+}
+
 function renderQuestion(){
   const wrap = document.getElementById('quizSessionWrap');
   if(!currentSession || currentSession.idx >= currentSession.queue.length){
@@ -3110,7 +3127,8 @@ function renderQuestion(){
       const feedbackPrefix = currentSession.lang === 'en' ? (isCorrect ? '✅ Correct! ' : '❌ Incorrect. ') : (isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. ');
       fb.classList.add('show', isCorrect ? 'ok' : 'bad');
       fb.innerHTML = `${feedbackPrefix}${escapeHtml(explanationText)}` +
-        (q.page ? `<button class="show-page-btn" id="showPageBtn">🖼️ عرض صفحة ${q.page} من المحاضرة</button>` : '');
+        (q.page ? `<button class="show-page-btn" id="showPageBtn">🖼️ عرض صفحة ${q.page} من المحاضرة</button>` : '') +
+        videoEmbedHtml(q, 'seq');
       const showPageBtn = document.getElementById('showPageBtn');
       if(showPageBtn){
         showPageBtn.addEventListener('click', ()=> openPageViewer(item.courseId, q.lec, q.page));
@@ -3238,7 +3256,8 @@ function gradeAllQuestions(){
     const feedbackPrefix = currentSession.lang === 'en' ? (isCorrect ? '✅ Correct! ' : '❌ Incorrect. ') : (isCorrect ? '✅ إجابة صحيحة! ' : '❌ إجابة غير صحيحة. ');
     fb.classList.add('show', isCorrect ? 'ok' : 'bad');
     fb.innerHTML = `${feedbackPrefix}${escapeHtml(explanationText)}` +
-      (q.page ? `<button class="show-page-btn" data-qi="${i}">🖼️ عرض صفحة ${q.page} من المحاضرة</button>` : '');
+      (q.page ? `<button class="show-page-btn" data-qi="${i}">🖼️ عرض صفحة ${q.page} من المحاضرة</button>` : '') +
+      videoEmbedHtml(q, 'all' + i);
   });
 
   document.querySelectorAll('#quizSessionWrap .show-page-btn').forEach(btn=>{
