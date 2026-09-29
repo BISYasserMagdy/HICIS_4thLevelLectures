@@ -837,6 +837,24 @@
     line-height:1.6;
     margin:0 0 20px;
   }
+  .quiz-data-table{
+    width:100%;
+    border-collapse:collapse;
+    margin:0 0 20px;
+    font-family:'Tajawal',sans-serif;
+    font-size:.92rem;
+  }
+  .quiz-data-table th, .quiz-data-table td{
+    border:1px solid var(--line);
+    padding:8px 12px;
+    text-align:center;
+  }
+  .quiz-data-table th{
+    background:var(--green-deep);
+    color:#fff;
+    font-weight:700;
+  }
+  .quiz-data-table tr:nth-child(even) td{background:#f7f3ea;}
   .quiz-q-translation{
     margin-top:10px;
     padding:10px 12px;
@@ -1349,6 +1367,7 @@
 
 <script src="lecture_pages_c1.js"></script>
 <script src="lecture_pages_c2.js"></script>
+<script src="lecture_pages_c2.js"></script>
 <script>
 /* ---------------- Seed data ---------------- */
 /* Levels/terms are editable groupings; course fields can all be edited in-app. */
@@ -1807,6 +1826,17 @@ const quizBank = {
   c4: [ // Feasibility Study of Projects
   ],
   c5: [ // Applied Statistics
+    { id:"c5q1", type:"mcq", lec:1, lecTitle:"Grouped Frequency Distribution", q:"For the grouped frequency distribution below, find the Mean.", table:{headers:["Sets","Frequency (F)"], rows:[["10-20","4"],["20-30","8"],["30-40","12"],["40-50","6"]]}, options:["31.67","32.5","30","28.33"], correct:0, explain:"Mean = Σ(f×midpoint)/N = (4×15 + 8×25 + 12×35 + 6×45)/30 = 950/30 = 31.67" },
+    { id:"c5q2", type:"mcq", lec:1, lecTitle:"Grouped Frequency Distribution", q:"For the grouped frequency distribution below, find the Median.", table:{headers:["Sets","Frequency (F)"], rows:[["10-20","4"],["20-30","8"],["30-40","12"],["40-50","6"]]}, options:["32.5","31.67","30","35"], correct:0, explain:"N/2 = 15, median class is 30-40 (cumulative freq before it = 12, f = 12). Median = L + ((N/2 - CF)/f)×h = 30 + ((15-12)/12)×10 = 32.5" },
+    { id:"c5q3", type:"mcq", lec:1, lecTitle:"Grouped Frequency Distribution", q:"For the grouped frequency distribution below, find the Mean.", table:{headers:["Sets","Frequency (F)"], rows:[["0-10","5"],["10-20","8"],["20-30","15"],["30-40","12"],["40-50","10"]]}, options:["27.8","28","26.5","30.2"], correct:0, explain:"Mean = Σ(f×midpoint)/N = (5×5 + 8×15 + 15×25 + 12×35 + 10×45)/50 = 1390/50 = 27.8" },
+    { id:"c5q4", type:"mcq", lec:1, lecTitle:"Grouped Frequency Distribution", q:"For the grouped frequency distribution below, find the Median.", table:{headers:["Sets","Frequency (F)"], rows:[["0-10","5"],["10-20","8"],["20-30","15"],["30-40","12"],["40-50","10"]]}, options:["28","27.8","25","30"], correct:0, explain:"N/2 = 25, median class is 20-30 (cumulative freq before it = 13, f = 15). Median = L + ((N/2 - CF)/f)×h = 20 + ((25-13)/15)×10 = 28" },
+    { id:"c5q5", type:"mcq", lec:1, lecTitle:"Grouped Frequency Distribution", q:"For the grouped frequency distribution below, find the Mean.", table:{headers:["Sets","Frequency (F)"], rows:[["20-30","6"],["30-40","9"],["40-50","15"],["50-60","12"],["60-70","8"]]}, options:["46.4","46.67","45","48.2"], correct:0, explain:"Mean = Σ(f×midpoint)/N = (6×25 + 9×35 + 15×45 + 12×55 + 8×65)/50 = 2320/50 = 46.4" },
+    { id:"c5q6", type:"mcq", lec:1, lecTitle:"Grouped Frequency Distribution", q:"For the grouped frequency distribution below, find the Median.", table:{headers:["Sets","Frequency (F)"], rows:[["20-30","6"],["30-40","9"],["40-50","15"],["50-60","12"],["60-70","8"]]}, options:["46.67","46.4","45","50"], correct:0, explain:"N/2 = 25, median class is 40-50 (cumulative freq before it = 15, f = 15). Median = L + ((N/2 - CF)/f)×h = 40 + ((25-15)/15)×10 = 46.67" },
+    { id:"c5q7", type:"mcq", lec:1, lecTitle:"Cumulative Frequency", q:"For the grouped frequency distribution below, find the Cumulative Frequency (CF) up to the end of the 30-40 class.", table:{headers:["Sets","Frequency (F)"], rows:[["10-20","4"],["20-30","8"],["30-40","12"],["40-50","6"]]}, options:["24","12","30","18"], correct:0, explain:"CF up to 30-40 = 4 + 8 + 12 = 24 (running total of frequencies up to and including that class)." },
+    { id:"c5q8", type:"mcq", lec:1, lecTitle:"Cumulative Frequency", q:"For the grouped frequency distribution below, find the Cumulative Frequency (CF) up to the end of the 20-30 class.", table:{headers:["Sets","Frequency (F)"], rows:[["0-10","5"],["10-20","8"],["20-30","15"],["30-40","12"],["40-50","10"]]}, options:["28","15","13","40"], correct:0, explain:"CF up to 20-30 = 5 + 8 + 15 = 28." },
+    { id:"c5q9", type:"mcq", lec:1, lecTitle:"Cumulative Frequency", q:"For the grouped frequency distribution below, find the Cumulative Frequency (CF) up to the end of the 50-60 class.", table:{headers:["Sets","Frequency (F)"], rows:[["20-30","6"],["30-40","9"],["40-50","15"],["50-60","12"],["60-70","8"]]}, options:["42","27","15","50"], correct:0, explain:"CF up to 50-60 = 6 + 9 + 15 + 12 = 42." },
+    { id:"c5q10", type:"mcq", lec:1, lecTitle:"Class Boundaries (True Limits)", q:"For the grouped frequency distribution below (where classes have a gap of 1 between them, e.g. 1-5 then 6-10), find the lower class boundary of the 11-15 class.", table:{headers:["Sets","Frequency (F)"], rows:[["1-5","3"],["6-10","7"],["11-15","10"],["16-20","9"],["21-25","5"]]}, options:["10.5","11","10","15.5"], correct:0, explain:"The gap between consecutive class limits is 1, so the correction factor is 0.5. Lower class boundary = lower limit − 0.5 = 11 − 0.5 = 10.5." },
+    { id:"c5q11", type:"mcq", lec:1, lecTitle:"Class Boundaries (True Limits)", q:"For the grouped frequency distribution below (where classes have a gap of 1 between them, e.g. 1-5 then 6-10), find the upper class boundary of the 6-10 class.", table:{headers:["Sets","Frequency (F)"], rows:[["1-5","3"],["6-10","7"],["11-15","10"],["16-20","9"],["21-25","5"]]}, options:["10.5","10","6","9.5"], correct:0, explain:"The gap between consecutive class limits is 1, so the correction factor is 0.5. Upper class boundary = upper limit + 0.5 = 10 + 0.5 = 10.5." },
   ],
 };
 
@@ -2988,6 +3018,12 @@ function endQuizSession(rerender){
   if(rerender !== false) renderQuizHome();
 }
 
+function renderQuestionTable(q){
+  if(!q.table) return '';
+  const head = `<tr>${q.table.headers.map(h=>`<th>${escapeHtml(h)}</th>`).join('')}</tr>`;
+  const rows = q.table.rows.map(r=>`<tr>${r.map(c=>`<td>${escapeHtml(String(c))}</td>`).join('')}</tr>`).join('');
+  return `<table class="quiz-data-table">${head}${rows}</table>`;
+}
 function renderQuestion(){
   const wrap = document.getElementById('quizSessionWrap');
   if(!currentSession || currentSession.idx >= currentSession.queue.length){
@@ -3032,6 +3068,7 @@ function renderQuestion(){
         ${q.lec ? `<span class="quiz-lec-tag">📖 محاضرة ${q.lec}${q.lecTitle ? `: ${escapeHtml(q.lecTitle)}` : ''}</span>` : ''}
         ${q.page ? `<span class="quiz-page-tag">📄 صفحة ${q.page}</span>` : ''}
         <p class="quiz-question">${escapeHtml(questionText)}</p>
+        ${renderQuestionTable(q)}
         ${optionsHtml}
         <div class="quiz-feedback" id="quizFeedback"></div>
         <div class="quiz-actions">
@@ -3125,6 +3162,7 @@ function renderAllQuestions(){
         ${q.lec ? `<span class="quiz-lec-tag">📖 محاضرة ${q.lec}${q.lecTitle ? `: ${escapeHtml(q.lecTitle)}` : ''}</span>` : ''}
         ${q.page ? `<span class="quiz-page-tag">📄 صفحة ${q.page}</span>` : ''}
         <p class="quiz-question">${escapeHtml(questionText)}</p>
+        ${renderQuestionTable(q)}
         ${optionsHtml}
         <div class="quiz-feedback" id="quizFeedbackAll-${i}"></div>
       </div>`;
