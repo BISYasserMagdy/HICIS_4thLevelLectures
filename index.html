@@ -342,6 +342,37 @@
     font-weight:700;
     font-size:.86rem;
   }
+  .lecture-note-banner{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:linear-gradient(90deg,#f0f7ef,#e6f2e5);
+    border:1px solid #b2d1b0;
+    border-radius:8px;
+    padding:10px 14px;
+    margin:8px 0 4px;
+    flex-wrap:wrap;
+  }
+  .lecture-note-icon{font-size:1.2rem;}
+  .lecture-note-text{
+    flex:1;
+    font-family:'Cairo',sans-serif;
+    font-size:.9rem;
+    color:#3a5a38;
+    font-weight:600;
+  }
+  .lecture-note-btn{
+    background:var(--green-deep);
+    color:#fff;
+    border-radius:6px;
+    padding:6px 14px;
+    font-size:.85rem;
+    font-family:'Cairo',sans-serif;
+    text-decoration:none;
+    white-space:nowrap;
+    transition:background .2s;
+  }
+  .lecture-note-btn:hover{background:#1a3a18;}
   .lecture-download{
     font-size:.78rem;
     font-weight:700;
@@ -1396,7 +1427,7 @@ const seedData = [
   { id:"c4", level:"الفرقة الرابعة - الترم الأول", name:"Feasibility Study of Projects", doctor:"د. خالد تعيلب", ta:"", day:"الأحد", time:"2:30", room:"", link:"https://drive.google.com/file/d/1pt2zJl-f8yr88Fs-DgQd43rINuH61oYv/view?usp=drive_link",
     lectures:[
       { title:"Feasibility Study - Lecture 1", file:"https://drive.google.com/uc?export=download&id=1pt2zJl-f8yr88Fs-DgQd43rINuH61oYv" },
-      { title:"Feasibility Study - Lecture 2", file:"https://drive.google.com/uc?export=download&id=12Q01N5803xKqi8t_hgK1oDAcqXA8NOAD", outline:["Market Gap (M.G = D – S)","Demand vs Supply decision rules","Price Elasticity of Demand (E)","Expected Demand (Exercise 1)","Market Gap for 2027"] },
+      { title:"Feasibility Study - Lecture 2", file:"https://drive.google.com/uc?export=download&id=12Q01N5803xKqi8t_hgK1oDAcqXA8NOAD", notes:[{label:"طريقة حساب Market Gap 📝", file:"https://drive.google.com/file/d/1CuQGWISl_S3aTreQbpuFXBKR2sZ1Sszg/view?usp=drive_link"}], outline:["Market Gap (M.G = D – S)","Demand vs Supply decision rules","Price Elasticity of Demand (E)","Expected Demand (Exercise 1)","Market Gap for 2027"] },
       { title:"Feasibility Study - Lecture 3", file:"https://drive.google.com/uc?export=download&id=1gE05b13xZ61y3RqLYw2VMIEqYBiOuWUw" }
     ] },
   { id:"c5", level:"الفرقة الرابعة - الترم الأول", name:"Applied Statistics", doctor:"د. محمد أبوزيد", ta:"", day:"السبت", time:"1:00", room:"", link:"https://drive.google.com/file/d/1kyfw2g0Czq6UjGvF0pf_Oc1U8viwOkWm/view?usp=drive_link" },
@@ -1483,6 +1514,15 @@ function courseCard(c){
           <div class="lecture-head">
             <span class="lecture-title">📄 ${escapeHtml(lec.title || `محاضرة ${i+1}`)}</span>
             ${lec.file ? `<a class="lecture-download" href="${escapeHtml(lec.file)}" target="_blank" rel="noopener">تحميل ⬇</a>` : ''}
+            ${(lec.notes||[]).map(n=>`<a class="lecture-download" style="background:#5a7a5a;" href="${escapeHtml(n.file)}" target="_blank" rel="noopener">${escapeHtml(n.label)}</a>`).join('')}
+          </div>
+          ${(lec.notes||[]).map(n=>`
+          <div class="lecture-note-banner">
+            <span class="lecture-note-icon">💡</span>
+            <span class="lecture-note-text">عندك ملاحظات شرح لهذه المحاضرة!</span>
+            <a class="lecture-note-btn" href="${escapeHtml(n.file)}" target="_blank" rel="noopener">افتح: ${escapeHtml(n.label)}</a>
+          </div>`).join('')}
+          <div style="display:none">
           </div>
           ${Array.isArray(lec.outline) && lec.outline.length ? `
             <ul class="lecture-outline">
