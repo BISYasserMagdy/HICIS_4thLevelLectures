@@ -1432,6 +1432,7 @@ const seedData = [
     ] },
   { id:"c5", level:"الفرقة الرابعة - الترم الأول", name:"Applied Statistics", doctor:"د. محمد أبوزيد", ta:"", day:"السبت", time:"1:00", room:"", link:"https://drive.google.com/file/d/1kyfw2g0Czq6UjGvF0pf_Oc1U8viwOkWm/view?usp=drive_link",
     lectures:[
+      { title:"Lecture 1", file:"https://drive.google.com/file/d/1kyfw2g0Czq6UjGvF0pf_Oc1U8viwOkWm/view?usp=drive_link" },
       { title:"Study Notes - Lecture 3", file:"https://drive.google.com/file/d/12FiE4WpL4tM5L9zbHYrzuu1TPDMtJWVz/view?usp=drive_link", outline:["Calculating the Median from a frequency table", "Solution of Q1: building the table (midpoint, upper limit, ascending cumulative frequency)", "Solution of Q2: drawing the graph and locating Q2 (the 0.5 / 50% point)"] }
     ] },
 ];
@@ -1443,7 +1444,7 @@ let activeLevel = "الكل";
 /* ---------------- Storage helpers ---------------- */
 /* DATA_VERSION bumped whenever seedData changes, so everyone's stored copy
    (which may include courses removed later, like CSS) resets to the latest seed. */
-const DATA_VERSION = "v10";
+const DATA_VERSION = "v11";
 
 async function loadCourses(){
   try{
