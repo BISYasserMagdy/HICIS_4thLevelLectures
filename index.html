@@ -373,6 +373,14 @@
     transition:background .2s;
   }
   .lecture-note-btn:hover{background:#1a3a18;}
+  .lecture-parts{display:flex; flex-direction:column; gap:8px; margin:10px 0 4px;}
+  .lecture-part{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; padding:10px 14px; border-radius:8px; border:1px solid var(--line); border-inline-start:5px solid var(--green-deep); background:#fff;}
+  .lecture-part.theory{border-inline-start-color:#2f6f4f; background:#f3f8f4;}
+  .lecture-part.exercise{border-inline-start-color:#c8921a; background:#fdf6e6;}
+  .part-label{font-weight:700; font-size:.9rem; color:var(--green-deep);}
+  .part-actions{display:flex; gap:6px;}
+  .part-btn{font-size:.78rem; font-weight:700; text-decoration:none; color:#fff; background:var(--green-deep); border-radius:6px; padding:5px 12px; white-space:nowrap;}
+  .part-btn.alt{background:#fff; color:var(--green-deep); border:1px solid var(--line);}
   .lecture-download{
     font-size:.78rem;
     font-weight:700;
@@ -1430,7 +1438,10 @@ const seedData = [
       { title:"Feasibility Study - Lecture 1", file:"https://drive.google.com/uc?export=download&id=1pt2zJl-f8yr88Fs-DgQd43rINuH61oYv" },
       { title:"Feasibility Study - Lecture 2", file:"https://drive.google.com/uc?export=download&id=12Q01N5803xKqi8t_hgK1oDAcqXA8NOAD", notes:[{label:"طريقة حساب Market Gap 📝", file:"https://drive.google.com/file/d/1CuQGWISl_S3aTreQbpuFXBKR2sZ1Sszg/view?usp=drive_link"}], outline:["Market Gap (M.G = D – S)","Demand vs Supply decision rules","Price Elasticity of Demand (E)","Expected Demand (Exercise 1)","Market Gap for 2027"] },
       { title:"Feasibility Study - Lecture 3", file:"https://drive.google.com/uc?export=download&id=1gE05b13xZ61y3RqLYw2VMIEqYBiOuWUw" },
-      { title:"Feasibility Study - Lecture 4", file:"https://drive.google.com/uc?export=download&id=1IzymdIqwYCHKxdk9p-sDZkJnxMKQASES", notes:[{label:"Exercises - المعادلات والتمارين 📝", file:"https://drive.google.com/file/d/1w4DolR8WUaeGn8pZu9KJFC55LzNNAEdz/view?usp=drive_link"}] }
+      { title:"Feasibility Study - Lecture 4", parts:[
+        { kind:"theory", label:"📘 الجزء النظري (Theory)", file:"https://drive.google.com/file/d/1IzymdIqwYCHKxdk9p-sDZkJnxMKQASES/view?usp=drive_link" },
+        { kind:"exercise", label:"🧮 التمارين والمعادلات (Exercises)", file:"https://drive.google.com/file/d/1w4DolR8WUaeGn8pZu9KJFC55LzNNAEdz/view?usp=drive_link" }
+      ] }
     ] },
   { id:"c5", level:"الفرقة الرابعة - الترم الأول", name:"Applied Statistics", doctor:"د. محمد أبوزيد", ta:"", day:"السبت", time:"1:00", room:"", link:"https://drive.google.com/file/d/1kyfw2g0Czq6UjGvF0pf_Oc1U8viwOkWm/view?usp=drive_link",
     lectures:[
@@ -1446,7 +1457,7 @@ let activeLevel = "الكل";
 /* ---------------- Storage helpers ---------------- */
 /* DATA_VERSION bumped whenever seedData changes, so everyone's stored copy
    (which may include courses removed later, like CSS) resets to the latest seed. */
-const DATA_VERSION = "v13";
+const DATA_VERSION = "v14";
 
 async function loadCourses(){
   try{
@@ -1519,7 +1530,7 @@ function courseCard(c){
         <div class="lecture-item">
           <div class="lecture-head">
             <span class="lecture-title">📄 ${escapeHtml(lec.title || `محاضرة ${i+1}`)}</span>
-            ${lec.file ? `<a class="lecture-download" href="${escapeHtml(lec.file)}" target="_blank" rel="noopener">تحميل ⬇</a>` : ''}
+            ${lec.file && !lec.parts ? `<a class="lecture-download" href="${escapeHtml(lec.file)}" target="_blank" rel="noopener">تحميل ⬇</a>` : ''}
             ${(lec.notes||[]).map(n=>`<a class="lecture-download" style="background:#5a7a5a;" href="${escapeHtml(n.file)}" target="_blank" rel="noopener">${escapeHtml(n.label)}</a>`).join('')}
           </div>
           ${(lec.notes||[]).map(n=>`
@@ -1528,13 +1539,24 @@ function courseCard(c){
             <span class="lecture-note-text">عندك ملاحظات شرح لهذه المحاضرة!</span>
             <a class="lecture-note-btn" href="${escapeHtml(n.file)}" target="_blank" rel="noopener">افتح: ${escapeHtml(n.label)}</a>
           </div>`).join('')}
-          <div style="display:none">
-          </div>
+          ${Array.isArray(lec.parts) && lec.parts.length ? `
+          <div class="lecture-parts">
+            ${lec.parts.map(p=>{
+              const dl = p.file.replace(/file\/d\/([^/]+)\/view.*/, 'uc?export=download&id=$1');
+              return `
+            <div class="lecture-part ${escapeHtml(p.kind||'')}">
+              <span class="part-label">${escapeHtml(p.label)}</span>
+              <span class="part-actions">
+                <a class="part-btn" href="${escapeHtml(p.file)}" target="_blank" rel="noopener">فتح ↗</a>
+                <a class="part-btn alt" href="${escapeHtml(dl)}" target="_blank" rel="noopener">تحميل ⬇</a>
+              </span>
+            </div>`;}).join('')}
+          </div>` : ''}
           ${Array.isArray(lec.outline) && lec.outline.length ? `
             <ul class="lecture-outline">
               ${lec.outline.map(pt => `<li>${escapeHtml(pt)}</li>`).join('')}
             </ul>` : ''}
-          ${openUrl ? `<a class="link-btn lecture-open-btn" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener">فتح ملف المحاضرة ↗</a>` : ''}
+          ${openUrl && !lec.parts ? `<a class="link-btn lecture-open-btn" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener">فتح ملف المحاضرة ↗</a>` : ''}
         </div>
       `;}).join('')}
     </div>` : '';
