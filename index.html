@@ -377,6 +377,7 @@
   .lecture-part{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; padding:10px 14px; border-radius:8px; border:1px solid var(--line); border-inline-start:5px solid var(--green-deep); background:#fff;}
   .lecture-part.theory{border-inline-start-color:#2f6f4f; background:#f3f8f4;}
   .lecture-part.exercise{border-inline-start-color:#c8921a; background:#fdf6e6;}
+  .lecture-part.photos{border-inline-start-color:#2f6aa3; background:#eef4fa;}
   .part-label{font-weight:700; font-size:.9rem; color:var(--green-deep);}
   .part-actions{display:flex; gap:6px;}
   .part-btn{font-size:.78rem; font-weight:700; text-decoration:none; color:#fff; background:var(--green-deep); border-radius:6px; padding:5px 12px; white-space:nowrap;}
@@ -1423,7 +1424,10 @@ const seedData = [
       { title:"Data Mining - Lecture 2", file:"https://drive.google.com/file/d/1s_EmUpfGFUBMPV_bayBOoZeto8tilKTz/view?usp=drive_link", outline:["Data Collection Methods (overview)","Collecting Primary Data: Questionnaires & Surveys","Interviews (structured, unstructured, semi-structured)","Observations (participant, non-participant, structured, unstructured)","Experiments (independent/dependent variables, lab/field/natural)","Secondary Data Collection & its sources","Reports and Previous Studies","Internet and Social Media as data sources","Databases, Data Warehouse & Data Repository","Modern tools & techniques for data collection","Digital Analytics Tools (SPSS, Hadoop, Spark, Tableau, Power BI, Python, R, SQL...)"] },
       { title:"Data Mining - Lecture 3", file:"https://drive.google.com/file/d/1pkJAXoY508t3TbFCpUFFa6dq0bhSNDa9/view?usp=drive_link", outline:["What is data extraction?", "Benefits of Data mining", "Data mining techniques", "Steps of Data Extraction Process", "Uses of Data mining", "Importance of Data Extraction", "Definition of Data Analytics Tools", "Types of Data Analytical Tools", "Uses of Data Analysis tools", "The importance of data analysis tools", "What are Data Analytics Categories (Prescriptive, Descriptive, Diagnostic, Predictive)", "Key elements of Analytical Project", "Data Analysis Lifecycle", "Data Visualization Definition and why it is important", "Types of Graphical Representation", "Types of Diagrams"] },
       { title:"Data Mining - Lecture 4", file:"https://drive.google.com/file/d/1iISiVPDuhlfLEjEzxZ9QsJVEWP7fiip3/view?usp=drive_link", outline:["Data Science", "What is Data Mining?", "Data Mining: on what kinds of data?", "Why Data Mining?", "Knowledge Discovery (KDD) process", "Relationship between Data Science and Data Mining", "Relationship between Data Warehousing and Data Mining", "History of Data Mining", "Data Mining Applications", "Data Mining vs Data Analysis", "Data Mining Lifecycle", "Data Mining Stages", "Data Collection Phase (steps, tools and challenges)", "Learning Levels (Facts, Concepts...)", "Methods of Learning (Supervised Learning)", "Data Mining Tasks", "Data Mining Techniques (Classification, Anomaly Detection, Prediction...)"] },
-      { title:"1st Section", file:"https://drive.google.com/file/d/1eypojvLoZGEfqw-Xhw7X6KldLRU9kVHB/view?usp=drive_link", outline:["Section Overview", "What is R and Why Use It?", "Installing R and RStudio", "Syntax and Print", "Comments", "Variables", "Data Types", "Numbers", "Math", "Strings", "Escape Characters", "Booleans (Logical Values)", "Operators", "Common Mistakes to Watch For"] }
+      { title:"1st Section", parts:[
+        { kind:"theory", label:"📘 ملف السيكشن (R Lab)", file:"https://drive.google.com/file/d/1eypojvLoZGEfqw-Xhw7X6KldLRU9kVHB/view?usp=drive_link" },
+        { kind:"photos", label:"🖼️ صور الشرح (Photos)", file:"https://drive.google.com/file/d/1ugaIFL37zBcJe0_gWiRmPuhqDtRPM1O5/view?usp=drive_link" }
+      ], outline:["Section Overview", "What is R and Why Use It?", "Installing R and RStudio", "Syntax and Print", "Comments", "Variables", "Data Types", "Numbers", "Math", "Strings", "Escape Characters", "Booleans (Logical Values)", "Operators", "Common Mistakes to Watch For"] }
     ] },
   { id:"c2", level:"الفرقة الرابعة - الترم الأول", name:"Enterprise Information System", doctor:"د. هاجر", ta:"", day:"السبت", time:"2:30", room:"", link:"https://drive.google.com/file/d/1dHqeiF57_K-ACDmc7SezfcULJeIPpkjc/view?usp=drive_link",
     lectures:[
@@ -1433,7 +1437,8 @@ const seedData = [
   { id:"c3", level:"الفرقة الرابعة - الترم الأول", name:"Public Finance", doctor:"د. خالد تعيلب", ta:"", day:"الأحد", time:"1:00", room:"", link:"https://drive.google.com/file/d/1WwzOJF0j8ISjcZXP1-FP39N9N1OTvMMw/view?usp=drive_link",
     lectures:[
       { title:"Public Finance - Lectures 1 & 2", file:"https://drive.google.com/uc?export=download&id=1WwzOJF0j8ISjcZXP1-FP39N9N1OTvMMw", outline:["Definition of Public Finance","Components: Revenues, Expenditures, Budget, Debt, Fiscal Policy","Importance of Public Finance","Public Finance vs Private Finance","Role of the State: Capitalist System","Role of the State: Socialist System","Role of the State: Mixed Economy"] },
-      { title:"Public Finance - Lecture 3", file:"https://drive.google.com/uc?export=download&id=1AlvhN0mTgpqb-byPbYnoEsatKlnOXx3m", outline:["Public Finance: Developing vs Advanced Countries","Role of Public Finance in Developed Countries","Key Terms: Public Revenues, Expenditures, Budget, Debt, Fiscal Policy, Public Goods"] }
+      { title:"Public Finance - Lecture 3", file:"https://drive.google.com/uc?export=download&id=1AlvhN0mTgpqb-byPbYnoEsatKlnOXx3m", outline:["Public Finance: Developing vs Advanced Countries","Role of Public Finance in Developed Countries","Key Terms: Public Revenues, Expenditures, Budget, Debt, Fiscal Policy, Public Goods"] },
+      { title:"Public Finance - Lecture 4", file:"https://drive.google.com/uc?export=download&id=1IzymdIqwYCHKxdk9p-sDZkJnxMKQASES", outline:["Public Revenues and their importance", "Types of Public Revenue: Taxes", "Types of Public Revenue: Fees (and Tax vs Fees)", "State revenues derived from its assets", "Royalty", "Fines and Confiscations", "Public Loans (domestic and foreign)", "Objectives of Public Revenue Policy", "Role of Public Finance: Developing vs Advanced Countries"] }
     ] },
   { id:"c4", level:"الفرقة الرابعة - الترم الأول", name:"Feasibility Study of Projects", doctor:"د. خالد تعيلب", ta:"", day:"الأحد", time:"2:30", room:"", link:"https://drive.google.com/file/d/1pt2zJl-f8yr88Fs-DgQd43rINuH61oYv/view?usp=drive_link",
     lectures:[
@@ -1441,7 +1446,6 @@ const seedData = [
       { title:"Feasibility Study - Lecture 2", file:"https://drive.google.com/uc?export=download&id=12Q01N5803xKqi8t_hgK1oDAcqXA8NOAD", notes:[{label:"طريقة حساب Market Gap 📝", file:"https://drive.google.com/file/d/1CuQGWISl_S3aTreQbpuFXBKR2sZ1Sszg/view?usp=drive_link"}], outline:["Market Gap (M.G = D – S)","Demand vs Supply decision rules","Price Elasticity of Demand (E)","Expected Demand (Exercise 1)","Market Gap for 2027"] },
       { title:"Feasibility Study - Lecture 3", file:"https://drive.google.com/uc?export=download&id=1gE05b13xZ61y3RqLYw2VMIEqYBiOuWUw" },
       { title:"Feasibility Study - Lecture 4", parts:[
-        { kind:"theory", label:"📘 الجزء النظري (Theory)", file:"https://drive.google.com/file/d/1IzymdIqwYCHKxdk9p-sDZkJnxMKQASES/view?usp=drive_link" },
         { kind:"exercise", label:"🧮 التمارين والمعادلات (Exercises)", file:"https://drive.google.com/file/d/1w4DolR8WUaeGn8pZu9KJFC55LzNNAEdz/view?usp=drive_link" }
       ] }
     ] },
@@ -1459,7 +1463,7 @@ let activeLevel = "الكل";
 /* ---------------- Storage helpers ---------------- */
 /* DATA_VERSION bumped whenever seedData changes, so everyone's stored copy
    (which may include courses removed later, like CSS) resets to the latest seed. */
-const DATA_VERSION = "v15";
+const DATA_VERSION = "v16";
 
 async function loadCourses(){
   try{
