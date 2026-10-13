@@ -402,6 +402,40 @@
     line-height:1.7;
   }
   .lecture-outline li{margin-bottom:2px;}
+  .lecture-outline li.outline-hot{
+    list-style:none;
+    margin:8px 0 4px -18px;
+    padding:7px 12px;
+    border-radius:10px;
+    font-weight:700;
+    color:#fff;
+    line-height:1.5;
+    background:linear-gradient(110deg,#e11d48 0%,#f97316 35%,#facc15 50%,#f97316 65%,#e11d48 100%);
+    background-size:250% 100%;
+    animation:hotShimmer 2.8s linear infinite, hotPulse 1.6s ease-in-out infinite;
+    text-shadow:0 1px 2px rgba(0,0,0,.35);
+  }
+  .lecture-outline li.outline-hot::before{
+    content:"🔥 ";
+    display:inline-block;
+    animation:hotWiggle 1.2s ease-in-out infinite;
+  }
+  @keyframes hotShimmer{
+    0%{background-position:100% 0;}
+    100%{background-position:-150% 0;}
+  }
+  @keyframes hotPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(225,29,72,.55); transform:scale(1);}
+    50%{box-shadow:0 0 0 7px rgba(225,29,72,0); transform:scale(1.02);}
+  }
+  @keyframes hotWiggle{
+    0%,100%{transform:rotate(-10deg) scale(1);}
+    50%{transform:rotate(10deg) scale(1.2);}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .lecture-outline li.outline-hot,
+    .lecture-outline li.outline-hot::before{animation:none;}
+  }
 
   .empty{
     text-align:center;
@@ -1432,7 +1466,8 @@ const seedData = [
   { id:"c2", level:"الفرقة الرابعة - الترم الأول", name:"Enterprise Information System", doctor:"د. هاجر", ta:"", day:"السبت", time:"2:30", room:"", link:"https://drive.google.com/file/d/1dHqeiF57_K-ACDmc7SezfcULJeIPpkjc/view?usp=drive_link",
     lectures:[
       { title:"Enterprise Information System", file:"https://drive.google.com/file/d/1dHqeiF57_K-ACDmc7SezfcULJeIPpkjc/view?usp=drive_link", outline:["What is Enterprise ?","Enterprise Characteristics","Objectives of Enterprises","Departments of Enterprises","Types of Enterprises","Types of information System in the organization","What is ERP System ?","The importance of ERP system","Types of ERP Systems","Components of ERP Systems"] },
-      { title:"Enterprise Information System - Lecture 3", file:"https://drive.google.com/file/d/1Mwfyout3Zlf0tLao_1dmM9GHcYEoFp4Z/view?usp=drive_link", outline:["Challenges of implementing an ERP system", "Examples of companies where ERP contributed to their success", "Elements of a successful ERP system", "Institutional system quality standards", "What are Information Systems?", "Elements of Information Systems (Inputs, Outputs, Processing, Control, Feedback)", "Components of Information Systems (Hardware, Software, Data, Communications, Human Resources)", "Features of Information Systems", "The importance of information for organizations", "Information systems quality standards"] }
+      { title:"Enterprise Information System - Lecture 3", file:"https://drive.google.com/file/d/1Mwfyout3Zlf0tLao_1dmM9GHcYEoFp4Z/view?usp=drive_link", outline:["Challenges of implementing an ERP system", "Examples of companies where ERP contributed to their success", "Elements of a successful ERP system", "Institutional system quality standards", "What are Information Systems?", "Elements of Information Systems (Inputs, Outputs, Processing, Control, Feedback)", "Components of Information Systems (Hardware, Software, Data, Communications, Human Resources)", "Features of Information Systems", "The importance of information for organizations", "Information systems quality standards"] },
+      { title:"Enterprise Information System - Lecture 4", file:"https://drive.google.com/file/d/1TO-zjZjkPAMUL7tkJHBvAVoR82cytOfZ/view?usp=drive_link", outline:["Network concept","The importance of networks for organizations","Types of computer networks: PAN, LAN, CAN, MAN, WAN, SAN, EPN","Types by connection method: Peer-to-Peer and Client/Server",{text:"Revision questions on enterprise and information systems — أسئلة الدكتورة (مهم جدًا!)", highlight:true}] }
     ] },
   { id:"c3", level:"الفرقة الرابعة - الترم الأول", name:"Public Finance", doctor:"د. خالد تعيلب", ta:"", day:"الأحد", time:"1:00", room:"", link:"https://drive.google.com/file/d/1WwzOJF0j8ISjcZXP1-FP39N9N1OTvMMw/view?usp=drive_link",
     lectures:[
@@ -1464,7 +1499,7 @@ let activeLevel = "الكل";
 /* ---------------- Storage helpers ---------------- */
 /* DATA_VERSION bumped whenever seedData changes, so everyone's stored copy
    (which may include courses removed later, like CSS) resets to the latest seed. */
-const DATA_VERSION = "v17";
+const DATA_VERSION = "v19";
 
 async function loadCourses(){
   try{
@@ -1561,7 +1596,7 @@ function courseCard(c){
           </div>` : ''}
           ${Array.isArray(lec.outline) && lec.outline.length ? `
             <ul class="lecture-outline">
-              ${lec.outline.map(pt => `<li>${escapeHtml(pt)}</li>`).join('')}
+              ${lec.outline.map(pt => (pt && typeof pt === 'object') ? `<li class="${pt.highlight ? 'outline-hot' : ''}">${escapeHtml(pt.text || '')}</li>` : `<li>${escapeHtml(pt)}</li>`).join('')}
             </ul>` : ''}
           ${openUrl && !lec.parts ? `<a class="link-btn lecture-open-btn" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener">فتح ملف المحاضرة ↗</a>` : ''}
         </div>
@@ -2112,7 +2147,37 @@ const quizBank = {
     { id:"c2q27", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:12, q:"Which ERP component manages employee payroll, performance, and training data?", options:["Human Resources Management","Customer Relationship Management","Project Management","Reports and Analysis"], correct:0, explain:"Human Resources Management handles employee payroll, performance, and training data." },
     { id:"c2q28", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:12, q:"Which component facilitates the management of customer-related information?", options:["Customer Relationship Management","Resource Planning","Financial Management","Operations Management"], correct:0, explain:"Customer Relationship Management facilitates the management of customer-related information." },
     { id:"c2q29", type:"mcq", lec:1, lecTitle:"Enterprise Information System", page:12, q:"Which component identifies and allocates resources among departments and projects?", options:["Resource Planning","Financial Management","Human Resources Management","Reports and Analysis"], correct:0, explain:"Resource Planning identifies and allocates resources among departments and projects." },
-    { id:"c2q30", type:"tf", lec:1, lecTitle:"Enterprise Information System", page:12, q:"Integration and databases allow different organizational units to exchange data seamlessly and in a unified way.", correct:true, explain:"Integration and databases enable different units to exchange data seamlessly and in a unified way." }
+    { id:"c2q30", type:"tf", lec:1, lecTitle:"Enterprise Information System", page:12, q:"Integration and databases allow different organizational units to exchange data seamlessly and in a unified way.", correct:true, explain:"Integration and databases enable different units to exchange data seamlessly and in a unified way." },
+    { id:"c2q31", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:2, q:"A computer network is defined as:", options:["Two computers or a group of devices connected to each other by wires, cables or wirelessly to exchange data and files", "A single computer with many programs", "A database that stores customer data", "A software used only for accounting"], correct:0, explain:"A network is two or more computers or devices connected by cables or wirelessly to exchange data and files." },
+    { id:"c2q32", type:"tf", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:2, q:"A computer network can include devices such as printers, phones and surveillance cameras.", correct:true, explain:"The definition includes all types of devices that can be connected to a computer, such as printers, phones and surveillance cameras." },
+    { id:"c2q33", type:"tf", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:2, q:"Computer networks can only be connected using wires or cables.", correct:false, explain:"They can also be connected wirelessly." },
+    { id:"c2q34", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:3, q:"Which benefit of networks reduces delays in communication and coordination between departments?", options:["Fast and Effective Communication", "File Sharing", "Organization and Management", "Productivity and Efficiency"], correct:0, explain:"Fast and effective communication reduces delays in communication and coordination between departments." },
+    { id:"c2q35", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:3, q:"Which benefit enables the sharing of files and data between employees and departments?", options:["File Sharing", "Fast and Effective Communication", "Productivity and Efficiency", "Organization and Management"], correct:0, explain:"File Sharing enables sharing of files and data between employees and departments." },
+    { id:"c2q36", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:3, q:"Which benefit means organizing and storing data and files in an organized and secure manner?", options:["Organization and Management", "File Sharing", "Fast and Effective Communication", "Productivity and Efficiency"], correct:0, explain:"Organization and Management: networks organize and store data and files in an organized and secure manner." },
+    { id:"c2q37", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:3, q:"Which benefit increases work efficiency and reduces administrative errors?", options:["Productivity and Efficiency", "File Sharing", "Organization and Management", "Fast and Effective Communication"], correct:0, explain:"Productivity and Efficiency improves overall organizational performance and reduces administrative errors." },
+    { id:"c2q38", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:4, q:"Which network is located in limited offices or residential homes and is managed by one person?", options:["PAN (Personal Area Network)", "LAN", "MAN", "WAN"], correct:0, explain:"A Personal Area Network (PAN) is located in limited offices or homes and managed by one person." },
+    { id:"c2q39", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:5, q:"Which network connects computers and devices within a single building or between two or three adjacent buildings?", options:["LAN (Local Area Network)", "WAN", "SAN", "MAN"], correct:0, explain:"A LAN connects devices across limited distances within a building or two or three adjacent buildings to share information and resources." },
+    { id:"c2q40", type:"tf", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:5, q:"A LAN is one of the most widespread computer networks and perhaps the simplest.", correct:true, explain:"The lecture describes the LAN as one of the most widespread and perhaps the simplest network." },
+    { id:"c2q41", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:6, q:"Which network is larger than a LAN but smaller than a MAN and is found in universities, large school districts or small businesses?", options:["CAN (Campus Area Network)", "PAN", "WAN", "SAN"], correct:0, explain:"A CAN spreads across several buildings in fairly close proximity, such as universities or large school districts." },
+    { id:"c2q42", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:7, q:"Which network is larger than a LAN but smaller than a WAN and spans an entire geographic area such as a city?", options:["MAN (Metropolitan Area Network)", "CAN", "PAN", "SAN"], correct:0, explain:"A MAN is larger than LANs but smaller than WANs, spanning an area such as a city or university campus." },
+    { id:"c2q43", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:8, q:"Which network connects computers across longer physical distances, even miles apart, and the Internet is a simple example of it?", options:["WAN (Wide Area Network)", "LAN", "PAN", "CAN"], correct:0, explain:"A WAN connects computers across long distances; the Internet is one of the simplest examples." },
+    { id:"c2q44", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:9, q:"Which network is a high-speed, dedicated network connecting shared pools of storage devices to multiple servers?", options:["SAN (Storage Area Network)", "LAN", "EPN", "MAN"], correct:0, explain:"A SAN is a high-speed dedicated network for shared storage devices and multiple servers." },
+    { id:"c2q45", type:"tf", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:9, q:"A SAN relies on local networks and WANs to connect its storage resources.", correct:false, explain:"A SAN does not rely on local networks or WANs; it places storage resources in its own high-performance network." },
+    { id:"c2q46", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:10, q:"Which network is built by companies that want to securely connect and access different locations to share resources?", options:["EPN (Enterprise Private Network)", "PAN", "CAN", "SAN"], correct:0, explain:"An Enterprise Private Network is built by companies to securely connect different locations and share resources." },
+    { id:"c2q47", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:10, q:"In a Peer-to-Peer network, each computer acts as:", options:["Both a server and a client", "A server only", "A client only", "A storage device only"], correct:0, explain:"Each computer both grants its resources to others and uses resources of other computers, with no central authority." },
+    { id:"c2q48", type:"tf", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:10, q:"A Peer-to-Peer network has a central authority that manages all computers.", correct:false, explain:"A Peer-to-Peer network has no central authority." },
+    { id:"c2q49", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:11, q:"In a Client/Server network, who requests resources and who sends them?", options:["The client requests, the server sends", "The server requests, the client sends", "Both only send", "Both only request"], correct:0, explain:"The client requests resources and the server sends them." },
+    { id:"c2q50", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:11, q:"In a Client/Server network, who is responsible for setting resource access rules and enforcing them for all users?", options:["The server", "The client", "The printer", "Each user"], correct:0, explain:"The server sets resource access rules and enforces them for all users." },
+    { id:"c2q51", type:"tf", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:11, q:"In Client/Server networks the central server uses operating systems specifically designed to manage the network.", correct:true, explain:"The central server uses operating systems designed to manage the network." },
+    { id:"c2q52", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:14, q:"A primary function consisting of inputs, outputs and operational processes is the:", options:["Production Function", "Public Relations Function", "Marketing Function", "Finance Function"], correct:0, explain:"The production function consists of inputs, outputs and operational processes." },
+    { id:"c2q53", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:14, q:"An organization that uses raw materials from a specific product of one organization to contribute to the production of a new product for another organization is a:", options:["Complementary Organization", "Sole Proprietorship", "Competitive Organization", "Public Relations Function"], correct:0, explain:"This is the definition of a complementary organization, as in the earlier lecture." },
+    { id:"c2q54", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:14, q:"Failure to perform this function effectively leads to the organization's failure and the inability to ensure its continuity:", options:["Marketing Function", "Personnel Function", "Public Relations Function", "Legal Affairs Function"], correct:0, explain:"Per the lecture, ineffective marketing can lead to organizational failure and loss of continuity." },
+    { id:"c2q55", type:"mcq", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:14, q:"Which type of system helps reduce costs and respond more simply to customer needs?", options:["Cloud-Based Systems", "On-Premise Systems", "Open Source Systems", "None of them"], correct:0, explain:"Cloud-based ERP systems help reduce costs and respond more simply to customer needs, with access anytime and anywhere." },
+    { id:"c2q56", type:"tf", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:15, q:"The legal affairs function is considered a subsidiary function of the organization.", correct:true, explain:"The subsidiary functions are personnel, legal affairs and public relations." },
+    { id:"c2q57", type:"tf", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:15, q:"A suite of software used on work devices at your company's site is an on-premise (workplace) system.", correct:true, explain:"On-premise systems are software suites used on workstations at the company's site." },
+    { id:"c2q58", type:"tf", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:15, q:"Systems that provide access anytime, anywhere are open source systems.", correct:false, explain:"Access anytime and anywhere describes cloud-based systems." },
+    { id:"c2q59", type:"tf", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:15, q:"Management information systems aim to assist managers in making non-structural and non-recurring decisions.", correct:false, explain:"That describes decision support systems; MIS provide managers with indicators and reports for planning and control." },
+    { id:"c2q60", type:"tf", lec:3, lecTitle:"Enterprise Information System - Lecture 4", page:15, q:"A complementary organization uses raw materials from a specific product of one organization to contribute to a new product of another organization.", correct:true, explain:"This is the definition of a complementary organization." }
   ],
   c3: [ // Public Finance
     { id:"c3q1", type:"mcq", lec:1, lecTitle:"Public Finance - Part 1", page:3, q:"Public finance is mainly concerned with the study of how the government manages...",
@@ -2203,7 +2268,7 @@ const quizBank = {
     {"id": "c4q2", "type": "mcq", "lec": 2, "lecTitle": "Lecture 2 – Calculating Market Gap", "page": 1, "q": "What is the main use of the Market Gap?", "options": ["To calculate the project's profit", "To decide whether the project should be implemented or not", "To calculate the project's taxes", "To determine the number of employees"], "correct": 1, "explain": "The Market Gap is a measure that helps decide whether the project is worth implementing.", "translation": {"ar": {"q": "ما الفائدة الأساسية من الفجوة السوقية؟", "options": ["حساب أرباح المشروع", "تحديد هل ننفذ المشروع أم لا", "حساب ضرائب المشروع", "تحديد عدد الموظفين"], "explain": "الفجوة السوقية مقياس يساعدنا في تحديد هل المشروع يستحق التنفيذ أم لا."}}},
     {"id": "c4q3", "type": "tf", "lec": 2, "lecTitle": "Lecture 2 – Calculating Market Gap", "page": 1, "q": "If Demand > Supply, the project is successful.", "correct": true, "explain": "A positive market gap (Demand > Supply) means the project is successful.", "translation": {"ar": {"q": "إذا كان الطلب أكبر من العرض فالمشروع ناجح.", "options": ["صح", "خطأ"], "explain": "الفجوة الموجبة (الطلب > العرض) تعني أن المشروع ناجح."}}},
     {"id": "c4q4", "type": "tf", "lec": 2, "lecTitle": "Lecture 2 – Calculating Market Gap", "page": 1, "q": "If Supply > Demand, the project is successful.", "correct": false, "explain": "If Supply > Demand the project is unsuccessful.", "translation": {"ar": {"q": "إذا كان العرض أكبر من الطلب فالمشروع ناجح.", "options": ["صح", "خطأ"], "explain": "إذا كان العرض أكبر من الطلب فالمشروع غير ناجح."}}},
-    {"id": "c4q5", "type": "mcq", "lec": 2, "lecTitle": "Lecture 2 – Calculating Market Gap", "page": 1, "q": "According to the lecture, if M.G = 0, the project is:", "options": ["Unsuccessful", "Successful", "Cannot be determined", "Must be cancelled"], "correct": 1, "explain": "The lecture states that when M.G = 0 the project is successful.", "translation": {"ar": {"q": "حسب المحاضرة، إذا كانت M.G = 0 فإن المشروع:", "options": ["غير ناجح", "ناجح", "لا يمكن تحديده", "يجب إلغاؤه"], "explain": "المحاضرة تنص على أنه عندما تكون M.G = 0 فالمشروع ناجح."}}},
+    {"id": "c4q5", "type": "mcq", "lec": 2, "lecTitle": "Lecture 2 – Calculating Market Gap", "page": 1, "q": "According to the lecture, if M.G = 0, the project is:", "options": ["Unsuccessful", "Successful", "Cannot be determined", "Must be cancelled"], "correct": 0, "explain": "According to the lecture notes, when M.G = 0 the project is unsuccessful.", "translation": {"ar": {"q": "حسب المحاضرة، إذا كانت M.G = 0 فإن المشروع:", "options": ["غير ناجح", "ناجح", "لا يمكن تحديده", "يجب إلغاؤه"], "explain": "حسب ملاحظات المحاضرة، عندما تكون M.G = 0 فالمشروع غير ناجح."}}},
     {"id": "c4q6", "type": "mcq", "lec": 2, "lecTitle": "Lecture 2 – Calculating Market Gap", "page": 1, "q": "What is the formula for Price Elasticity of Demand (E) used in the lecture?", "options": ["E = (ΔQ / ΔP) × (P / Q)", "E = (ΔP / ΔQ) × (P / Q)", "E = (ΔQ / ΔP) × (Q / P)", "E = ΔQ × ΔP"], "correct": 0, "explain": "E = (ΔQ / ΔP) × (P / Q).", "translation": {"ar": {"q": "ما هي معادلة مرونة الطلب السعرية (E) المستخدمة في المحاضرة؟", "options": ["E = (ΔQ / ΔP) × (P / Q)", "E = (ΔP / ΔQ) × (P / Q)", "E = (ΔQ / ΔP) × (Q / P)", "E = ΔQ × ΔP"], "explain": "E = (ΔQ / ΔP) × (P / Q)."}}},
     {"id": "c4q7", "type": "mcq", "lec": 2, "lecTitle": "Lecture 2 – Calculating Market Gap", "page": 2, "q": "In Exercise 1, what is ΔQ between 2025 and 2026 (Q₂ – Q₁)?", "options": ["+40", "–40", "–2", "+2"], "correct": 1, "explain": "ΔQ = 560 – 600 = –40.", "translation": {"ar": {"q": "في التمرين 1، كم تساوي ΔQ بين 2025 و2026 (Q₂ – Q₁)؟", "options": ["+40", "–40", "–2", "+2"], "explain": "ΔQ = 560 – 600 = –40."}}},
     {"id": "c4q8", "type": "mcq", "lec": 2, "lecTitle": "Lecture 2 – Calculating Market Gap", "page": 2, "q": "In Exercise 1, what is ΔP between 2025 and 2026?", "options": ["2", "–2", "12", "22"], "correct": 0, "explain": "ΔP = 12 – 10 = 2.", "translation": {"ar": {"q": "في التمرين 1، كم تساوي ΔP بين 2025 و2026؟", "options": ["2", "–2", "12", "22"], "explain": "ΔP = 12 – 10 = 2."}}},
