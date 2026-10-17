@@ -404,7 +404,8 @@
   .lecture-outline li{margin-bottom:2px;}
   .lecture-outline li.outline-hot{
     list-style:none;
-    margin:8px 0 4px -18px;
+    margin:8px 0 4px;
+    margin-inline-start:-18px;
     padding:7px 12px;
     border-radius:10px;
     font-weight:700;
@@ -437,6 +438,8 @@
     .lecture-outline li.outline-hot::before{animation:none;}
   }
 
+  #offlineBar{position:fixed; left:0; right:0; bottom:0; z-index:200; background:#7a1f1f; color:#fff; text-align:center; font-size:.82rem; font-weight:700; padding:8px 12px; display:none;}
+  #offlineBar.show{display:block;}
   .empty{
     text-align:center;
     padding:60px 20px;
@@ -3887,23 +3890,22 @@ document.getElementById('scheduleLightbox').addEventListener('click', ()=>{
 
 
 /* ---------- PWA: service worker + install button ---------- */
-if('serviceWorker' in navigator){
-  window.addEventListener('load', async ()=>{
-    if(location.hostname === 'localhost' || location.protocol === 'https:'){
-      try {
-        const reg = await navigator.serviceWorker.register('sw.js');
-        if(reg && reg.active && location.hostname !== 'localhost') {
-          await navigator.serviceWorker.getRegistrations().then(rs => Promise.all(rs.map(r => r.unregister())));
-        }
-      }catch(e){ /* ignore */ }
-    } else {
-      try {
-        const registrations = await navigator.serviceWorker.getRegistrations();
-        await Promise.all(registrations.map(reg => reg.unregister()));
-      }catch(e){ /* ignore */ }
-    }
+if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{ /* ignore */ });
   });
 }
+/* ---------- Offline indicator ---------- */
+(function(){
+  const bar = document.createElement('div');
+  bar.id = 'offlineBar';
+  bar.textContent = 'أنت غير متصل بالإنترنت — الموقع شغال، لكن روابط درايف ويوتيوب محتاجة إنترنت';
+  document.body.appendChild(bar);
+  const upd = ()=> bar.classList.toggle('show', !navigator.onLine);
+  window.addEventListener('online', upd);
+  window.addEventListener('offline', upd);
+  upd();
+})();
 (function(){
   const wrap = document.getElementById('installWrap');
   const btn = document.getElementById('installBtn');
