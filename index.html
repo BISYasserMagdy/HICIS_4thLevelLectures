@@ -1464,7 +1464,8 @@ const seedData = [
       { title:"1st Section", parts:[
         { kind:"theory", label:"📘 ملف السيكشن (R Lab)", file:"https://drive.google.com/file/d/1eypojvLoZGEfqw-Xhw7X6KldLRU9kVHB/view?usp=drive_link" },
         { kind:"photos", label:"🖼️ صور الشرح (Photos)", file:"https://drive.google.com/file/d/1ugaIFL37zBcJe0_gWiRmPuhqDtRPM1O5/view?usp=drive_link" }
-      ], outline:["Section Overview", "What is R and Why Use It?", "Installing R and RStudio", "Syntax and Print", "Comments", "Variables", "Data Types", "Numbers", "Math", "Strings", "Escape Characters", "Booleans (Logical Values)", "Operators", "Common Mistakes to Watch For"] }
+      ], outline:["Section Overview", "What is R and Why Use It?", "Installing R and RStudio", "Syntax and Print", "Comments", "Variables", "Data Types", "Numbers", "Math", "Strings", "Escape Characters", "Booleans (Logical Values)", "Operators", "Common Mistakes to Watch For"] },
+      { title:"Data Mining - Lecture 6", file:"https://drive.google.com/file/d/1RcHaFYG8OxSrix-4c21lB1NvclVDd3Nk/view?usp=drive_link", outline:["Data Mining Tasks: Classification", "Neural networks and biological nerve cells", "How neural networks are structured", "Components of neural networks (input, hidden and output layers)", "How a neuron works: inputs, weights, bias and function", "Multiple-input neuron, layer of neurons, monolayer and multilayer networks", "Elements of ANNs: processing units, topology, learning algorithm", "The learning process (adjusting weights)", "Types of neural networks (ANN, MLP, CNN, RNN, LSTM)", "Steps of applying a neural network: architecture, training, validation", "How to calculate the output: weighted sum and bias", "Activation functions: Sigmoid, ReLU, Tanh, Softmax", "Practical example of output calculation", "Applications of neural networks", "Advantages and disadvantages of neural networks", "Test: calculating outputs with a sigmoid function"] }
     ] },
   { id:"c2", level:"الفرقة الرابعة - الترم الأول", name:"Enterprise Information System", doctor:"د. هاجر", ta:"", day:"السبت", time:"2:30", room:"", link:"https://drive.google.com/file/d/1dHqeiF57_K-ACDmc7SezfcULJeIPpkjc/view?usp=drive_link",
     lectures:[
@@ -1502,7 +1503,7 @@ let activeLevel = "الكل";
 /* ---------------- Storage helpers ---------------- */
 /* DATA_VERSION bumped whenever seedData changes, so everyone's stored copy
    (which may include courses removed later, like CSS) resets to the latest seed. */
-const DATA_VERSION = "v19";
+const DATA_VERSION = "v20";
 
 async function loadCourses(){
   try{
