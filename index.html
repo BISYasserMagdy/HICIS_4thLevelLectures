@@ -1332,6 +1332,63 @@
   .gamification-course-card .course-note{color:var(--muted); font-size:.82rem; margin:0 0 12px;}
   .gamification-mode-buttons{display:flex; flex-wrap:wrap; gap:10px;}
   @media (max-width:600px){.interactive-match-grid{grid-template-columns:1fr;}.interactive-card{padding:18px;}.interactive-flashcard{min-height:180px; padding:22px 16px;}}
+
+  /* ---------- Midterm exam ---------- */
+  #examSection{display:none;}
+  .exam-intro{background:linear-gradient(135deg,#eef6f0,#fdf6e3);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:18px;}
+  .exam-intro h2{margin:0 0 6px;font-family:'Cairo',sans-serif;color:var(--green-deep);}
+  .exam-intro ul{margin:8px 0 0;padding-inline-start:20px;line-height:1.9;color:var(--muted);}
+  .exam-start-btn{background:var(--green-deep);color:#fff;border:0;border-radius:10px;padding:11px 18px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;margin-top:12px;}
+  .exam-start-btn:hover{background:var(--green);}
+  .exam-start-btn:disabled{opacity:.5;cursor:default;}
+  .exam-course-card{cursor:pointer;}
+  .exam-wrap{max-width:860px;margin:0 auto;}
+  .exam-bar{position:sticky;top:0;z-index:30;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;margin-bottom:16px;box-shadow:0 8px 22px -14px rgba(20,40,30,.45);}
+  .exam-bar-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:8px;}
+  .exam-bar-row:first-child{margin-top:0;}
+  .exam-title{font-family:'Cairo',sans-serif;font-weight:800;color:var(--green-deep);font-size:.95rem;}
+  .exam-timer{font-family:'Cairo',sans-serif;font-weight:800;font-size:1.5rem;color:var(--green-deep);font-variant-numeric:tabular-nums;}
+  .exam-timer.warn{color:#b9791a;}
+  .exam-timer.danger{color:#c0392b;animation:examPulse 1s infinite;}
+  @keyframes examPulse{50%{opacity:.45;}}
+  .exam-answered{font-size:.84rem;font-weight:700;color:var(--muted);}
+  .exam-bar-actions{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .exam-submit{background:#c0392b;color:#fff;border:0;border-radius:8px;padding:8px 14px;font-family:'Tajawal',sans-serif;font-weight:700;cursor:pointer;}
+  .exam-submit.big{padding:13px 28px;font-size:1rem;}
+  .exam-bottom{text-align:center;margin:20px 0 40px;}
+  .exam-nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+  .exam-chip{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:.78rem;cursor:pointer;color:var(--muted);font-family:'Tajawal',sans-serif;}
+  .exam-chip.done{background:var(--green-deep);border-color:var(--green-deep);color:#fff;}
+  .exam-q{margin-bottom:16px;}
+  .exam-q-head{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .exam-q-num{background:var(--gold);color:#fff;border-radius:8px;min-width:28px;text-align:center;padding:2px 8px;font-weight:800;font-size:.85rem;}
+  .exam-q .quiz-type-tag,.exam-q .quiz-lec-tag,.exam-q .quiz-page-tag{margin:0;}
+  .quiz-opt.selected{border-color:var(--green-deep);background:#e6f2ea;font-weight:700;}
+  .exam-opt .opt-letter{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--cream);align-items:center;justify-content:center;font-weight:800;font-size:.75rem;margin-inline-end:10px;flex:none;}
+  .exam-review{margin-top:14px;border-radius:10px;padding:12px 14px;font-size:.9rem;line-height:1.8;}
+  .exam-review.ok{background:#e6f2ea;color:#1e6b45;}
+  .exam-review.bad{background:#fbe9e7;color:#a13b28;}
+  .exam-review-line.right{color:#1e6b45;}
+  .exam-review-expl{margin-top:6px;color:var(--ink,#333);}
+  .exam-banner{background:#fbe9e7;border:1px solid #d9634f;color:#a13b28;border-radius:var(--radius);padding:12px 16px;font-weight:700;text-align:center;margin-bottom:14px;}
+  .exam-result{margin-bottom:18px;}
+  .exam-result-course{font-weight:700;color:var(--muted);}
+  .exam-pct{font-size:1.1rem;font-weight:700;margin-bottom:12px;}
+  .exam-stats,.exam-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0;}
+  .exam-stats .stat-chip{font-size:.8rem;padding:5px 11px;border-radius:999px;background:var(--cream);color:var(--green-deep);font-weight:700;}
+  .exam-stats .stat-chip.good{background:#e6f2ea;color:#1e6b45;}
+  .exam-stats .stat-chip.bad{background:#fbe9e7;color:#a13b28;}
+  .exam-lec-panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:18px;}
+  .exam-lec-panel h3,.exam-list-head h3{margin:0 0 10px;font-family:'Cairo',sans-serif;color:var(--green-deep);font-size:1rem;}
+  .exam-lec-row{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:.84rem;}
+  .exam-lec-name{flex:0 0 38%;font-weight:700;}
+  .exam-lec-bar{flex:1;height:8px;background:var(--cream);border-radius:99px;overflow:hidden;}
+  .exam-lec-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--green-deep));}
+  .exam-lec-score{font-weight:800;min-width:38px;text-align:left;}
+  .exam-list-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 12px;}
+  .exam-list-head h3{margin:0;}
+  .exam-perfect{background:#e6f2ea;color:#1e6b45;border-radius:var(--radius);padding:18px;text-align:center;font-weight:700;margin-bottom:12px;}
+  @media (max-width:600px){.exam-lec-name{flex-basis:44%;}.exam-timer{font-size:1.25rem;}}
 </style>
 </head>
 <body>
@@ -1352,6 +1409,7 @@
   <div class="section-nav" id="sectionNav">
     <button class="section-btn active" data-section="courses">📚 المحاضرات</button>
     <button class="section-btn" data-section="quiz">🧠 اختبارات وتدريب <span class="badge" id="dueBadge" style="display:none;">0</span></button>
+    <button class="section-btn" data-section="exam">🎓 محاكاة الميدترم <span class="badge" id="examBadge" style="display:none;">⏱</span></button>
     <button class="section-btn" data-section="gamification">🎮 تدريب تفاعلي</button>
     <button class="section-btn" data-section="videos">🎬 فيديوهات مقترحة</button>
   </div>
@@ -1400,6 +1458,8 @@
 
   <div id="quizSessionWrap" style="display:none;"></div>
 </main>
+
+<main id="examSection" style="display:none;"></main>
 
 <main id="videosSection">
   <p class="video-intro">🎬 قوايم تشغيل ومقترحات فيديوهات لشرح المواد — اختار المادة وشاهد الشرح.</p>
@@ -2881,7 +2941,7 @@ function courseNameById(cid){
 
 /* ---- Section switching ---- */
 const SECTION_STORAGE_KEY = 'portal_active_section';
-const VALID_SECTIONS = new Set(['courses', 'quiz', 'gamification', 'videos']);
+const VALID_SECTIONS = new Set(['courses', 'quiz', 'exam', 'gamification', 'videos']);
 
 function saveActiveSection(){
   try{
@@ -2918,16 +2978,20 @@ function switchSection(section){
   const quizSection = document.getElementById('quizSection');
   const gamificationSection = document.getElementById('gamificationSection');
   const videosSection = document.getElementById('videosSection');
+  const examSection = document.getElementById('examSection');
 
   if(coursesControls) coursesControls.style.display = safeSection === 'courses' ? '' : 'none';
   if(mainContent) mainContent.style.display = safeSection === 'courses' ? '' : 'none';
   if(quizSection) quizSection.style.display = safeSection === 'quiz' ? 'block' : 'none';
   if(gamificationSection) gamificationSection.style.display = safeSection === 'gamification' ? 'block' : 'none';
   if(videosSection) videosSection.style.display = safeSection === 'videos' ? 'block' : 'none';
+  if(examSection) examSection.style.display = safeSection === 'exam' ? 'block' : 'none';
 
   if(safeSection === 'quiz'){
     endQuizSession(false);
     renderQuizHome();
+  } else if(safeSection === 'exam'){
+    renderExamSection();
   } else if(safeSection === 'videos'){
     renderVideos();
   } else if(safeSection === 'gamification'){
@@ -4096,6 +4160,501 @@ if('serviceWorker' in navigator && (location.protocol === 'https:' || location.h
     wrap.style.display = 'block'; hint.style.display = 'block';
   }
 })();
+
+/* =========================================================
+   MIDTERM EXAM SIMULATION
+   - 20 random questions per course, spread evenly over every lecture that has questions
+   - 20-minute countdown (based on an end timestamp, so refreshing the page does not reset it)
+   - When time is up the exam closes automatically and the result is shown
+   - Result: score, per-lecture breakdown, mistakes (+ unanswered) with the correct answers
+   ========================================================= */
+const EXAM_COUNT = 20;
+const EXAM_SECONDS = 20 * 60;
+const EXAM_STATE_KEY = 'portal_midterm_exam_state_v1';
+const EXAM_HISTORY_KEY = 'portal_midterm_exam_history_v1';
+const EXAM_LANG_KEY = 'portal_midterm_exam_lang_v1';
+const EXAM_NO_SHUFFLE = /(all|none|both)\s+(of\s+)?(the\s+)?(above|these)|كل ما سبق|جميع ما سبق|لا شيء مما سبق|كلاهما|both/i;
+
+let exam = null;
+let examTick = null;
+let examShowAll = false;
+
+function examRead(key){ try{ const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; }catch(e){ return null; } }
+function examWrite(key, val){ try{ if(val === null) localStorage.removeItem(key); else localStorage.setItem(key, JSON.stringify(val)); }catch(e){ /* storage unavailable */ } }
+function examEsc(s){ return escapeHtml(String(s == null ? '' : s)); }
+function examShuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function examFmt(sec){
+  sec = Math.max(0, Math.round(sec));
+  return String(Math.floor(sec / 60)).padStart(2, '0') + ':' + String(sec % 60).padStart(2, '0');
+}
+function examLang(){
+  try{ return localStorage.getItem(EXAM_LANG_KEY) === 'ar' ? 'ar' : 'en'; }catch(e){ return 'en'; }
+}
+function examQuestion(item){
+  return (quizBank[exam.cid] || []).find(q => q.id === item.id) || null;
+}
+function examOptionOrder(q){
+  const idx = q.options.map((_, i) => i);
+  const ar = (q.translation && q.translation.ar && q.translation.ar.options) || [];
+  if(q.options.some(o => EXAM_NO_SHUFFLE.test(String(o))) || ar.some(o => EXAM_NO_SHUFFLE.test(String(o)))) return idx;
+  return examShuffle(idx);
+}
+
+/* ---- Picking the questions: round-robin over lectures so every lecture is represented ---- */
+function pickExamQuestions(cid){
+  const pool = quizBank[cid] || [];
+  const groups = {};
+  pool.forEach(q => { const k = q.lec || 0; (groups[k] = groups[k] || []).push(q); });
+  Object.keys(groups).forEach(k => { groups[k] = examShuffle(groups[k]); });
+  const order = examShuffle(Object.keys(groups));
+  const target = Math.min(EXAM_COUNT, pool.length);
+  const picked = [];
+  while(picked.length < target){
+    let progressed = false;
+    for(const k of order){
+      if(picked.length >= target) break;
+      if(groups[k].length){ picked.push(groups[k].pop()); progressed = true; }
+    }
+    if(!progressed) break;
+  }
+  return examShuffle(picked);
+}
+
+/* ---- State ---- */
+function examPersist(){
+  if(!exam) { examWrite(EXAM_STATE_KEY, null); return; }
+  examWrite(EXAM_STATE_KEY, exam);
+}
+function examRestore(){
+  const s = examRead(EXAM_STATE_KEY);
+  if(!s || !s.cid || !Array.isArray(s.items) || !quizBank[s.cid]) return null;
+  const ok = s.items.every(it => (quizBank[s.cid] || []).some(q => q.id === it.id));
+  if(!ok){ examWrite(EXAM_STATE_KEY, null); return null; }
+  return s;
+}
+function examHistory(cid){
+  const h = examRead(EXAM_HISTORY_KEY) || {};
+  return Array.isArray(h[cid]) ? h[cid] : [];
+}
+function examSaveHistory(res){
+  const h = examRead(EXAM_HISTORY_KEY) || {};
+  const list = Array.isArray(h[exam.cid]) ? h[exam.cid] : [];
+  list.push({ score: res.correct, total: res.total, at: Date.now(), secs: res.secsUsed });
+  h[exam.cid] = list.slice(-15);
+  examWrite(EXAM_HISTORY_KEY, h);
+}
+function examUpdateBadge(){
+  const b = document.getElementById('examBadge');
+  if(!b) return;
+  b.style.display = (exam && !exam.submitted) ? 'inline-block' : 'none';
+}
+
+/* ---- Timer ---- */
+function examEnsureTick(){
+  if(examTick || !exam || exam.submitted) return;
+  examTick = setInterval(examUpdateTimer, 250);
+  examUpdateTimer();
+}
+function examStopTick(){
+  if(examTick){ clearInterval(examTick); examTick = null; }
+}
+function examUpdateTimer(){
+  if(!exam || exam.submitted){ examStopTick(); return; }
+  const remaining = Math.max(0, exam.endsAt - Date.now());
+  const el = document.getElementById('examTimer');
+  if(el){
+    el.textContent = examFmt(remaining / 1000);
+    el.classList.toggle('warn', remaining <= 5 * 60 * 1000 && remaining > 60 * 1000);
+    el.classList.toggle('danger', remaining <= 60 * 1000);
+  }
+  const fill = document.getElementById('examTimeFill');
+  if(fill) fill.style.width = (100 - remaining / (EXAM_SECONDS * 1000) * 100).toFixed(1) + '%';
+  if(remaining <= 0) finishExam('timeout');
+}
+
+/* ---- Starting / finishing ---- */
+function startExam(cid){
+  const picked = pickExamQuestions(cid);
+  if(!picked.length) return;
+  const now = Date.now();
+  exam = {
+    cid, startedAt: now, endsAt: now + EXAM_SECONDS * 1000,
+    items: picked.map(q => ({ id: q.id, order: q.type === 'mcq' ? examOptionOrder(q) : null })),
+    answers: {}, lang: examLang(), submitted: false, finishedAt: null, reason: null
+  };
+  examShowAll = false;
+  examPersist();
+  examUpdateBadge();
+  renderExamRun();
+  examEnsureTick();
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+function examIsCorrect(q, ans){
+  if(ans === undefined || ans === null) return false;
+  return ans === q.correct;
+}
+
+function examScore(){
+  const lecs = {};
+  let correct = 0, unanswered = 0;
+  const mistakes = [];
+  exam.items.forEach((it, i) => {
+    const q = examQuestion(it);
+    const ans = exam.answers[q.id];
+    const lk = q.lec || 0;
+    if(!lecs[lk]) lecs[lk] = { lec: lk, title: q.lecTitle || '', total: 0, correct: 0 };
+    lecs[lk].total += 1;
+    if(ans === undefined || ans === null) unanswered += 1;
+    if(examIsCorrect(q, ans)){ correct += 1; lecs[lk].correct += 1; }
+    else mistakes.push(i);
+  });
+  const total = exam.items.length;
+  const end = exam.finishedAt || Date.now();
+  return {
+    correct, total, unanswered, wrong: total - correct - unanswered,
+    pct: total ? Math.round(correct / total * 100) : 0,
+    secsUsed: Math.min(EXAM_SECONDS, Math.round((end - exam.startedAt) / 1000)),
+    lecs: Object.values(lecs).sort((a, b) => a.lec - b.lec), mistakes
+  };
+}
+
+function finishExam(reason){
+  if(!exam || exam.submitted) return;
+  exam.submitted = true;
+  exam.reason = reason;
+  exam.finishedAt = Math.min(Date.now(), exam.endsAt);
+  examStopTick();
+  examSaveHistory(examScore());
+  examPersist();
+  examUpdateBadge();
+  if(typeof activeSection !== 'undefined' && activeSection === 'exam') renderExamResults();
+}
+
+function examSubmitClick(){
+  if(!exam || exam.submitted) return;
+  const left = exam.items.filter(it => exam.answers[it.id] === undefined).length;
+  const msg = left > 0
+    ? `لسه فيه ${left} سؤال من غير إجابة وهتتحسب غلط. تسلّم الامتحان دلوقتي؟`
+    : 'تسلّم الامتحان دلوقتي؟';
+  if(window.confirm(msg)) finishExam('submitted');
+}
+
+function examBackToHome(){
+  examStopTick();
+  exam = null;
+  examShowAll = false;
+  examPersist();
+  examUpdateBadge();
+  renderExamHome();
+}
+
+/* ---- Rendering: home ---- */
+function renderExamHome(){
+  const sec = document.getElementById('examSection');
+  if(!sec) return;
+  const cids = Object.keys(quizBank).sort();
+  const cards = cids.map(cid => {
+    const pool = quizBank[cid] || [];
+    const lecCount = new Set(pool.map(q => q.lec || 0)).size;
+    const hist = examHistory(cid);
+    const last = hist[hist.length - 1];
+    const best = hist.reduce((m, h) => Math.max(m, h.score), 0);
+    const histHtml = last
+      ? `<span class="stat-chip">🕘 آخر نتيجة: ${last.score}/${last.total}</span><span class="stat-chip">🏆 أفضل نتيجة: ${best}/${last.total}</span>`
+      : `<span class="stat-chip">لسه ما دخلتش امتحان</span>`;
+    const n = Math.min(EXAM_COUNT, pool.length);
+    return `
+    <div class="quiz-course-card exam-course-card" data-exam-course="${cid}">
+      <h4>${examEsc(courseNameById(cid))}</h4>
+      <div class="stats">
+        <span class="stat-chip">📝 ${pool.length} سؤال في البنك</span>
+        <span class="stat-chip">📖 ${lecCount} محاضرة</span>
+        ${histHtml}
+      </div>
+      <button class="exam-start-btn" data-exam-start="${cid}" ${pool.length ? '' : 'disabled'}>ابدأ امتحان الميدترم (${n} سؤال)</button>
+    </div>`;
+  }).join('');
+  sec.innerHTML = `
+    <div class="exam-intro">
+      <h2>🎓 محاكاة امتحان الميدترم</h2>
+      <p>اختار المادة وابدأ امتحان تجريبي زي الامتحان الحقيقي.</p>
+      <ul>
+        <li>الامتحان <strong>${EXAM_COUNT} سؤال</strong> عشوائي من المادة، موزعين بالتساوي على كل المحاضرات اللي ليها أسئلة.</li>
+        <li>الوقت <strong>${EXAM_SECONDS / 60} دقيقة</strong>، ولما الوقت يخلص الامتحان بيتقفل ويتسلّم لوحده.</li>
+        <li>مفيش إجابات صحيحة بتظهر وقت الامتحان. في الآخر بتشوف <strong>الدرجة والأخطاء والإجابة الصحيحة</strong>.</li>
+        <li>لو قفلت الصفحة أو عملت refresh، الوقت بيفضل شغال ومفيش حاجة بتتصفّر.</li>
+      </ul>
+    </div>
+    <div class="quiz-course-grid">${cards}</div>`;
+}
+
+/* ---- Rendering: question cards (run / review) ---- */
+function examAnswerText(q, val, lang){
+  if(val === undefined || val === null) return null;
+  if(q.type === 'mcq') return getQuestionOptionText(q, lang, val);
+  return val ? (lang === 'en' ? 'True' : 'صح') : (lang === 'en' ? 'False' : 'خطأ');
+}
+
+function examQuestionCard(it, i, mode){
+  const q = examQuestion(it);
+  const lang = exam.lang;
+  const ans = exam.answers[q.id];
+  const review = mode === 'review';
+  const letters = 'ABCDEFGH';
+  let opts = '';
+  if(q.type === 'mcq'){
+    const order = it.order || q.options.map((_, k) => k);
+    opts = '<div class="quiz-options">' + order.map((oi, pos) => {
+      let cls = 'quiz-opt exam-opt';
+      if(review){ if(oi === q.correct) cls += ' correct'; else if(ans === oi) cls += ' wrong'; }
+      else if(ans === oi) cls += ' selected';
+      return `<button class="${cls}" data-qi="${i}" data-idx="${oi}" ${review ? 'disabled' : ''}>
+        <span class="quiz-option-row"><span class="opt-letter">${letters[pos]}</span><span class="quiz-option-main" dir="auto">${examEsc(getQuestionOptionText(q, lang, oi))}</span></span>
+      </button>`;
+    }).join('') + '</div>';
+  }else{
+    const mk = (val, label) => {
+      let cls = 'quiz-opt exam-opt';
+      if(review){ if(val === q.correct) cls += ' correct'; else if(ans === val) cls += ' wrong'; }
+      else if(ans === val) cls += ' selected';
+      return `<button class="${cls}" data-qi="${i}" data-val="${val}" ${review ? 'disabled' : ''}><span class="quiz-option-row"><span class="quiz-option-main">${label}</span></span></button>`;
+    };
+    opts = `<div class="tf-row">${mk(true, lang === 'en' ? 'True' : 'صح')}${mk(false, lang === 'en' ? 'False' : 'خطأ')}</div>`;
+  }
+
+  let reviewHtml = '';
+  if(review){
+    const mine = examAnswerText(q, ans, lang);
+    const right = examAnswerText(q, q.correct, lang);
+    const ok = examIsCorrect(q, ans);
+    const expl = getQuestionExplanation(q, lang);
+    reviewHtml = `
+      <div class="exam-review ${ok ? 'ok' : 'bad'}">
+        <div class="exam-review-line">${ok ? '✅ إجابتك صحيحة' : (mine === null ? '⚪ لم تجب على هذا السؤال' : '❌ إجابتك: <span dir="auto">' + examEsc(mine) + '</span>')}</div>
+        ${ok ? '' : `<div class="exam-review-line right">✔ الإجابة الصحيحة: <strong dir="auto">${examEsc(right)}</strong></div>`}
+        ${expl ? `<div class="exam-review-expl">💡 <span dir="auto">${examEsc(expl)}</span></div>` : ''}
+      </div>`;
+  }
+
+  return `
+  <div class="quiz-card exam-q" id="examQ-${i}" data-qi="${i}">
+    <div class="exam-q-head">
+      <span class="exam-q-num">${i + 1}</span>
+      <span class="quiz-type-tag">${q.type === 'mcq' ? (lang === 'en' ? 'Multiple choice' : 'اختيار من متعدد') : (lang === 'en' ? 'True / False' : 'صح أم غلط')}</span>
+      ${review && q.lec ? `<span class="quiz-lec-tag">📖 محاضرة ${q.lec}${q.lecTitle ? ': ' + examEsc(q.lecTitle) : ''}</span>` : ''}
+      ${review && q.page ? `<span class="quiz-page-tag">📄 صفحة ${q.page}</span>` : ''}
+    </div>
+    <p class="quiz-question" dir="auto">${examEsc(getQuestionLanguageText(q, lang))}</p>
+    ${renderQuestionTable(q)}
+    ${opts}
+    ${reviewHtml}
+  </div>`;
+}
+
+/* ---- Rendering: exam in progress ---- */
+function examAnsweredCount(){
+  return exam.items.filter(it => exam.answers[it.id] !== undefined).length;
+}
+function examRefreshProgress(){
+  const n = examAnsweredCount();
+  const t = document.getElementById('examAnsweredText');
+  if(t) t.textContent = `${n} / ${exam.items.length} تمت الإجابة`;
+  exam.items.forEach((it, i) => {
+    const chip = document.querySelector(`.exam-chip[data-qi="${i}"]`);
+    if(chip) chip.classList.toggle('done', exam.answers[it.id] !== undefined);
+  });
+}
+
+function renderExamQuestionsOnly(){
+  const box = document.getElementById('examQuestions');
+  if(!box) return;
+  box.innerHTML = exam.items.map((it, i) => examQuestionCard(it, i, 'run')).join('');
+}
+
+function renderExamRun(){
+  const sec = document.getElementById('examSection');
+  if(!sec || !exam) return;
+  const chips = exam.items.map((it, i) => `<button class="exam-chip" data-qi="${i}" aria-label="سؤال ${i + 1}">${i + 1}</button>`).join('');
+  sec.innerHTML = `
+  <div class="exam-wrap">
+    <div class="exam-bar" id="examBar">
+      <div class="exam-bar-row">
+        <div class="exam-title">🎓 ميدترم — ${examEsc(courseNameById(exam.cid))}</div>
+        <div class="exam-timer" id="examTimer" dir="ltr">${examFmt(Math.max(0, exam.endsAt - Date.now()) / 1000)}</div>
+      </div>
+      <div class="progress-bar exam-time-bar"><div class="progress-bar-fill" id="examTimeFill" style="width:0%"></div></div>
+      <div class="exam-bar-row">
+        <span class="exam-answered" id="examAnsweredText"></span>
+        <span class="exam-bar-actions">
+          <button class="quiz-lang-toggle" id="examLangBtn">${exam.lang === 'en' ? 'العربية' : 'English'}</button>
+          <button class="exam-submit" id="examSubmitBtn">تسليم الامتحان</button>
+        </span>
+      </div>
+      <div class="exam-nav" id="examNav">${chips}</div>
+    </div>
+    <div id="examQuestions"></div>
+    <div class="exam-bottom"><button class="exam-submit big" id="examSubmitBtn2">تسليم الامتحان</button></div>
+  </div>`;
+  renderExamQuestionsOnly();
+  examRefreshProgress();
+  examUpdateTimer();
+}
+
+/* ---- Rendering: results ---- */
+function examVerdict(pct){
+  if(pct >= 90) return '🌟 ممتاز';
+  if(pct >= 80) return '👏 جيد جداً';
+  if(pct >= 65) return '👍 جيد';
+  if(pct >= 50) return '🙂 مقبول';
+  return '📚 محتاج مذاكرة أكتر';
+}
+
+function renderExamResults(){
+  const sec = document.getElementById('examSection');
+  if(!sec || !exam) return;
+  const res = examScore();
+  const timeoutBanner = exam.reason === 'timeout'
+    ? `<div class="exam-banner">⏰ انتهى الوقت — الامتحان اتقفل واتسلّم تلقائياً.</div>` : '';
+  const lecRows = res.lecs.map(l => {
+    const pct = l.total ? Math.round(l.correct / l.total * 100) : 0;
+    return `<div class="exam-lec-row">
+      <div class="exam-lec-name">${l.lec ? 'محاضرة ' + l.lec : 'عام'}${l.title ? ' — ' + examEsc(l.title) : ''}</div>
+      <div class="exam-lec-bar"><span style="width:${pct}%"></span></div>
+      <div class="exam-lec-score">${l.correct}/${l.total}</div>
+    </div>`;
+  }).join('');
+  const shown = examShowAll ? exam.items.map((_, i) => i) : res.mistakes;
+  const cards = shown.map(i => examQuestionCard(exam.items[i], i, 'review')).join('');
+  const listTitle = examShowAll
+    ? `كل الأسئلة (${exam.items.length})`
+    : `الأخطاء ومراجعتها (${res.mistakes.length})`;
+  const empty = !examShowAll && !res.mistakes.length
+    ? `<div class="exam-perfect">🎉 مفيش ولا غلطة! إجاباتك كلها صحيحة.</div>` : '';
+
+  sec.innerHTML = `
+  <div class="exam-wrap">
+    ${timeoutBanner}
+    <div class="quiz-summary exam-result">
+      <div class="exam-result-course">${examEsc(courseNameById(exam.cid))}</div>
+      <div class="score">${res.correct} / ${res.total}</div>
+      <div class="exam-pct">${res.pct}% — ${examVerdict(res.pct)}</div>
+      <div class="exam-stats">
+        <span class="stat-chip good">✅ صح: ${res.correct}</span>
+        <span class="stat-chip bad">❌ غلط: ${res.wrong}</span>
+        <span class="stat-chip">⚪ من غير إجابة: ${res.unanswered}</span>
+        <span class="stat-chip">⏱ الوقت المستخدم: ${examFmt(res.secsUsed)}</span>
+      </div>
+      <div class="exam-actions">
+        <button class="exam-start-btn" id="examAgainBtn">امتحان جديد في نفس المادة</button>
+        <button class="quiz-back" id="examHomeBtn">اختيار مادة تانية</button>
+      </div>
+    </div>
+    <div class="exam-lec-panel">
+      <h3>الأداء حسب المحاضرة</h3>
+      ${lecRows}
+    </div>
+    <div class="exam-list-head">
+      <h3>${listTitle}</h3>
+      <span class="exam-bar-actions">
+        <button class="quiz-lang-toggle" id="examLangBtn">${exam.lang === 'en' ? 'العربية' : 'English'}</button>
+        <button class="quiz-back" id="examToggleAllBtn">${examShowAll ? 'عرض الأخطاء فقط' : 'عرض كل الأسئلة'}</button>
+      </span>
+    </div>
+    <div id="examReview">${empty}${cards}</div>
+  </div>`;
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+/* ---- Entry point for the tab ---- */
+function renderExamSection(){
+  if(!exam) exam = examRestore();
+  if(exam){
+    if(!exam.submitted && Date.now() >= exam.endsAt){ finishExam('timeout'); renderExamResults(); return; }
+    if(exam.submitted){ renderExamResults(); return; }
+    renderExamRun();
+    examEnsureTick();
+    return;
+  }
+  renderExamHome();
+}
+
+/* ---- Events ---- */
+(function(){
+  const sec = document.getElementById('examSection');
+  if(!sec) return;
+  sec.addEventListener('click', (e) => {
+    const start = e.target.closest('[data-exam-start]');
+    if(start){ startExam(start.dataset.examStart); return; }
+    const card = e.target.closest('[data-exam-course]');
+    if(card && !e.target.closest('button')){ startExam(card.dataset.examCourse); return; }
+
+    if(e.target.closest('#examSubmitBtn') || e.target.closest('#examSubmitBtn2')){ examSubmitClick(); return; }
+    if(e.target.closest('#examAgainBtn')){ const cid = exam.cid; exam = null; startExam(cid); return; }
+    if(e.target.closest('#examHomeBtn')){ examBackToHome(); return; }
+    if(e.target.closest('#examToggleAllBtn')){ examShowAll = !examShowAll; renderExamResults(); return; }
+
+    if(e.target.closest('#examLangBtn')){
+      exam.lang = exam.lang === 'en' ? 'ar' : 'en';
+      try{ localStorage.setItem(EXAM_LANG_KEY, exam.lang); }catch(err){ /* ignore */ }
+      examPersist();
+      if(exam.submitted) renderExamResults();
+      else { renderExamQuestionsOnly(); document.getElementById('examLangBtn').textContent = exam.lang === 'en' ? 'العربية' : 'English'; }
+      return;
+    }
+
+    const chip = e.target.closest('.exam-chip');
+    if(chip){
+      const target = document.getElementById('examQ-' + chip.dataset.qi);
+      const bar = document.getElementById('examBar');
+      if(target){
+        target.style.scrollMarginTop = ((bar ? bar.offsetHeight : 120) + 12) + 'px';
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
+
+    const opt = e.target.closest('.exam-opt');
+    if(opt && exam && !exam.submitted){
+      if(Date.now() >= exam.endsAt){ finishExam('timeout'); return; }
+      const i = Number(opt.dataset.qi);
+      const it = exam.items[i];
+      const q = examQuestion(it);
+      const val = q.type === 'mcq' ? Number(opt.dataset.idx) : (opt.dataset.val === 'true');
+      if(exam.answers[q.id] === val) delete exam.answers[q.id];   // tap again to clear
+      else exam.answers[q.id] = val;
+      const card = document.getElementById('examQ-' + i);
+      if(card){
+        card.querySelectorAll('.exam-opt').forEach(b => {
+          const bv = q.type === 'mcq' ? Number(b.dataset.idx) : (b.dataset.val === 'true');
+          b.classList.toggle('selected', exam.answers[q.id] === bv);
+        });
+      }
+      examRefreshProgress();
+      examPersist();
+    }
+  });
+
+  window.addEventListener('beforeunload', (e) => {
+    if(exam && !exam.submitted){ e.preventDefault(); e.returnValue = ''; }
+  });
+
+  /* pick up an exam that was running before a refresh, so the timer and badge continue */
+  exam = examRestore();
+  if(exam && !exam.submitted){
+    if(Date.now() >= exam.endsAt) finishExam('timeout');
+    else examEnsureTick();
+  }
+  examUpdateBadge();
+})();
+
 
 /* ---- Quiz init ---- */
 async function initQuiz(){
