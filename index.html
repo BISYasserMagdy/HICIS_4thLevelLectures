@@ -1600,7 +1600,7 @@ let activeLevel = "الكل";
 /* ---------------- Storage helpers ---------------- */
 /* DATA_VERSION bumped whenever seedData changes, so everyone's stored copy
    (which may include courses removed later, like CSS) resets to the latest seed. */
-const DATA_VERSION = "v28";
+const DATA_VERSION = "v29";
 
 async function loadCourses(){
   try{
@@ -4120,7 +4120,7 @@ const assignmentsData = [
     courseId: "c5",
     title: "Statistics Assignment – Grouped Frequency Distribution",
     deadline: "2026-11-08",
-    file: null,
+    file: "https://drive.google.com/file/d/1gLrfmPwUAYovrMPZaCXQ3amnKcTsvcXb/view?usp=drive_link",
     topics: [
       "Mean",
       "Standard Deviation",
@@ -4157,18 +4157,15 @@ function renderAssignments(){
     return d.toLocaleDateString('ar-EG', {day:'numeric', month:'long', year:'numeric'});
   }
 
-  const doneSet = JSON.parse(localStorage.getItem('assignDone')||'{}');
-
   let html = `<h2 class="assign-header">📝 الواجبات</h2>`;
   if(!assignmentsData.length){
     html += `<p class="assign-empty">لا توجد واجبات حالياً ✅</p>`;
   } else {
     assignmentsData.forEach(a=>{
-      const done = !!doneSet[a.id];
       const cd = countdown(a.deadline);
-      const cardCls = done ? 'done' : (cd.cls === 'overdue' ? 'overdue' : cd.cls === 'urgent' ? 'due-soon' : '');
-      const cdCls = done ? 'done' : cd.cls;
-      const cdLabel = done ? '✅ تم التسليم' : cd.label;
+      const cardCls = cd.cls === 'overdue' ? 'overdue' : cd.cls === 'urgent' ? 'due-soon' : '';
+      const cdCls = cd.cls;
+      const cdLabel = cd.label;
       html += `
       <div class="assign-card ${cardCls}">
         <div class="assign-card-top">
@@ -4181,7 +4178,7 @@ function renderAssignments(){
             </div>
             ${a.note ? `<div style="font-size:.82rem;color:var(--muted);margin-top:6px;">📊 ${escapeHtml(a.note)}</div>` : ''}
           </div>
-          <button class="assign-done-btn ${done?'marked':''}" onclick="toggleAssignDone('${a.id}')">${done?'✅ تم':'تسليم ✓'}</button>
+          ${a.file ? `<a href="${a.file}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:var(--green-deep);color:#fff;border-radius:8px;padding:7px 14px;font-size:.85rem;font-family:'Cairo',sans-serif;text-decoration:none;white-space:nowrap;flex-shrink:0;">⬇️ تحميل</a>` : ''}
         </div>
         ${a.topics && a.topics.length ? `
         <ul class="assign-topics">
@@ -4191,21 +4188,11 @@ function renderAssignments(){
     });
   }
   sec.innerHTML = html;
-  refreshAssignBadge();
-}
-
-function toggleAssignDone(id){
-  const doneSet = JSON.parse(localStorage.getItem('assignDone')||'{}');
-  doneSet[id] = !doneSet[id];
-  localStorage.setItem('assignDone', JSON.stringify(doneSet));
-  renderAssignments();
 }
 
 function refreshAssignBadge(){
   const now = new Date();
-  const doneSet = JSON.parse(localStorage.getItem('assignDone')||'{}');
   const pending = assignmentsData.filter(a => {
-    if(doneSet[a.id]) return false;
     const dl = new Date(a.deadline + 'T23:59:59');
     return dl >= now;
   });
