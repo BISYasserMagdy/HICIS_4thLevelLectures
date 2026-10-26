@@ -1600,7 +1600,7 @@ let activeLevel = "الكل";
 /* ---------------- Storage helpers ---------------- */
 /* DATA_VERSION bumped whenever seedData changes, so everyone's stored copy
    (which may include courses removed later, like CSS) resets to the latest seed. */
-const DATA_VERSION = "v27";
+const DATA_VERSION = "v28";
 
 async function loadCourses(){
   try{
@@ -2996,7 +2996,7 @@ function courseNameById(cid){
 
 /* ---- Section switching ---- */
 const SECTION_STORAGE_KEY = 'portal_active_section';
-const VALID_SECTIONS = new Set(['courses', 'quiz', 'exam', 'gamification', 'videos']);
+const VALID_SECTIONS = new Set(['courses', 'quiz', 'exam', 'gamification', 'videos', 'assignments']);
 
 function saveActiveSection(){
   try{
@@ -4215,7 +4215,7 @@ function refreshAssignBadge(){
     else { badge.style.display='none'; }
   }
 }
-refreshAssignBadge();
+document.addEventListener('DOMContentLoaded', refreshAssignBadge);
 
 function renderVideos(){
   const wrap = document.getElementById('videosList');
