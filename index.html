@@ -648,6 +648,29 @@
   .embed-note{font-size:.78rem; color:var(--muted); margin-top:6px;}
   .embed-note a{color:var(--green); font-weight:700;}
 
+  /* ---------- Assignments section ---------- */
+  #assignmentsSection{display:none; padding:24px 16px; max-width:760px; margin:0 auto;}
+  .assign-header{font-family:'Cairo',sans-serif; font-weight:800; font-size:1.4rem; color:var(--green-deep); margin:0 0 20px; text-align:center;}
+  .assign-card{background:var(--card-bg); border-radius:14px; box-shadow:var(--shadow); padding:20px 24px; margin-bottom:18px; border-right:5px solid var(--green-deep); position:relative;}
+  .assign-card.overdue{border-right-color:#e53e3e;}
+  .assign-card.due-soon{border-right-color:#dd6b20;}
+  .assign-card.done{border-right-color:#38a169; opacity:.75;}
+  .assign-card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;}
+  .assign-course{font-family:'Cairo',sans-serif; font-weight:800; font-size:1rem; color:var(--green-deep);}
+  .assign-title{font-family:'Cairo',sans-serif; font-weight:700; font-size:1.1rem; color:var(--text); margin:6px 0 10px;}
+  .assign-deadline{font-size:.88rem; color:var(--muted); display:flex; align-items:center; gap:5px;}
+  .assign-countdown{display:inline-block; background:var(--green-deep); color:#fff; border-radius:20px; padding:3px 12px; font-size:.82rem; font-weight:700; font-family:'Cairo',sans-serif;}
+  .assign-countdown.urgent{background:#dd6b20;}
+  .assign-countdown.overdue{background:#e53e3e;}
+  .assign-countdown.done{background:#38a169;}
+  .assign-topics{margin:12px 0 0; padding:0; list-style:none;}
+  .assign-topics li{padding:4px 0 4px 0; font-size:.9rem; color:var(--text); border-bottom:1px solid var(--border); display:flex; gap:8px;}
+  .assign-topics li:last-child{border-bottom:none;}
+  .assign-topics li::before{content:"•"; color:var(--green-deep); font-weight:800; flex-shrink:0;}
+  .assign-done-btn{background:none; border:2px solid #38a169; color:#38a169; border-radius:8px; padding:5px 14px; font-size:.85rem; font-family:'Cairo',sans-serif; cursor:pointer; transition:.2s;}
+  .assign-done-btn.marked{background:#38a169; color:#fff;}
+  .assign-empty{text-align:center; color:var(--muted); font-size:1rem; padding:40px 0; font-family:'Cairo',sans-serif;}
+
   /* ---------- Videos section ---------- */
   #videosSection{display:none;}
   .video-intro{color:var(--muted); margin:0 0 22px; font-size:.95rem;}
@@ -1412,6 +1435,7 @@
     <button class="section-btn" data-section="exam">🎓 محاكاة الميدترم <span class="badge" id="examBadge" style="display:none;">⏱</span></button>
     <button class="section-btn" data-section="gamification">🎮 تدريب تفاعلي</button>
     <button class="section-btn" data-section="videos">🎬 فيديوهات مقترحة</button>
+    <button class="section-btn" data-section="assignments">📝 الواجبات <span class="badge" id="assignBadge" style="display:none;">!</span></button>
   </div>
   <div class="install-wrap" id="installWrap" style="display:none;">
   <button class="install-btn" id="installBtn" style="display:none;">📲 ثبّت الموقع كتطبيق</button>
@@ -1465,6 +1489,8 @@
   <p class="video-intro">🎬 قوايم تشغيل ومقترحات فيديوهات لشرح المواد — اختار المادة وشاهد الشرح.</p>
   <div id="videosList"></div>
 </main>
+
+<main id="assignmentsSection" style="display:none;"></main>
 
 <main id="gamificationSection" style="display:none;">
   <div id="gamificationHome">
@@ -1574,7 +1600,7 @@ let activeLevel = "الكل";
 /* ---------------- Storage helpers ---------------- */
 /* DATA_VERSION bumped whenever seedData changes, so everyone's stored copy
    (which may include courses removed later, like CSS) resets to the latest seed. */
-const DATA_VERSION = "v26";
+const DATA_VERSION = "v27";
 
 async function loadCourses(){
   try{
@@ -3008,6 +3034,7 @@ function switchSection(section){
   const gamificationSection = document.getElementById('gamificationSection');
   const videosSection = document.getElementById('videosSection');
   const examSection = document.getElementById('examSection');
+  const assignmentsSection = document.getElementById('assignmentsSection');
 
   if(coursesControls) coursesControls.style.display = safeSection === 'courses' ? '' : 'none';
   if(mainContent) mainContent.style.display = safeSection === 'courses' ? '' : 'none';
@@ -3015,6 +3042,7 @@ function switchSection(section){
   if(gamificationSection) gamificationSection.style.display = safeSection === 'gamification' ? 'block' : 'none';
   if(videosSection) videosSection.style.display = safeSection === 'videos' ? 'block' : 'none';
   if(examSection) examSection.style.display = safeSection === 'exam' ? 'block' : 'none';
+  if(assignmentsSection) assignmentsSection.style.display = safeSection === 'assignments' ? 'block' : 'none';
 
   if(safeSection === 'quiz'){
     endQuizSession(false);
@@ -3026,6 +3054,8 @@ function switchSection(section){
   } else if(safeSection === 'gamification'){
     if(gamificationSession) renderGamificationActivity();
     else renderGamificationHome();
+  } else if(safeSection === 'assignments'){
+    renderAssignments();
   }
 }
 
@@ -4081,6 +4111,111 @@ function loadVideoTitles(){
       .catch(()=>{ /* يفضل الرقم لو مفيش اتصال */ });
   });
 }
+
+/* ===== ASSIGNMENTS ===== */
+const assignmentsData = [
+  {
+    id: "stat_assign_1",
+    course: "Applied Statistics",
+    courseId: "c5",
+    title: "Statistics Assignment – Grouped Frequency Distribution",
+    deadline: "2026-11-08",
+    file: null,
+    topics: [
+      "Mean",
+      "Standard Deviation",
+      "First Quartile (Q1)",
+      "Second Quartile / Median (Q2)",
+      "Third Quartile (Q3)",
+      "Middle Interquartile Range (MIQR)",
+      "Coefficient of Variation (C.V.)",
+      "Mode"
+    ],
+    note: "Data Table: Sets (2-, 4-, 6-, 8-, 10-12) | Frequency (5, 15, 30, 20, 10)"
+  }
+];
+
+function renderAssignments(){
+  const sec = document.getElementById('assignmentsSection');
+  if(!sec) return;
+  const now = new Date();
+
+  function countdown(deadlineStr){
+    const dl = new Date(deadlineStr + 'T23:59:59');
+    const diff = dl - now;
+    if(diff < 0) return {label:'انتهى الميعاد', cls:'overdue'};
+    const days = Math.floor(diff / 86400000);
+    const hrs  = Math.floor((diff % 86400000) / 3600000);
+    if(days === 0 && hrs === 0) return {label:'آخر ساعات!', cls:'urgent'};
+    if(days === 0) return {label:`باقي ${hrs} ساعة`, cls:'urgent'};
+    if(days <= 3) return {label:`باقي ${days} يوم`, cls:'urgent'};
+    return {label:`باقي ${days} يوم`, cls:''};
+  }
+
+  function fmtDate(s){
+    const d = new Date(s);
+    return d.toLocaleDateString('ar-EG', {day:'numeric', month:'long', year:'numeric'});
+  }
+
+  const doneSet = JSON.parse(localStorage.getItem('assignDone')||'{}');
+
+  let html = `<h2 class="assign-header">📝 الواجبات</h2>`;
+  if(!assignmentsData.length){
+    html += `<p class="assign-empty">لا توجد واجبات حالياً ✅</p>`;
+  } else {
+    assignmentsData.forEach(a=>{
+      const done = !!doneSet[a.id];
+      const cd = countdown(a.deadline);
+      const cardCls = done ? 'done' : (cd.cls === 'overdue' ? 'overdue' : cd.cls === 'urgent' ? 'due-soon' : '');
+      const cdCls = done ? 'done' : cd.cls;
+      const cdLabel = done ? '✅ تم التسليم' : cd.label;
+      html += `
+      <div class="assign-card ${cardCls}">
+        <div class="assign-card-top">
+          <div>
+            <div class="assign-course">${escapeHtml(a.course)}</div>
+            <div class="assign-title">${escapeHtml(a.title)}</div>
+            <div class="assign-deadline">
+              📅 ميعاد التسليم: ${fmtDate(a.deadline)}
+              &nbsp;<span class="assign-countdown ${cdCls}">${cdLabel}</span>
+            </div>
+            ${a.note ? `<div style="font-size:.82rem;color:var(--muted);margin-top:6px;">📊 ${escapeHtml(a.note)}</div>` : ''}
+          </div>
+          <button class="assign-done-btn ${done?'marked':''}" onclick="toggleAssignDone('${a.id}')">${done?'✅ تم':'تسليم ✓'}</button>
+        </div>
+        ${a.topics && a.topics.length ? `
+        <ul class="assign-topics">
+          ${a.topics.map(t=>`<li>${escapeHtml(t)}</li>`).join('')}
+        </ul>` : ''}
+      </div>`;
+    });
+  }
+  sec.innerHTML = html;
+  refreshAssignBadge();
+}
+
+function toggleAssignDone(id){
+  const doneSet = JSON.parse(localStorage.getItem('assignDone')||'{}');
+  doneSet[id] = !doneSet[id];
+  localStorage.setItem('assignDone', JSON.stringify(doneSet));
+  renderAssignments();
+}
+
+function refreshAssignBadge(){
+  const now = new Date();
+  const doneSet = JSON.parse(localStorage.getItem('assignDone')||'{}');
+  const pending = assignmentsData.filter(a => {
+    if(doneSet[a.id]) return false;
+    const dl = new Date(a.deadline + 'T23:59:59');
+    return dl >= now;
+  });
+  const badge = document.getElementById('assignBadge');
+  if(badge){
+    if(pending.length > 0){ badge.style.display='inline-block'; badge.textContent=pending.length; }
+    else { badge.style.display='none'; }
+  }
+}
+refreshAssignBadge();
 
 function renderVideos(){
   const wrap = document.getElementById('videosList');
