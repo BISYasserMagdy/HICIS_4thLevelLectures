@@ -4958,6 +4958,70 @@ function renderExamSection(){
 
 
 
+
+/* ---- Self-contained questions: prepend the shared data to questions that depended on a previous question ---- */
+(function(){
+  const EX1 = { en:'Exercise 1 data: price 10 → quantity 600 (2025); price 12 → quantity 560 (2026); price 15 in 2027; total market supply 500. ',
+                ar:'بيانات التمرين 1: السعر 10 ← الكمية 600 (2025)؛ السعر 12 ← الكمية 560 (2026)؛ السعر 15 في 2027؛ إجمالي العرض في السوق 500. ' };
+  const GAS = { en:'Gas station: expected daily demand 10,000 liters; daily supply about 7,670 liters. ',
+                ar:'محطة بنزين: الطلب اليومي المتوقع 10,000 لتر والعرض اليومي نحو 7,670 لتراً. ' };
+  const LOC = { en:'Locations B, C, A have fixed costs 200,000 / 280,000 / 440,000 and variable costs 19 / 15 / 13 per unit. ',
+                ar:'المواقع B و C و A تكلفتها الثابتة 200,000 / 280,000 / 440,000 والمتغيرة 19 / 15 / 13 للوحدة. ' };
+  const MAC = { en:'Machine 1: investment 440,000, life 4 years, cumulative factor 3.16, annual operating cost 80,000. ',
+                ar:'الآلة الأولى: تكلفة استثمار 440,000 وعمرها 4 سنوات والمعامل التراكمي 3.16 وتكلفة التشغيل السنوية 80,000. ' };
+  const WAG = { en:'Daily wages of 100 workers (classes 100-, 110-, 120-, 130-, 140-, 150-160 with frequencies 10, 20, 30, 25, 8, 7). ',
+                ar:'الأجور اليومية لـ 100 عامل (الفئات 100-، 110-، 120-، 130-، 140-، 150-160 بتكرارات 10، 20، 30، 25، 8، 7). ' };
+  const SPD = { en:'Speeds of 100 cars (classes 40-, 50-, 60-, 70-, 80-90 with frequencies 10, 20, 40, 20, 10). ',
+                ar:'سرعات 100 سيارة (الفئات 40-، 50-، 60-، 70-، 80-90 بتكرارات 10، 20، 40، 20، 10). ' };
+  const WG2 = { en:'Wages of 10 workers: 90, 83, 90, 102, 59, 95, 90, 83, 99, 100. ',
+                ar:'أجور 10 عمال: 90, 83, 90, 102, 59, 95, 90, 83, 99, 100. ' };
+  const NODE = { en:'A node has weighted sum z = 0.74. ', ar:'عقدة مجموعها الموزون z = 0.74. ' };
+  const map = {
+    c4: { c4q7:EX1, c4q8:EX1, c4q9:EX1, c4q10:EX1, c4q12:EX1, c4q13:EX1, c4q14:EX1, c4q15:EX1,
+          c4q20:GAS, c4q21:GAS, c4q39:MAC },
+    c5: { c5q38:WAG, c5q40:WAG, c5q44:WAG, c5q49:SPD, c5q50:SPD, c5q51:SPD, c5q52:SPD, c5q66:WG2 },
+    c1: { c1q194:NODE }
+  };
+  /* ids that were generated with "same data" wording */
+  const fixText = {
+    c1q194: ['For the same node (z = 0.74) with a ReLU', 'With a ReLU'],
+    c1q201: ['In the same test, what is', 'In the lecture\'s test, what is'],
+    c4q18:  ['For the same gas station, the', 'For the gas station in the table, the'],
+    c5q49:  ['For the same speed data (n = 100), what', 'What'],
+    c5q66:  ['For the same wages, the arithmetic mean is...', 'The arithmetic mean of these wages is...'],
+  };
+  const byLoose = (cid, re) => (quizBank[cid] || []).filter(q => re.test(q.q));
+  /* c4 "Using the same data" (C vs A) */
+  byLoose('c4', /^Using the same data, at what quantity do C and A/).forEach(q => { map.c4[q.id] = LOC; });
+  /* c4 first machine question */
+  byLoose('c4', /^In the lecture example, the first machine/).forEach(q => { map.c4[q.id] = MAC; });
+  Object.keys(map).forEach(cid => {
+    (quizBank[cid] || []).forEach(q => {
+      const ctx = map[cid][q.id];
+      if(!ctx || q._ctx) return;
+      q._ctx = true;
+      let en = q.q;
+      const ft = fixText[q.id];
+      if(ft && en.indexOf(ft[0]) === 0) en = ft[1] + en.slice(ft[0].length);
+      q.q = ctx.en + en;
+      if(q.translation && q.translation.ar && q.translation.ar.q) q.translation.ar.q = ctx.ar + q.translation.ar.q;
+    });
+  });
+  const q201 = (quizBank.c1 || []).find(q => q.id === 'c1q201');
+  if(q201) q201.q = q201.q.replace('In the same test, what is', "In the lecture's test, what is");
+  const q18 = (quizBank.c4 || []).find(q => q.id === 'c4q18');
+  if(q18) q18.q = q18.q.replace('For the same gas station, the', 'For the gas station in the table, the');
+  /* wording cleanup after context was added */
+  const CLEAN = [['Using the same data, at what','At what'],['Using the same data, ','']];
+  const CLEAN_AR = [['لنفس العقدة (z = 0.74) مع','مع'],['في نفس الاختبار','في اختبار المحاضرة'],['لنفس محطة البنزين،','لمحطة البنزين في الجدول،'],['لنفس بيانات السرعات (n = 100)، ',''],['لنفس الأجور، ',''],['بنفس البيانات، ','']];
+  Object.keys(quizBank).forEach(cid => (quizBank[cid] || []).forEach(q => {
+    if(!q._ctx) return;
+    CLEAN.forEach(([a,b]) => { if(q.q.indexOf(a) !== -1) q.q = q.q.replace(a,b); });
+    const t = q.translation && q.translation.ar;
+    if(t && t.q) CLEAN_AR.forEach(([a,b]) => { if(t.q.indexOf(a) !== -1) t.q = t.q.replace(a,b); });
+  }));
+})();
+
 /* ---- Mark files that have never been opened ---- */
 const SEEN_KEY = 'portal_seen_files_v1';
 const FILE_LINK_SEL = '.lecture-item a.lecture-download, .lecture-item a.lecture-note-btn, .lecture-item a.part-btn, .lecture-item a.lecture-open-btn';
