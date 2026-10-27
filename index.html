@@ -1067,6 +1067,8 @@
     display:none;
   }
   .quiz-next-btn.show{display:inline-flex;}
+  .quiz-prev-btn{background:none;border:1px solid var(--line);border-radius:8px;padding:10px 16px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.9rem;color:var(--green-deep);cursor:pointer;margin-inline-end:10px;}
+  .quiz-prev-btn:hover{background:var(--cream);}
   .quiz-next-btn:hover{background:var(--green);}
 
   .quiz-summary{
@@ -2639,7 +2641,7 @@ const quizBank = {
     {"id": "c4q74", "type": "tf", "lec": 3, "lecTitle": "Feasibility Study - Lecture 3", "page": 2, "q": "The project is accepted if the market gap is positive.", "correct": true, "explain": "Positive gap means expected demand exceeds expected supply.", "translation": {"ar": {"q": "يُقبل المشروع إذا كانت الفجوة السوقية موجبة.", "options": ["صح", "خطأ"], "explain": "الفجوة الموجبة تعني أن الطلب المتوقع أكبر من العرض المتوقع."}}},
     {"id": "c4q75", "type": "tf", "lec": 3, "lecTitle": "Feasibility Study - Lecture 3", "page": 2, "q": "The project is rejected only if the market gap is negative; a zero gap is accepted.", "correct": false, "explain": "The project is rejected if the gap is negative or zero.", "translation": {"ar": {"q": "يُرفض المشروع فقط إذا كانت الفجوة سالبة أما الصفرية فتُقبل.", "options": ["صح", "خطأ"], "explain": "يُرفض المشروع إذا كانت الفجوة سالبة أو صفرية."}}},
     {"id": "c4q76", "type": "mcq", "lec": 3, "lecTitle": "Feasibility Study - Lecture 3", "page": 3, "q": "Price 10 (2025): demand 600; price 12 (2026): demand 560. The price elasticity of demand is about...", "options": ["−0.33", "0.33", "−3", "−0.6"], "correct": 0, "explain": "E = (−40/2) × (10/600) = −0.33.", "translation": {"ar": {"q": "سعر 10 (2025): الطلب 600؛ سعر 12 (2026): الطلب 560. مرونة الطلب السعرية حوالي...", "options": ["−0.33", "0.33", "−3", "−0.6"], "explain": "E = (−40 ÷ 2) × (10 ÷ 600) = −0.33."}}},
-    {"id": "c4q77", "type": "mcq", "lec": 3, "lecTitle": "Feasibility Study - Lecture 3", "page": 3, "q": "With elasticity −0.33 and the price rising to 15 in 2027, the expected demand in 2027 is about...", "options": ["606", "560", "514", "400"], "correct": 2, "explain": "ΔQ ≈ −46, so 560 − 46 = 514 units.", "translation": {"ar": {"q": "بمرونة −0.33 وارتفاع السعر إلى 15 في 2027، الطلب المتوقع في 2027 حوالي...", "options": ["606", "560", "514", "400"], "explain": "ΔQ ≈ −46 فيكون 560 − 46 = 514 وحدة."}}},
+    {"id": "c4q77", "type": "mcq", "lec": 3, "lecTitle": "Feasibility Study - Lecture 3", "page": 3, "q": "Price 12 in 2026 with demand 560 units; the price rises to 15 in 2027 and the price elasticity of demand is −0.33. The expected demand in 2027 is about...", "options": ["606", "560", "514", "400"], "correct": 2, "explain": "ΔQ ≈ −46, so 560 − 46 = 514 units.", "translation": {"ar": {"q": "السعر 12 في 2026 والطلب 560 وحدة؛ ارتفع السعر إلى 15 في 2027 ومرونة الطلب السعرية −0.33. الطلب المتوقع في 2027 حوالي...", "options": ["606", "560", "514", "400"], "explain": "ΔQ ≈ −46 فيكون 560 − 46 = 514 وحدة."}}},
     {"id": "c4q78", "type": "tf", "lec": 3, "lecTitle": "Feasibility Study - Lecture 3", "page": 3, "q": "If the expected demand is 514 units and the expected supply is 600 units, the project is rejected.", "correct": true, "explain": "Gap = 514 − 600 < 0, so the project is rejected.", "translation": {"ar": {"q": "إذا كان الطلب المتوقع 514 والعرض المتوقع 600 وحدة فإن المشروع يُرفض.", "options": ["صح", "خطأ"], "explain": "الفجوة = 514 − 600 < 0 فيُرفض المشروع."}}}
   ],
   c5: [ // Applied Statistics
@@ -3977,6 +3979,7 @@ function renderQuestion(){
         ${optionsHtml}
         <div class="quiz-feedback" id="quizFeedback"></div>
         <div class="quiz-actions">
+          ${currentSession.idx > 0 ? `<button class="quiz-prev-btn" id="quizPrevBtn">${lang === 'en' ? '← Previous question' : '→ السؤال السابق'}</button>` : ''}
           <button class="quiz-next-btn" id="quizNextBtn">${currentSession.idx + 1 === currentSession.total ? 'عرض النتيجة' : (lang === 'en' ? 'Next question' : 'السؤال التالي')}</button>
         </div>
       </div>
@@ -3989,8 +3992,8 @@ function renderQuestion(){
   });
 
   const optButtons = wrap.querySelectorAll('.quiz-opt');
-  optButtons.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
+  currentSession.history = currentSession.history || {};
+  const answerHandler = (btn, replay)=>{
       const isCorrect = q.type === 'mcq'
         ? Number(btn.dataset.idx) === q.correct
         : (btn.dataset.val === 'true') === q.correct;
@@ -4022,11 +4025,29 @@ function renderQuestion(){
         showPageBtn.addEventListener('click', ()=> openPageViewer(item.courseId, q.lec, q.page));
       }
 
-      recordAnswer(q.id, isCorrect);
-      if(isCorrect) currentSession.correctInSession += 1;
+      if(!replay){
+        recordAnswer(q.id, isCorrect);
+        if(isCorrect) currentSession.correctInSession += 1;
+        currentSession.history[currentSession.idx] = q.type === 'mcq' ? { idx: Number(btn.dataset.idx) } : { val: btn.dataset.val };
+      }
 
       document.getElementById('quizNextBtn').classList.add('show');
-    });
+  };
+  optButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=> answerHandler(btn, false));
+  });
+
+  /* coming back to a question that was already answered: show it as answered */
+  const prevAns = currentSession.history[currentSession.idx];
+  if(prevAns){
+    const target = [...optButtons].find(b => q.type === 'mcq' ? Number(b.dataset.idx) === prevAns.idx : b.dataset.val === prevAns.val);
+    if(target) answerHandler(target, true);
+  }
+
+  const prevBtn = document.getElementById('quizPrevBtn');
+  if(prevBtn) prevBtn.addEventListener('click', ()=>{
+    currentSession.idx = Math.max(0, currentSession.idx - 1);
+    renderQuestion();
   });
 
   document.getElementById('quizNextBtn').addEventListener('click', ()=>{
