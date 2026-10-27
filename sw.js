@@ -3,7 +3,7 @@
    - fonts / icons / lecture_pages_*.js / other same-origin files: stale-while-revalidate.
    - Drive / YouTube links are NOT cached (they need internet).
    Bump CACHE_VERSION if you ever want to force everyone's cache to reset. */
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CORE = 'aboukir-core-' + CACHE_VERSION;
 const RUNTIME = 'aboukir-runtime-' + CACHE_VERSION;
 const PRECACHE = [
