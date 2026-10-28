@@ -1067,6 +1067,10 @@
     display:none;
   }
   .quiz-next-btn.show{display:inline-flex;}
+  .course-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px;}
+  .course-chip{border:1px solid var(--line);background:#fff;color:var(--green-deep);font-family:'Tajawal',sans-serif;font-weight:700;font-size:.86rem;padding:8px 16px;border-radius:999px;cursor:pointer;transition:all .15s;}
+  .course-chip:hover{background:var(--cream);border-color:var(--gold);}
+  .course-chip.active{background:var(--green-deep);color:#fff;border-color:var(--green-deep);}
   .quiz-prev-btn{background:none;border:1px solid var(--line);border-radius:8px;padding:10px 16px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.9rem;color:var(--green-deep);cursor:pointer;margin-inline-end:10px;}
   .quiz-prev-btn:hover{background:var(--cream);}
   .quiz-next-btn:hover{background:var(--green);}
@@ -1473,11 +1477,9 @@
 <div class="controls-wrap" id="coursesControls">
   <div class="controls">
     <div class="level-tabs" id="levelTabs"></div>
-    <div class="search-box">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="searchInput" placeholder="ابحث عن مادة أو دكتور...">
-    </div>
+    <input type="hidden" id="searchInput" value="">
   </div>
+  <div class="course-chips" id="courseChips"></div>
 </div>
 
 <main id="mainContent"></main>
@@ -1768,14 +1770,26 @@ function courseCard(c){
   </div>`;
 }
 
+let activeCourseId = "";
+try{ activeCourseId = localStorage.getItem('portal_active_course') || ""; }catch(e){ /* ignore */ }
+
+function renderCourseChips(){
+  const wrap = document.getElementById('courseChips');
+  if(!wrap) return;
+  const list = courses.filter(c => !c.hideInLectures && (activeLevel === "الكل" || c.level === activeLevel));
+  if(activeCourseId && !list.some(c => c.id === activeCourseId)) activeCourseId = "";
+  wrap.innerHTML = `<button class="course-chip ${activeCourseId ? '' : 'active'}" data-course="">📚 كل المواد</button>` +
+    list.map(c => `<button class="course-chip ${c.id === activeCourseId ? 'active' : ''}" data-course="${escapeHtml(c.id)}">${escapeHtml(c.name || 'مادة')}</button>`).join('');
+}
+
 function renderContent(){
   const main = document.getElementById('mainContent');
-  const q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+  renderCourseChips();
 
   let filtered = courses.filter(c=>{
     const matchLevel = activeLevel === "الكل" || c.level === activeLevel;
-    const matchSearch = !q || (c.name||'').toLowerCase().includes(q) || (c.doctor||'').toLowerCase().includes(q) || (c.ta||'').toLowerCase().includes(q);
-    return matchLevel && matchSearch;
+    const matchCourse = !activeCourseId || c.id === activeCourseId;
+    return matchLevel && matchCourse;
   });
 
   if(filtered.length === 0){
@@ -1800,7 +1814,13 @@ function renderContent(){
 }
 
 /* ---------------- Init ---------------- */
-document.getElementById('searchInput').addEventListener('input', renderContent);
+document.getElementById('courseChips').addEventListener('click', (e)=>{
+  const b = e.target.closest('.course-chip');
+  if(!b) return;
+  activeCourseId = b.dataset.course || "";
+  try{ localStorage.setItem('portal_active_course', activeCourseId); }catch(err){ /* ignore */ }
+  renderContent();
+});
 
 (async function init(){
   await loadCourses();
