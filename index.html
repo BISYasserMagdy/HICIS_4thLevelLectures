@@ -1627,8 +1627,9 @@ const seedData = [
       { title:"Study Notes - Lecture 3", file:"https://drive.google.com/file/d/12FiE4WpL4tM5L9zbHYrzuu1TPDMtJWVz/view?usp=drive_link", outline:["Calculating the Median from a frequency table", "Solution of Q1: building the table (midpoint, upper limit, ascending cumulative frequency)", "Solution of Q2: drawing the graph and locating Q2 (the 0.5 / 50% point)"] },
       { title:"Study Notes - Lecture 4", file:"https://drive.google.com/file/d/1QBnco7SRmpufsCXN08o--gA3kBrs2TEk/view?usp=drive_link", outline:["Types of Data: Nominal, Ordinal, Interval", "Descriptive Statistics vs Inferential Statistics", "Calculating the Mode from a frequency table", "Showing the Mode by graph"] },
       { title:"Study Notes - Lecture 5", file:"https://drive.google.com/file/d/1npyA9ReRDn0XzJe_WpoZVVQxhfiacofr/view?usp=drive_link", outline:["Variance", "Standard Deviation", "Calculating the Mode from a frequency table", "Showing Mode by graph"] },
-      { title:"Applied Statistics - Midterm Revision", file:"https://drive.google.com/file/d/1TdRvmz12aG2RIalJuF6X-d3bJwO7wCUb/view?usp=drive_link", outline:[{text:"مراجعة ما قبل الميدترم — مهم جدًا!", highlight:true}, "Measures of Central Tendency: True / False (20 statements)", "Multiple choice questions (15 questions)"] },
-      { title:"Applied Statistics - Book", file:"https://drive.google.com/file/d/1Uk8r1uNn9UVi2tQCrxTGZQCvQQvhoCzj/view?usp=drive_link" }
+      { title:"Applied Statistics - Midterm Revision", file:"https://drive.google.com/file/d/1TdRvmz12aG2RIalJuF6X-d3bJwO7wCUb/view?usp=drive_link", outline:[{text:"مراجعة ما قبل الميدترم — مهم جدًا!", highlight:true}, {text:"⚠️ تحذير: الدكتور غالط في بعض إجابات أسئلة الصح والغلط في الملف — الإجابات الغلط متعلَّم عليها في الملف، راجعها قبل ما تحفظ أي إجابة.", highlight:true}, {text:"⚠️ تحذير: الدكتور حاطط في الملف أسئلة لسه ماشرحهاش في المحاضرات قبل كده (كأنه عايز يوقعنا) — ماتستهونش بيها، وذاكرها كويس من ملخص المادة (الأسيمنت) والكتاب.", highlight:true}, "Measures of Central Tendency: True / False (20 statements)", "Multiple choice questions (15 questions)"] },
+      { title:"Applied Statistics - Book", file:"https://drive.google.com/file/d/1Uk8r1uNn9UVi2tQCrxTGZQCvQQvhoCzj/view?usp=drive_link" },
+      { title:"Applied Statistics - ملخص المادة (الأسيمنت)", file:"https://drive.google.com/file/d/1gLrfmPwUAYovrMPZaCXQ3amnKcTsvcXb/view?usp=drive_link", outline:[{text:"ملخص المادة — فيه كل الأسئلة وشرح خطوات الحل", highlight:true}, "Grouped Frequency Distribution: حل خطوة بخطوة"] }
     ] },
 ];
 
@@ -1639,7 +1640,7 @@ let activeLevel = "الكل";
 /* ---------------- Storage helpers ---------------- */
 /* DATA_VERSION bumped whenever seedData changes, so everyone's stored copy
    (which may include courses removed later, like CSS) resets to the latest seed. */
-const DATA_VERSION = "v35";
+const DATA_VERSION = "v37";
 
 async function loadCourses(){
   try{
