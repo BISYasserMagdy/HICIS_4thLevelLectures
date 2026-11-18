@@ -1464,6 +1464,7 @@
     <button class="section-btn active" data-section="courses">📚 المحاضرات</button>
     <button class="section-btn" data-section="quiz">🧠 اختبارات وتدريب <span class="badge" id="dueBadge" style="display:none;">0</span></button>
     <button class="section-btn" data-section="exam">🎓 محاكاة الميدترم <span class="badge" id="examBadge" style="display:none;">⏱</span></button>
+    <button class="section-btn" data-section="final">🏁 محاكاة الفاينل</button>
     <button class="section-btn" data-section="gamification">🎮 تدريب تفاعلي</button>
     <button class="section-btn" data-section="videos">🎬 فيديوهات مقترحة</button>
     <button class="section-btn" data-section="assignments">📝 الواجبات <span class="badge" id="assignBadge" style="display:none;">!</span></button>
@@ -1513,6 +1514,7 @@
 </main>
 
 <main id="examSection" style="display:none;"></main>
+<main id="finalSection" style="display:none;"></main>
 
 <main id="videosSection">
   <p class="video-intro">🎬 قوايم تشغيل ومقترحات فيديوهات لشرح المواد — اختار المادة وشاهد الشرح.</p>
@@ -1602,6 +1604,7 @@ const seedData = [
       { title:"Enterprise Information System - Lecture 5", file:"https://drive.google.com/file/d/1CuLYqrEP3RphKy_f6FoaHXXnwOgYFC1k/view?usp=drive_link", outline:["Physical Structure of Networks","Point-to-Point topology","Bus Topology","Ring Topology","Star Network","Tree Topology","Mesh Network","Hybrid Topology","Logical Structure of Networks","Ethernet (IEEE 802.3 / CSMA/CD)","Token Ring technology (IBM)","Wireless technology (CSMA/CA)","FDDI technology (Token Passing)"] },
       { title:"Enterprise Information System - Lecture 6", file:"https://drive.google.com/file/d/1u18tKo3f72IFA4NcPSHXSQw3C3RMtHLz/view?usp=drive_link", outline:["Hardware components","Network transmission methods (Twisted Pair, Coaxial, Fiber Optic)","Network Card and MAC address","Central devices: Hubs (Active, Passive, Hybrid)","Repeaters","Switch","Bridge device","Access Point","Router","Modem","Software components: Protocols","OSI Model (7 layers)","Application, Presentation and Session layers","Revision questions: True/False and Multiple choice"] },
       { title:"Enterprise Information System - Lecture 7", file:"https://drive.google.com/file/d/1bRqr1en8_J8uN0z_pjohNw2HgknjsQGw/view?usp=drive_link", outline:["Network software components","OSI layers: Transport (Segments), Network (Packets), Data Link (Frames), Physical (Bits)","Data type in each layer","Layer protocols: FTP, HTTP, DNS, SMTP (layers 5-7)","TCP and UDP (layer 4) and IP (layer 3)","Internet, Intranet and Extranet","Network quality standards in the organization","Revision questions (organization functions, systems, network devices and layers)"] },
+      { title:"Enterprise Information System - Lecture 8", file:"https://drive.google.com/file/d/1nGcbU8vZY5kNsOp6Zg2Ldw5VUqP8v7EQ/view?usp=drive_link", outline:["Information security: keeping information under your complete control", "Confidentiality and identity verification", "Content integrity", "Availability of information or service", "Non-repudiation and electronic signatures", "Aims of threats and types of attacks (eavesdropping, denial, modification, spoofing)", "Security problems: hackers and malware (viruses, worms, Trojan horses, backdoors)", "Hacking categories and espionage", "Email privacy", "Protection policies and security requirements", "Security system design: prevention, detection, deterrence, recovery, reversal", "Information security quality standards", "Network exercises (hardware, layers, devices)"] },
       { title:"Enterprise Information System - Online Midterm Questions", file:"https://drive.google.com/file/d/1YKa0bvpxeURLt36HF11UBL_cBHqs0Td6/view?usp=drive_link", outline:[{text:"أسئلة الميدترم الأونلاين اللي جت فعلاً في الامتحان — مهم جدًا!", highlight:true},{text:"⚠️ دي صور من الامتحان نفسه والإجابات المعلّمة فيها هي اللي اختارها الطالب، مش بالضرورة الصح — راجع كل إجابة قبل ما تعتمد عليها.", highlight:true}] },
       { title:"Enterprise Information System - Book", file:"https://drive.google.com/file/d/1liqNJuc81x6hdXRKHbFd0xAfVMa6dnnG/view?usp=drive_link" }
     ] },
@@ -1658,7 +1661,7 @@ let activeLevel = "الكل";
 /* ---------------- Storage helpers ---------------- */
 /* DATA_VERSION bumped whenever seedData changes, so everyone's stored copy
    (which may include courses removed later, like CSS) resets to the latest seed. */
-const DATA_VERSION = "v44";
+const DATA_VERSION = "v47";
 
 async function loadCourses(){
   try{
@@ -1740,7 +1743,6 @@ function courseCard(c){
             <span class="lecture-note-text">عندك ملاحظات شرح لهذه المحاضرة!</span>
             <a class="lecture-note-btn" href="${escapeHtml(n.file)}" target="_blank" rel="noopener">افتح: ${escapeHtml(n.label)}</a>
           </div>`).join('')}
-          ${lec.noExam ? `<div class="lecture-noexam">⚠️ ملحوظة: هذا الملف لا يأتي في امتحان الميدترم.</div>` : ''}
           ${Array.isArray(lec.parts) && lec.parts.length ? `
           <div class="lecture-parts">
             ${lec.parts.map(p=>{
@@ -2921,7 +2923,63 @@ const quizBank = {
     {"id": "c2q184", "type": "tf", "lec": 6, "lecTitle": "Enterprise Information System - Lecture 7", "q": "Business analysts work to improve efficiency and productivity, as well as simplify distribution.", "correct": true, "explain": "As stated in the lecture's true/false revision question.", "page": 15, "translation": {"ar": {"q": "محللو الأعمال يعملون على تحسين الكفاءة والإنتاجية وتبسيط التوزيع.", "options": ["صح", "خطأ"], "explain": "كما ورد في سؤال الصح والخطأ في المراجعة."}}},
     {"id": "c2q185", "type": "tf", "lec": 6, "lecTitle": "Enterprise Information System - Lecture 7", "q": "Network transmission methods (media) are considered network hardware components.", "correct": true, "explain": "Transmission media (cables, etc.) are physical, so they are hardware components of the network.", "page": 16, "translation": {"ar": {"q": "وسائل نقل البيانات في الشبكة تعتبر من المكونات المادية (Hardware) للشبكة.", "options": ["صح", "خطأ"], "explain": "وسائل النقل (كابلات وغيرها) أشياء مادية فهي مكونات Hardware."}}},
     {"id": "c2q186", "type": "tf", "lec": 6, "lecTitle": "Enterprise Information System - Lecture 7", "q": "A network card has a unique 8-digit number.", "correct": false, "explain": "The network card has a unique MAC address (48 bits, written as 12 hexadecimal digits), not an 8-digit number.", "page": 16, "translation": {"ar": {"q": "كارت الشبكة له رقم فريد من 8 خانات.", "options": ["صح", "خطأ"], "explain": "كارت الشبكة له عنوان MAC فريد (48 بت أي 12 خانة hexadecimal) وليس 8 خانات."}}},
-    {"id": "c2q187", "type": "mcq", "lec": 6, "lecTitle": "Enterprise Information System - Lecture 7", "q": "An inexpensive device used to regenerate or amplify data signals on a network is the...", "options": ["Passive hub", "Active hub", "Hybrid hub", "Bridge"], "correct": 1, "explain": "An active hub regenerates/amplifies signals; a passive hub only acts as a connection point without amplifying.", "page": 18, "translation": {"ar": {"q": "جهاز رخيص يُستخدم لإعادة توليد أو تقوية إشارات البيانات في الشبكة هو...", "options": ["Passive hub", "Active hub", "Hybrid hub", "Bridge"], "explain": "الـ Active hub يعيد توليد الإشارات ويقويها، أما الـ Passive hub فمجرد نقطة اتصال بدون تقوية."}}}
+    {"id": "c2q187", "type": "mcq", "lec": 6, "lecTitle": "Enterprise Information System - Lecture 7", "q": "An inexpensive device used to regenerate or amplify data signals on a network is the...", "options": ["Passive hub", "Active hub", "Hybrid hub", "Bridge"], "correct": 1, "explain": "An active hub regenerates/amplifies signals; a passive hub only acts as a connection point without amplifying.", "page": 18, "translation": {"ar": {"q": "جهاز رخيص يُستخدم لإعادة توليد أو تقوية إشارات البيانات في الشبكة هو...", "options": ["Passive hub", "Active hub", "Hybrid hub", "Bridge"], "explain": "الـ Active hub يعيد توليد الإشارات ويقويها، أما الـ Passive hub فمجرد نقطة اتصال بدون تقوية."}}},
+    {"id": "c2q188", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Information security means...", "options": ["Backing up files weekly", "Buying faster computers", "Keeping information under your direct and complete control so no one can access it without permission", "Sharing data openly"], "correct": 2, "explain": "Information security: information cannot be accessed by anyone else without your permission.", "page": 2, "translation": {"ar": {"q": "أمن المعلومات يعني...", "options": ["عمل نسخ احتياطية أسبوعياً", "شراء حواسيب أسرع", "إبقاء معلوماتك تحت سيطرتك المباشرة والكاملة بحيث لا يصل إليها أحد دون إذنك", "مشاركة البيانات بشكل مفتوح"], "explain": "أمن المعلومات: ألا يتمكن أي شخص آخر من الوصول إلى المعلومات دون إذنك."}}},
+    {"id": "c2q189", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Confidentiality means ensuring that information...", "options": ["Cannot be viewed or disclosed by unauthorized individuals", "Is always available", "Is never modified", "Cannot be denied"], "correct": 0, "explain": "Organizations use methods such as message encryption to protect confidentiality.", "page": 2, "translation": {"ar": {"q": "السرية (Confidentiality) تعني ضمان أن المعلومات...", "options": ["لا يمكن الاطلاع عليها أو الكشف عنها من قبل أشخاص غير مصرح لهم", "متاحة دائماً", "لا تُعدَّل أبداً", "لا يمكن إنكارها"], "explain": "تستخدم المؤسسات وسائل مثل تشفير الرسائل لحماية السرية."}}},
+    {"id": "c2q190", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Which method is mentioned to protect confidentiality?", "options": ["Antivirus hardware", "Electronic signatures", "Backups", "Message encryption"], "correct": 3, "explain": "Encryption prevents unauthorized viewing of messages.", "page": 2, "translation": {"ar": {"q": "أي وسيلة مذكورة لحماية السرية؟", "options": ["مضادات الفيروسات", "التوقيعات الإلكترونية", "النسخ الاحتياطية", "تشفير الرسائل"], "explain": "التشفير يمنع الاطلاع غير المصرح به على الرسائل."}}},
+    {"id": "c2q191", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Identity verification is done by...", "options": ["Using one shared password", "Using unique passwords for each user", "Deleting accounts", "Encrypting email"], "correct": 1, "explain": "It confirms the identity of anyone trying to use the information.", "page": 2, "translation": {"ar": {"q": "يتم التحقق من الهوية عن طريق...", "options": ["استخدام كلمة مرور مشتركة واحدة", "استخدام كلمة مرور فريدة لكل مستخدم", "حذف الحسابات", "تشفير البريد الإلكتروني"], "explain": "هو تأكيد هوية أي شخص يحاول استخدام المعلومات."}}},
+    {"id": "c2q192", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Content integrity means ensuring that information is...", "options": ["Always online", "Hidden from everyone", "Accurate and not modified, destroyed or tampered with at any stage", "Signed by the sender"], "correct": 2, "explain": "Unauthorized access such as viruses threatens integrity; anti-intrusion software and antivirus are used.", "page": 3, "translation": {"ar": {"q": "سلامة المحتوى (Integrity) تعني ضمان أن المعلومات...", "options": ["متاحة دائماً على الإنترنت", "مخفية عن الجميع", "دقيقة ولم تُعدَّل أو تُتلف أو يُعبث بها في أي مرحلة", "موقعة من المرسل"], "explain": "الوصول غير المصرح به كالفيروسات يهدد السلامة، وتُستخدم برامج منع التسلل ومضادات الفيروسات."}}},
+    {"id": "c2q193", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Availability means...", "options": ["Continuous operation of the information system and access to services without disruption", "Encrypting data", "Proving who sent a message", "Deleting old data"], "correct": 0, "explain": "Users must not be prevented from accessing or using information by people trying to disrupt the service.", "page": 3, "translation": {"ar": {"q": "التوافر (Availability) يعني...", "options": ["استمرار عمل نظام المعلومات وإمكانية الوصول إلى الخدمات دون تعطيل", "تشفير البيانات", "إثبات من أرسل الرسالة", "حذف البيانات القديمة"], "explain": "يجب ألا يُمنع المستخدمون من الوصول للمعلومات بواسطة من يحاولون تعطيل الخدمة."}}},
+    {"id": "c2q194", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Non-repudiation means that a person who performed an action...", "options": ["Can deny it", "Must delete it", "Must encrypt it", "Cannot deny having done it"], "correct": 3, "explain": "Methods such as electronic signatures prove actions, e.g. online purchases and electronic money transfers.", "page": 3, "translation": {"ar": {"q": "عدم الإنكار (Non-repudiation) يعني أن الشخص الذي نفّذ إجراءً...", "options": ["يستطيع إنكاره", "يجب أن يحذفه", "يجب أن يشفّره", "لا يستطيع إنكار أنه قام به"], "explain": "تُستخدم وسائل مثل التوقيعات الإلكترونية لإثبات الإجراءات كالشراء عبر الإنترنت وتحويل الأموال إلكترونياً."}}},
+    {"id": "c2q195", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Which tool is used to support non-repudiation?", "options": ["Antivirus", "Electronic signatures", "Backups", "Fingerprint devices"], "correct": 1, "explain": "Electronic signatures verify delivery and prove electronic transfers.", "page": 3, "translation": {"ar": {"q": "أي أداة تُستخدم لدعم عدم الإنكار؟", "options": ["مضاد الفيروسات", "التوقيعات الإلكترونية", "النسخ الاحتياطية", "أجهزة البصمة"], "explain": "التوقيعات الإلكترونية تُثبت التسليم والتحويلات الإلكترونية."}}},
+    {"id": "c2q196", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Which is NOT an aim of threats listed in the lecture?", "options": ["Destruction and damage of devices or information", "Theft or alteration of information", "Improving system speed", "Installing spying and surveillance systems"], "correct": 2, "explain": "The listed aims are destruction/damage, theft/alteration and installing spying systems.", "page": 4, "translation": {"ar": {"q": "أي مما يلي ليس من أهداف التهديدات المذكورة في المحاضرة؟", "options": ["تدمير وإتلاف الأجهزة أو المعلومات", "سرقة المعلومات أو تعديلها", "تحسين سرعة النظام", "تركيب أنظمة تجسس ومراقبة"], "explain": "الأهداف المذكورة: التدمير والإتلاف، السرقة والتعديل، وتركيب أنظمة التجسس."}}},
+    {"id": "c2q197", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Spying and surveillance installation is countered by...", "options": ["Physically securing devices", "Encryption only", "Antivirus only", "Deleting email"], "correct": 0, "explain": "This type is countered by physical security of devices.", "page": 4, "translation": {"ar": {"q": "يُواجَه تركيب أنظمة التجسس والمراقبة عن طريق...", "options": ["التأمين المادي للأجهزة", "التشفير فقط", "مضاد الفيروسات فقط", "حذف البريد"], "explain": "يُواجَه هذا النوع بالحماية المادية للأجهزة."}}},
+    {"id": "c2q198", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "In an eavesdropping attack, the attacker...", "options": ["Blocks the channel", "Changes the message", "Pretends to be a friend", "Monitors communication between sender and receiver to obtain confidential information"], "correct": 3, "explain": "This is message eavesdropping.", "page": 4, "translation": {"ar": {"q": "في هجوم التنصت على الرسائل يقوم المهاجم بـ...", "options": ["قطع قناة الاتصال", "تغيير الرسالة", "انتحال صفة صديق", "مراقبة الاتصال بين المرسل والمستقبل للحصول على معلومات سرية"], "explain": "هذا هو هجوم التنصت."}}},
+    {"id": "c2q199", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "A denial attack...", "options": ["Reads the message", "Disrupts the communication channel so the message does not reach the receiver", "Alters the message", "Sends forged messages"], "correct": 1, "explain": "It prevents the message or data from reaching the receiver.", "page": 4, "translation": {"ar": {"q": "هجوم الحجب (Denial) هو...", "options": ["قراءة الرسالة", "تعطيل قناة الاتصال لمنع وصول الرسالة إلى المستقبل", "تعديل الرسالة", "إرسال رسائل مزورة"], "explain": "يمنع وصول الرسالة أو البيانات إلى المستقبل."}}},
+    {"id": "c2q200", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "In a message content modification attack, the attacker...", "options": ["Only listens", "Blocks the channel", "Intervenes between sender and receiver, alters the content and sends it on", "Pretends to be a friend"], "correct": 2, "explain": "The message reaches the attacker first, who changes it and sends it to the recipient.", "page": 5, "translation": {"ar": {"q": "في هجوم تعديل محتوى الرسالة يقوم المهاجم بـ...", "options": ["الاستماع فقط", "قطع القناة", "التدخل بين المرسل والمستقبل وتعديل المحتوى ثم إرساله", "انتحال صفة صديق"], "explain": "تصل الرسالة للمهاجم أولاً فيعدّلها ثم يرسلها للمستقبل."}}},
+    {"id": "c2q201", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "A spoof (forged) attack is when the attacker...", "options": ["Pretends to be a friend and asks for company information or passwords", "Monitors communication", "Blocks the channel", "Modifies messages in transit"], "correct": 0, "explain": "The attacker sends a message posing as a friend.", "page": 5, "translation": {"ar": {"q": "هجوم الانتحال (Spoof/Forged) هو أن المهاجم...", "options": ["يتظاهر بأنه صديق ويطلب معلومات الشركة أو كلمات المرور", "يراقب الاتصال", "يقطع القناة", "يعدّل الرسائل أثناء النقل"], "explain": "يرسل المهاجم رسالة منتحلاً صفة صديق."}}},
+    {"id": "c2q202", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "A hacker is someone who...", "options": ["Writes documentation", "Repairs hardware", "Updates software", "Gains unauthorized access to a system and performs unwanted, illegal actions"], "correct": 3, "explain": "A hacker exploits a system through unauthorized access.", "page": 6, "translation": {"ar": {"q": "الهاكر هو شخص...", "options": ["يكتب التوثيق", "يصلح الأجهزة", "يحدّث البرامج", "يدخل نظاماً دون تصريح وينفذ إجراءات غير مرغوبة وغير قانونية"], "explain": "الهاكر يستغل النظام عبر وصول غير مصرح به."}}},
+    {"id": "c2q203", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Malware is...", "options": ["Antivirus software", "Programs created to harm targeted data by corrupting, deleting or controlling it", "A network card", "A backup system"], "correct": 1, "explain": "Malware includes viruses, worms, Trojan horses and backdoors.", "page": 6, "translation": {"ar": {"q": "البرمجيات الخبيثة (Malware) هي...", "options": ["برنامج مضاد للفيروسات", "برامج صُممت لإيذاء البيانات المستهدفة بإتلافها أو حذفها أو التحكم فيها", "كارت شبكة", "نظام نسخ احتياطي"], "explain": "تشمل الفيروسات والديدان وأحصنة طروادة والأبواب الخلفية."}}},
+    {"id": "c2q204", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "A virus is designed to...", "options": ["Send itself to your email list on its own", "Hide inside games only", "Rewrite itself onto files on the infected computer and on computers that exchange information with it", "Remove passwords"], "correct": 2, "explain": "The email-list self-sending behavior belongs to worms.", "page": 7, "translation": {"ar": {"q": "الفيروس مصمم من أجل...", "options": ["إرسال نفسه إلى قائمة بريدك تلقائياً", "الاختباء في الألعاب فقط", "إعادة كتابة نفسه على الملفات في الجهاز المصاب وفي الأجهزة التي تتبادل معه المعلومات", "إزالة كلمات المرور"], "explain": "إرسال النفس لقائمة البريد سلوك خاص بالديدان."}}},
+    {"id": "c2q205", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Which is an effect of a virus?", "options": ["Increasing file size by rewriting it thousands of times", "Increasing network speed", "Backing up files", "Encrypting email"], "correct": 0, "explain": "Other effects: millions of processes crashing the computer, deleting system files, blocking internet access.", "page": 7, "translation": {"ar": {"q": "أي مما يلي من آثار الفيروس؟", "options": ["زيادة حجم الملف بإعادة كتابته آلاف المرات", "زيادة سرعة الشبكة", "عمل نسخ احتياطية للملفات", "تشفير البريد"], "explain": "من الآثار الأخرى: ملايين العمليات التي تُسقط الجهاز، حذف ملفات النظام، وحجب الإنترنت."}}},
+    {"id": "c2q206", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "What makes Internet worms unique compared to viruses?", "options": ["They only delete files", "They are embedded in games", "They are vulnerabilities in operating systems", "They send themselves to your email list or every device on the network, spreading at incredible speed"], "correct": 3, "explain": "Worms overload the network and can slow it significantly.", "page": 8, "translation": {"ar": {"q": "ما الذي يميز ديدان الإنترنت عن الفيروسات؟", "options": ["تحذف الملفات فقط", "مدمجة داخل الألعاب", "ثغرات في أنظمة التشغيل", "ترسل نفسها إلى قائمة بريدك أو إلى كل جهاز في الشبكة وتنتشر بسرعة هائلة"], "explain": "الديدان تُحمّل الشبكة بأكثر من طاقتها وقد تبطئها كثيراً."}}},
+    {"id": "c2q207", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "An effect of Internet worms is...", "options": ["Stealing passwords silently only", "Overloading the network and slowing it down", "Removing hardware", "Updating the OS"], "correct": 1, "explain": "Worms also increase processes to millions, crashing the computer.", "page": 8, "translation": {"ar": {"q": "من آثار ديدان الإنترنت...", "options": ["سرقة كلمات المرور بصمت فقط", "تحميل الشبكة فوق طاقتها وإبطاؤها", "إزالة العتاد", "تحديث نظام التشغيل"], "explain": "كما تزيد العمليات إلى الملايين فيتعطل الجهاز."}}},
+    {"id": "c2q208", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Trojan horses are...", "options": ["Network cards", "Backup tools", "Programs embedded within other programs, such as games, that bypass security and corrupt files", "Email servers"], "correct": 2, "explain": "They delete files, send fake emails from you to your list, and let hackers bypass protection.", "page": 8, "translation": {"ar": {"q": "أحصنة طروادة (Trojan horses) هي...", "options": ["كروت شبكة", "أدوات نسخ احتياطي", "برامج مدمجة داخل برامج أخرى مثل الألعاب تتجاوز الحماية وتتلف الملفات", "خوادم بريد"], "explain": "تحذف الملفات وترسل رسائل مزيفة من بريدك لقائمتك وتتيح للهاكرز كسر الحماية."}}},
+    {"id": "c2q209", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Backdoors are...", "options": ["Vulnerabilities in operating systems, often created by programmers to allow easy access", "Antivirus updates", "Email filters", "Hardware repeaters"], "correct": 0, "explain": "Default passwords that are not changed can act as backdoors.", "page": 9, "translation": {"ar": {"q": "الأبواب الخلفية (Backdoors) هي...", "options": ["ثغرات في أنظمة التشغيل غالباً ما يضعها المبرمجون لتسهيل الوصول", "تحديثات مضاد الفيروسات", "فلاتر بريد", "مكررات عتادية"], "explain": "كلمات المرور الافتراضية التي لا تُغيَّر قد تعمل كباب خلفي."}}},
+    {"id": "c2q210", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "A default password that is not changed can act as a...", "options": ["Worm", "Firewall", "Signature", "Backdoor"], "correct": 3, "explain": "It allows complete or partial control of devices.", "page": 9, "translation": {"ar": {"q": "كلمة المرور الافتراضية التي لا تُغيَّر قد تعمل كـ...", "options": ["دودة", "جدار حماية", "توقيع", "باب خلفي (Backdoor)"], "explain": "تتيح تحكماً كاملاً أو جزئياً في الأجهزة."}}},
+    {"id": "c2q211", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Hacking is defined as...", "options": ["Backing up data", "The ability to access specific targets illegally by exploiting vulnerabilities in their systems", "Installing antivirus", "Encrypting email"], "correct": 1, "explain": "Motives include political and military, personal, commercial or retaliatory.", "page": 9, "translation": {"ar": {"q": "يُعرَّف الاختراق (Hacking) بأنه...", "options": ["عمل نسخ احتياطية", "القدرة على الوصول إلى أهداف محددة بشكل غير قانوني باستغلال ثغرات في أنظمتها", "تثبيت مضاد فيروسات", "تشفير البريد"], "explain": "تتنوع الدوافع بين سياسية وعسكرية وشخصية وتجارية وانتقامية."}}},
+    {"id": "c2q212", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Which is NOT one of the three hacking categories mentioned?", "options": ["Intercepting data in transit and decrypting it", "Hacking the main systems of organizations, often through identity theft", "Hacking printers' paper trays", "Hacking personal devices"], "correct": 2, "explain": "The three: intercepting data in transit (e.g. revealing PINs), hacking organizations' systems, hacking personal devices.", "page": 9, "translation": {"ar": {"q": "أي مما يلي ليس من فئات الاختراق الثلاث المذكورة؟", "options": ["اعتراض البيانات أثناء النقل وفك تشفيرها", "اختراق الأنظمة الرئيسية للمؤسسات غالباً عبر سرقة الهوية", "اختراق أدراج ورق الطابعات", "اختراق الأجهزة الشخصية"], "explain": "الفئات الثلاث: اعتراض البيانات أثناء النقل (مثل كشف أرقام PIN)، اختراق أنظمة المؤسسات، اختراق الأجهزة الشخصية."}}},
+    {"id": "c2q213", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "The purpose of espionage is to...", "options": ["Learn the contents of targeted systems without damaging them", "Delete files", "Overload the network", "Disable the system"], "correct": 0, "explain": "It is similar to hacking but does not damage; it uses a virus that sends copies of information or allows access.", "page": 10, "translation": {"ar": {"q": "الغرض من التجسس (Espionage) هو...", "options": ["معرفة محتويات الأنظمة المستهدفة دون إتلافها", "حذف الملفات", "تحميل الشبكة فوق طاقتها", "تعطيل النظام"], "explain": "يشبه الاختراق لكنه لا يُتلف؛ ويستخدم فيروساً يرسل نسخاً من المعلومات أو يتيح الوصول للأنظمة."}}},
+    {"id": "c2q214", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "The privacy of email is compared in the lecture to that of...", "options": ["A sealed envelope", "A locked safe", "A phone call", "A postcard"], "correct": 3, "explain": "Email travels through many servers and can be accessed by administrators or intruders.", "page": 10, "translation": {"ar": {"q": "تُشبَّه خصوصية البريد الإلكتروني في المحاضرة بـ...", "options": ["ظرف مغلق", "خزنة مقفلة", "مكالمة هاتفية", "بطاقة بريدية"], "explain": "يمر البريد عبر خوادم كثيرة ويمكن لمديري النظام أو المتسللين الاطلاع عليه."}}},
+    {"id": "c2q215", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "The only way to ensure some degree of email privacy is to...", "options": ["Delete it", "Encrypt it", "Send it twice", "Use a short subject"], "correct": 1, "explain": "Encryption gives some privacy.", "page": 10, "translation": {"ar": {"q": "الطريقة الوحيدة لضمان درجة من خصوصية البريد هي...", "options": ["حذفه", "تشفيره", "إرساله مرتين", "استخدام عنوان قصير"], "explain": "التشفير يمنح درجة من الخصوصية."}}},
+    {"id": "c2q216", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Which is a protection policy listed?", "options": ["Allowing personal internet use on company computers", "Exchanging private messages freely", "Removing the password of any employee whose contract has ended immediately", "Using outdated software"], "correct": 2, "explain": "Other policies: fingerprint devices, updated antivirus and intrusion detection, daily backups, strong encryption, updated software.", "page": 11, "translation": {"ar": {"q": "أي مما يلي من سياسات الحماية المذكورة؟", "options": ["السماح بالإنترنت الشخصي على حواسيب الشركة", "تبادل الرسائل الخاصة بحرية", "إلغاء كلمة مرور أي موظف انتهى عقده فوراً", "استخدام برامج قديمة"], "explain": "سياسات أخرى: أجهزة البصمة، مضاد فيروسات وكشف تسلل محدّثان، نسخ احتياطي يومي، تشفير قوي، وتحديث البرامج."}}},
+    {"id": "c2q217", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "The backup policy recommended is...", "options": ["Daily updates", "Yearly", "Never", "Only on request"], "correct": 0, "explain": "Implement a backup policy with daily updates.", "page": 11, "translation": {"ar": {"q": "سياسة النسخ الاحتياطي الموصى بها هي...", "options": ["تحديث يومي", "سنوي", "أبداً", "عند الطلب فقط"], "explain": "تطبيق سياسة نسخ احتياطي بتحديثات يومية."}}},
+    {"id": "c2q218", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Fingerprint authentication devices should be installed on...", "options": ["Printers", "Mice", "Monitors", "Critical data storage devices"], "correct": 3, "explain": "This is one of the protection policies.", "page": 11, "translation": {"ar": {"q": "يجب تركيب أجهزة التحقق بالبصمة على...", "options": ["الطابعات", "الفأرات", "الشاشات", "أجهزة تخزين البيانات الحرجة"], "explain": "هذه إحدى سياسات الحماية."}}},
+    {"id": "c2q219", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Responsibility for information systems security should be entrusted to...", "options": ["Any employee", "Experienced information security personnel", "Customers", "External competitors"], "correct": 1, "explain": "They define protection, monitoring, backups, encryption and continuity.", "page": 12, "translation": {"ar": {"q": "يجب إسناد مسؤولية أمن نظم المعلومات إلى...", "options": ["أي موظف", "أفراد ذوي خبرة في أمن المعلومات", "العملاء", "منافسين خارجيين"], "explain": "يحددون الحماية والمراقبة والنسخ الاحتياطي والتشفير والاستمرارية."}}},
+    {"id": "c2q220", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Which stage of security system design is the most important but costly to implement?", "options": ["Detection", "Deterrence", "Prevention", "Recovery"], "correct": 2, "explain": "Prevention is a best theoretical concept but difficult because of high costs.", "page": 13, "translation": {"ar": {"q": "أي مرحلة في تصميم نظام الأمن هي الأهم لكنها مكلفة التنفيذ؟", "options": ["الكشف (Detection)", "الردع (Deterrence)", "الوقاية (Prevention)", "الاسترداد (Recovery)"], "explain": "الوقاية من أفضل المفاهيم النظرية لكنها صعبة بسبب التكلفة العالية."}}},
+    {"id": "c2q221", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "The detection stage may involve...", "options": ["Recording failed access attempts to identify malicious activity and who is behind it", "Redesigning the system", "Restoring from backup", "Removing passwords"], "correct": 0, "explain": "Detection identifies the type of malicious activity and the individuals carrying it out.", "page": 13, "translation": {"ar": {"q": "قد تتضمن مرحلة الكشف (Detection)...", "options": ["تسجيل محاولات الدخول الفاشلة لتحديد النشاط الخبيث ومن يقف وراءه", "إعادة تصميم النظام", "الاستعادة من النسخ الاحتياطي", "إزالة كلمات المرور"], "explain": "الكشف يحدد نوع النشاط الخبيث والأفراد القائمين به."}}},
+    {"id": "c2q222", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Which stage uses backups to quickly recover lost components?", "options": ["Prevention", "Detection", "Deterrence", "Recovery"], "correct": 3, "explain": "Measures are taken to quickly recover lost components using backups.", "page": 13, "translation": {"ar": {"q": "أي مرحلة تستخدم النسخ الاحتياطية لاسترداد المكونات المفقودة بسرعة؟", "options": ["الوقاية", "الكشف", "الردع", "الاسترداد (Recovery)"], "explain": "تُتخذ إجراءات لاسترداد المكونات المفقودة بسرعة باستخدام النسخ الاحتياطية."}}},
+    {"id": "c2q223", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "When all security measures fail against a specific threat, the remaining option is to...", "options": ["Ignore it", "Redesign the system with new security measures (reversal and reproduction)", "Disconnect forever", "Delete all data"], "correct": 1, "explain": "This is the fifth stage: reversal and reproduction.", "page": 13, "translation": {"ar": {"q": "عندما تفشل كل إجراءات الأمن أمام تهديد معين فالخيار المتبقي هو...", "options": ["تجاهل التهديد", "إعادة تصميم النظام بإجراءات أمن جديدة (العكس وإعادة الإنتاج)", "الفصل للأبد", "حذف كل البيانات"], "explain": "هذه هي المرحلة الخامسة: العكس وإعادة الإنتاج."}}},
+    {"id": "c2q224", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "The five stages of security system design in order are...", "options": ["Detection, Prevention, Recovery, Deterrence, Reversal", "Recovery, Prevention, Detection, Deterrence, Reversal", "Prevention, Detection, Deterrence, Recovery, Reversal and Reproduction", "Deterrence, Detection, Prevention, Recovery, Reversal"], "correct": 2, "explain": "First prevention, second detection, third deterrence, fourth recovery, fifth reversal and reproduction.", "page": 13, "translation": {"ar": {"q": "ترتيب مراحل تصميم نظام الأمن الخمس هو...", "options": ["الكشف، الوقاية، الاسترداد، الردع، العكس", "الاسترداد، الوقاية، الكشف، الردع، العكس", "الوقاية، الكشف، الردع، الاسترداد، العكس وإعادة الإنتاج", "الردع، الكشف، الوقاية، الاسترداد، العكس"], "explain": "أولاً الوقاية، ثانياً الكشف، ثالثاً الردع، رابعاً الاسترداد، خامساً العكس وإعادة الإنتاج."}}},
+    {"id": "c2q225", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "One of the information security quality standards is...", "options": ["Gaining the trust of stakeholders and clients that their data is protected", "Reducing staff", "Avoiding controls", "Hiding incidents"], "correct": 0, "explain": "Compliance gives customers confidence that the company is the preferred supplier.", "page": 14, "translation": {"ar": {"q": "من معايير جودة أمن المعلومات...", "options": ["كسب ثقة أصحاب المصلحة والعملاء بأن بياناتهم محمية", "تقليل الموظفين", "تجنب الضوابط", "إخفاء الحوادث"], "explain": "الالتزام بالضوابط يمنح العملاء ثقة بأن الشركة هي المورد المفضل."}}},
+    {"id": "c2q226", "type": "tf", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Denial attack means the attacker modifies the message content.", "correct": false, "explain": "Denial disrupts the channel; modification is a separate attack.", "page": 4, "translation": {"ar": {"q": "هجوم الحجب (Denial) يعني أن المهاجم يعدّل محتوى الرسالة.", "options": ["صح", "خطأ"], "explain": "الحجب يعطّل القناة؛ أما التعديل فهجوم مستقل."}}},
+    {"id": "c2q227", "type": "tf", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Email guarantees full privacy.", "correct": false, "explain": "Email privacy is like a postcard.", "page": 10, "translation": {"ar": {"q": "البريد الإلكتروني يضمن خصوصية كاملة.", "options": ["صح", "خطأ"], "explain": "خصوصية البريد تشبه البطاقة البريدية."}}},
+    {"id": "c2q228", "type": "tf", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Using the company's own computer for internet access is prohibited according to the protection policies.", "correct": true, "explain": "This is listed among the protection policies.", "page": 11, "translation": {"ar": {"q": "استخدام حاسوب الشركة نفسه للدخول على الإنترنت ممنوع وفق سياسات الحماية.", "options": ["صح", "خطأ"], "explain": "هذا مذكور ضمن سياسات الحماية."}}},
+    {"id": "c2q229", "type": "tf", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Fiber optic cables are slower than twisted-pair cables.", "correct": false, "explain": "Fiber optic cables are faster.", "page": 15, "translation": {"ar": {"q": "كابلات الألياف الضوئية أبطأ من الأزواج المتلوية.", "options": ["صح", "خطأ"], "explain": "الألياف الضوئية أسرع."}}},
+    {"id": "c2q230", "type": "tf", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "The hub identifies the MAC address of the device and sends data directly to it.", "correct": false, "explain": "A hub broadcasts; a switch identifies MAC addresses.", "page": 15, "translation": {"ar": {"q": "الـ hub يتعرف على عنوان MAC للجهاز ويرسل البيانات إليه مباشرة.", "options": ["صح", "خطأ"], "explain": "الـ hub يبث للجميع؛ أما الـ switch فيتعرف على عناوين MAC."}}},
+    {"id": "c2q231", "type": "tf", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "A passive hub acts as a connection point and does not amplify or generate signals.", "correct": true, "explain": "Passive hubs only connect.", "page": 15, "translation": {"ar": {"q": "الـ hub السلبي نقطة اتصال ولا يضخّم ولا يولّد الإشارات.", "options": ["صح", "خطأ"], "explain": "الـ hub السلبي يوصّل فقط."}}},
+    {"id": "c2q232", "type": "tf", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "A repeater can amplify data packets and retransmit them.", "correct": true, "explain": "This is the repeater's function.", "page": 15, "translation": {"ar": {"q": "المكرر (repeater) يمكنه تضخيم الحزم وإعادة إرسالها.", "options": ["صح", "خطأ"], "explain": "هذه وظيفة المكرر."}}},
+    {"id": "c2q233", "type": "tf", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "A network card has a unique 8-digit number.", "correct": false, "explain": "A network card has a unique MAC address (48 bits, 12 hex digits), not an 8-digit number.", "page": 15, "translation": {"ar": {"q": "كارت الشبكة له رقم فريد من 8 أرقام.", "options": ["صح", "خطأ"], "explain": "كارت الشبكة له عنوان MAC فريد (48 بت أي 12 رقماً سداسي عشري) وليس رقماً من 8 أرقام."}}},
+    {"id": "c2q234", "type": "tf", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "A switch is used to pass data from one network to another.", "correct": false, "explain": "Passing data between networks is a router's job.", "page": 16, "translation": {"ar": {"q": "الـ switch يُستخدم لتمرير البيانات من شبكة إلى أخرى.", "options": ["صح", "خطأ"], "explain": "تمرير البيانات بين الشبكات وظيفة الـ router."}}},
+    {"id": "c2q235", "type": "tf", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "A switch is better than a bridge.", "correct": true, "explain": "A switch is like a multi-port bridge with better performance.", "page": 16, "translation": {"ar": {"q": "الـ switch أفضل من الـ bridge.", "options": ["صح", "خطأ"], "explain": "الـ switch يشبه bridge متعدد المنافذ بأداء أفضل."}}},
+    {"id": "c2q236", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "The ____ layer compresses and encrypts data.", "options": ["Application", "Session", "Network", "Presentation"], "correct": 3, "explain": "The presentation layer handles compression and encryption.", "page": 16, "translation": {"ar": {"q": "طبقة ____ تضغط البيانات وتشفّرها.", "options": ["Application", "Session", "Network", "Presentation"], "explain": "طبقة العرض (Presentation) تتولى الضغط والتشفير."}}},
+    {"id": "c2q237", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "A device that allows sending and receiving information over telephone lines is a...", "options": ["Hub", "Modem", "Switch", "Access point"], "correct": 1, "explain": "A modem modulates and demodulates signals over telephone lines.", "page": 16, "translation": {"ar": {"q": "جهاز يسمح بإرسال واستقبال المعلومات عبر خطوط الهاتف هو...", "options": ["Hub", "Modem", "Switch", "Access point"], "explain": "المودم يعدّل ويفك تعديل الإشارات عبر خطوط الهاتف."}}},
+    {"id": "c2q238", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "Among the software components of a network are...", "options": ["Switch", "Routers", "Protocols", "Network card"], "correct": 2, "explain": "Switches, routers and network cards are hardware.", "page": 17, "translation": {"ar": {"q": "من المكونات البرمجية للشبكة...", "options": ["Switch", "Routers", "البروتوكولات", "Network card"], "explain": "الـ switches والـ routers وكروت الشبكة مكونات عتادية."}}},
+    {"id": "c2q239", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "The address of a network card is called...", "options": ["MAC address", "IP address", "IPX address", "Other"], "correct": 0, "explain": "The physical address is the MAC address.", "page": 17, "translation": {"ar": {"q": "يسمى عنوان كارت الشبكة...", "options": ["MAC address", "IP address", "IPX address", "أخرى"], "explain": "العنوان الفيزيائي هو MAC address."}}},
+    {"id": "c2q240", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "An inexpensive device used to regenerate or amplify data signals on a network is a...", "options": ["Passive hub", "Hybrid hub", "Bridge", "Active hub"], "correct": 3, "explain": "An active hub regenerates signals (acts as a repeater).", "page": 17, "translation": {"ar": {"q": "جهاز رخيص يُستخدم لتجديد أو تضخيم إشارات البيانات في الشبكة هو...", "options": ["Passive hub", "Hybrid hub", "Bridge", "Active hub"], "explain": "الـ active hub يجدد الإشارات (يعمل كمكرر)."}}},
+    {"id": "c2q241", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "A device that transmits data using broadcasting is a...", "options": ["Switch", "Hub", "Router", "Modem"], "correct": 1, "explain": "A hub sends data to all connected ports.", "page": 17, "translation": {"ar": {"q": "جهاز ينقل البيانات بنظام البث (broadcasting) هو...", "options": ["Switch", "Hub", "Router", "Modem"], "explain": "الـ hub يرسل البيانات لكل المنافذ المتصلة."}}},
+    {"id": "c2q242", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "The central device in a wireless local area network is the...", "options": ["Router", "Switch", "Access point", "Hub"], "correct": 2, "explain": "An access point is the central device of a WLAN.", "page": 17, "translation": {"ar": {"q": "الجهاز المركزي في الشبكة المحلية اللاسلكية هو...", "options": ["Router", "Switch", "Access point", "Hub"], "explain": "نقطة الوصول هي الجهاز المركزي في الشبكة اللاسلكية."}}},
+    {"id": "c2q243", "type": "mcq", "lec": 7, "lecTitle": "Enterprise Information System - Lecture 8", "q": "The data type (PDU) in the application layer is...", "options": ["Data", "Frame", "Packet", "Segment"], "correct": 0, "explain": "Application layer: data; transport: segment; network: packet; data link: frame.", "page": 17, "translation": {"ar": {"q": "نوع البيانات في طبقة التطبيقات هو...", "options": ["Data", "Frame", "Packet", "Segment"], "explain": "طبقة التطبيقات: data؛ النقل: segment؛ الشبكة: packet؛ ربط البيانات: frame."}}}
   ],
   c3: [ // Public Finance
     { id:"c3q1", type:"mcq", lec:1, lecTitle:"Public Finance - Lectures 1 & 2", page:3, q:"Public finance is mainly concerned with the study of how the government manages...",
@@ -3829,7 +3887,7 @@ function courseNameById(cid){
 
 /* ---- Section switching ---- */
 const SECTION_STORAGE_KEY = 'portal_active_section';
-const VALID_SECTIONS = new Set(['courses', 'quiz', 'exam', 'gamification', 'videos', 'assignments']);
+const VALID_SECTIONS = new Set(['courses', 'quiz', 'exam', 'final', 'gamification', 'videos', 'assignments']);
 
 function saveActiveSection(){
   try{
@@ -3868,6 +3926,8 @@ function switchSection(section){
   const videosSection = document.getElementById('videosSection');
   const examSection = document.getElementById('examSection');
   const assignmentsSection = document.getElementById('assignmentsSection');
+  const finalSection = document.getElementById('finalSection');
+  if(finalSection) finalSection.style.display = safeSection === 'final' ? 'block' : 'none';
 
   if(coursesControls) coursesControls.style.display = safeSection === 'courses' ? '' : 'none';
   if(mainContent) mainContent.style.display = safeSection === 'courses' ? '' : 'none';
@@ -3882,6 +3942,8 @@ function switchSection(section){
     renderQuizHome();
   } else if(safeSection === 'exam'){
     renderExamSection();
+  } else if(safeSection === 'final'){
+    renderFinalSection();
   } else if(safeSection === 'videos'){
     renderVideos();
   } else if(safeSection === 'gamification'){
@@ -5791,6 +5853,230 @@ function markNewFiles(){
   main.addEventListener('click', onOpen);
   main.addEventListener('auxclick', onOpen);
   markNewFiles();
+})();
+
+
+/* ================= Final exam simulation ================= */
+const FINAL_TF = 20, FINAL_MCQ = 10, FINAL_ESSAY = 2, FINAL_SECONDS = 120 * 60;
+const FINAL_KEY = 'portal_final_exam_state_v1', FINAL_HIST = 'portal_final_exam_history_v1';
+let fin = null, finTick = null;
+
+function finCourse(cid){ return (typeof courses !== 'undefined' ? courses : []).find(x => x.id === cid) || { lectures: [] }; }
+function finPool(cid){
+  const L = finCourse(cid).lectures || [];
+  return (quizBank[cid] || []).filter(q => { const l = L[(q.lec || 0) - 1]; return !(l && /^Study Notes/i.test(l.title || '')); });
+}
+function finPick(pool, n){
+  const g = {};
+  pool.forEach(q => { (g[q.lec || 0] = g[q.lec || 0] || []).push(q); });
+  Object.keys(g).forEach(k => { g[k] = examShuffle(g[k]); });
+  const order = examShuffle(Object.keys(g)), out = [];
+  while(out.length < n){
+    let moved = false;
+    for(const k of order){ if(out.length >= n) break; if(g[k].length){ out.push(g[k].pop()); moved = true; } }
+    if(!moved) break;
+  }
+  return out;
+}
+function finStr(o){ return typeof o === 'string' ? o : (o && o.text) || ''; }
+function finKeywords(t){ return (String(t).toLowerCase().match(/[a-z]{6,}/g) || []); }
+function finBuildEssays(cid){
+  const c = finCourse(cid), L = c.lectures || [], Q = quizBank[cid] || [];
+  const cand = [];
+  L.forEach((l, i) => {
+    if(/Study Notes|Revision|Online|Book|ملخص/i.test(l.title || '') || !Array.isArray(l.outline)) return;
+    const items = l.outline.map(finStr).filter(t => t.length > 18 && !/[؀-ۿ]/.test(t) && !/true\s*\/\s*false|exercise|worked example|questions?\b|\bexample\b/i.test(t));
+    if(items.length) cand.push({ lec: i + 1, title: l.title, items });
+  });
+  const lecs = examShuffle(cand).slice(0, FINAL_ESSAY);
+  return lecs.map(l => {
+    const topic = l.items[Math.floor(Math.random() * l.items.length)];
+    const kws = finKeywords(topic);
+    const lq = Q.filter(q => q.lec === l.lec);
+    let refs = lq.filter(q => { const h = (q.q + ' ' + (q.explain || '')).toLowerCase(); return kws.some(k => h.includes(k)); });
+    refs = examShuffle(refs).slice(0, 5).map(q => ({ en: q.explain || '', ar: (q.translation && q.translation.ar && q.translation.ar.explain) || q.explain || '' })).filter(r => r.en);
+    return { kind: 'essay', lec: l.lec, title: l.title, topic, refs };
+  });
+}
+function finDerive(q){
+  const wrong = q.options.map((_, i) => i).filter(i => i !== q.correct);
+  const truth = Math.random() < 0.5, idx = truth ? q.correct : wrong[Math.floor(Math.random() * wrong.length)];
+  return { kind: 'tf', id: q.id + ':d', src: q.id, derived: true, opt: idx, truth };
+}
+function finBuild(cid){
+  const pool = finPool(cid);
+  const tfs = examShuffle(pool.filter(q => q.type === 'tf'));
+  const mcqs = examShuffle(pool.filter(q => q.type === 'mcq'));
+  const tfItems = finPick(tfs, FINAL_TF).map(q => ({ kind: 'tf', id: q.id }));
+  const usedMcq = new Set();
+  let mcqItems = finPick(mcqs, FINAL_MCQ);
+  mcqItems.forEach(q => usedMcq.add(q.id));
+  if(tfItems.length < FINAL_TF){
+    const extra = examShuffle(mcqs.filter(q => !usedMcq.has(q.id)));
+    while(tfItems.length < FINAL_TF && extra.length) tfItems.push(finDerive(extra.pop()));
+  }
+  return {
+    cid, startedAt: Date.now(), endsAt: Date.now() + FINAL_SECONDS * 1000,
+    lang: examLang(), answers: {}, essaySel: null, essayText: '', submitted: false,
+    items: examShuffle(tfItems).concat(mcqItems.map(q => ({ kind: 'mcq', id: q.id, order: examOptionOrderFor(q) }))),
+    essays: finBuildEssays(cid)
+  };
+}
+function examOptionOrderFor(q){
+  const idx = q.options.map((_, i) => i);
+  const ar = (q.translation && q.translation.ar && q.translation.ar.options) || [];
+  if(q.options.some(o => EXAM_NO_SHUFFLE.test(String(o))) || ar.some(o => EXAM_NO_SHUFFLE.test(String(o)))) return idx;
+  return examShuffle(idx);
+}
+function finQ(it){
+  const q = (quizBank[fin.cid] || []).find(x => x.id === (it.src || it.id));
+  if(!q) return null;
+  if(!it.derived) return q;
+  const ar = (q.translation && q.translation.ar) || {};
+  const oEn = q.options[it.opt], oAr = (ar.options && ar.options[it.opt]) || oEn;
+  return {
+    id: it.id, type: 'tf', correct: it.truth, lec: q.lec, lecTitle: q.lecTitle, page: q.page,
+    q: q.q + ' — Answer: ' + oEn, explain: q.explain,
+    translation: { ar: { q: (ar.q || q.q) + ' — الإجابة: ' + oAr, explain: ar.explain || q.explain } }
+  };
+}
+function finPersist(){ examWrite(FINAL_KEY, fin); }
+function finHistory(cid){ const h = examRead(FINAL_HIST) || {}; return h[cid] || []; }
+function finSaveHistory(r){ const h = examRead(FINAL_HIST) || {}; (h[r.cid] = h[r.cid] || []).push(r); h[r.cid] = h[r.cid].slice(-10); examWrite(FINAL_HIST, h); }
+function finStartTick(){ if(finTick) return; finTick = setInterval(finUpdateTimer, 1000); }
+function finStopTick(){ if(finTick){ clearInterval(finTick); finTick = null; } }
+function finUpdateTimer(){
+  if(!fin || fin.submitted){ finStopTick(); return; }
+  const rem = Math.max(0, fin.endsAt - Date.now());
+  const el = document.getElementById('finTimer');
+  if(el){ el.textContent = examFmt(rem / 1000); el.classList.toggle('warn', rem < 10 * 60000); el.classList.toggle('danger', rem < 3 * 60000); }
+  if(rem <= 0) finFinish('timeout');
+}
+function finCorrect(q, ans){ return ans !== undefined && ans !== null && ans === q.correct; }
+function finFinish(reason){
+  if(!fin || fin.submitted) return;
+  let score = 0, tfScore = 0, mcqScore = 0;
+  fin.items.forEach(it => { const q = finQ(it); if(q && finCorrect(q, fin.answers[it.id])){ score++; if(it.kind === 'tf') tfScore++; else mcqScore++; } });
+  fin.submitted = true; fin.reason = reason; fin.score = score; fin.tfScore = tfScore; fin.mcqScore = mcqScore;
+  fin.total = fin.items.length; fin.finishedAt = Date.now();
+  finSaveHistory({ cid: fin.cid, score, total: fin.total, at: fin.finishedAt });
+  finStopTick(); finPersist(); renderFinalSection();
+}
+function finAnswered(){ return fin.items.filter(it => fin.answers[it.id] !== undefined).length; }
+function finAnsText(q, v, lang){
+  if(v === undefined || v === null) return null;
+  if(q.type === 'mcq') return getQuestionOptionText(q, lang, v);
+  return v ? (lang === 'en' ? 'True' : 'صح') : (lang === 'en' ? 'False' : 'خطأ');
+}
+function finCard(it, i, review){
+  const q = finQ(it); if(!q) return '';
+  const lang = fin.lang, ans = fin.answers[it.id], L = 'ABCDEFGH';
+  let opts = '';
+  if(q.type === 'mcq'){
+    const order = it.order || q.options.map((_, k) => k);
+    opts = '<div class="quiz-options">' + order.map((oi, pos) => {
+      let cls = 'quiz-opt exam-opt';
+      if(review){ if(oi === q.correct) cls += ' correct'; else if(ans === oi) cls += ' wrong'; } else if(ans === oi) cls += ' selected';
+      return `<button class="${cls}" data-fi="${i}" data-idx="${oi}" ${review ? 'disabled' : ''}><span class="quiz-option-row"><span class="opt-letter">${L[pos]}</span><span class="quiz-option-main" dir="auto">${examEsc(getQuestionOptionText(q, lang, oi))}</span></span></button>`;
+    }).join('') + '</div>';
+  }else{
+    const mk = (val, label) => {
+      let cls = 'quiz-opt exam-opt';
+      if(review){ if(val === q.correct) cls += ' correct'; else if(ans === val) cls += ' wrong'; } else if(ans === val) cls += ' selected';
+      return `<button class="${cls}" data-fi="${i}" data-val="${val}" ${review ? 'disabled' : ''}><span class="quiz-option-row"><span class="quiz-option-main">${label}</span></span></button>`;
+    };
+    opts = `<div class="tf-row">${mk(true, lang === 'en' ? 'True' : 'صح')}${mk(false, lang === 'en' ? 'False' : 'خطأ')}</div>`;
+  }
+  let rv = '';
+  if(review){
+    const ok = finCorrect(q, ans), mine = finAnsText(q, ans, lang), right = finAnsText(q, q.correct, lang), ex = getQuestionExplanation(q, lang);
+    rv = `<div class="exam-review ${ok ? 'ok' : 'bad'}"><div class="exam-review-line">${ok ? '✅ إجابتك صحيحة' : (mine === null ? '⚪ لم تجب' : '❌ إجابتك: <span dir="auto">' + examEsc(mine) + '</span>')}</div>${ok ? '' : `<div class="exam-review-line right">✔ الإجابة الصحيحة: <strong dir="auto">${examEsc(right)}</strong></div>`}${ex ? `<div class="exam-review-expl">💡 <span dir="auto">${examEsc(ex)}</span></div>` : ''}</div>`;
+  }
+  return `<div class="quiz-card exam-q" id="finQ-${i}"><div class="exam-q-head"><span class="exam-q-num">${i + 1}</span><span class="quiz-type-tag">${q.type === 'mcq' ? (lang === 'en' ? 'Multiple choice' : 'اختيار من متعدد') : (lang === 'en' ? 'True / False' : 'صح أم غلط')}</span>${review && q.lec ? `<span class="quiz-lec-tag">📖 محاضرة ${q.lec}${q.lecTitle ? ': ' + examEsc(q.lecTitle) : ''}</span>` : ''}${review && q.page ? `<span class="quiz-page-tag">📄 صفحة ${q.page}</span>` : ''}</div><p class="quiz-question" dir="auto">${examEsc(getQuestionLanguageText(q, lang))}</p>${typeof renderQuestionTable === 'function' && !q.derived ? renderQuestionTable(q) : ''}${opts}${rv}</div>`;
+}
+function finEssayHtml(review){
+  const lang = fin.lang;
+  const cards = fin.essays.map((e, k) => {
+    const sel = fin.essaySel === k;
+    const prompt = lang === 'en' ? `Explain in detail: “${e.topic}”` : `اشرح بالتفصيل: «${e.topic}»`;
+    const refs = review && e.refs.length ? `<div class="exam-review ok" style="margin-top:10px"><div class="exam-review-line"><strong>📌 نقاط مساعدة من أسئلة المحاضرة (للمراجعة الذاتية):</strong></div><ul style="margin:6px 0 0;padding-inline-start:20px">${e.refs.map(r => `<li dir="auto">${examEsc(lang === 'en' ? r.en : r.ar)}</li>`).join('')}</ul></div>` : (review ? `<div class="exam-review-expl">راجع محاضرة «${examEsc(e.title)}» وقارن إجابتك بها.</div>` : '');
+    return `<label class="quiz-card exam-q" style="display:block;cursor:${review ? 'default' : 'pointer'};${sel ? 'border-color:var(--green-deep);' : ''}"><div class="exam-q-head"><span class="exam-q-num">${k === 0 ? 'أ' : 'ب'}</span><span class="quiz-lec-tag">📖 محاضرة ${e.lec}: ${examEsc(e.title)}</span>${review ? '' : `<input type="radio" name="finEssay" value="${k}" ${sel ? 'checked' : ''} style="margin-inline-start:auto">`}</div><p class="quiz-question" dir="auto">${examEsc(prompt)}</p>${review && sel ? `<div class="exam-review-expl"><strong>إجابتك:</strong><div dir="auto" style="white-space:pre-wrap;margin-top:4px">${examEsc(fin.essayText || '(لم تكتب شيئاً)')}</div></div>` : ''}${refs}</label>`;
+  }).join('');
+  const box = review ? '' : `<textarea id="finEssayText" dir="auto" rows="8" placeholder="اكتب إجابة السؤال المقالي اللي اخترته هنا..." style="width:100%;margin-top:10px;padding:12px;border:1px solid var(--line);border-radius:10px;font-family:'Tajawal',sans-serif;font-size:.95rem;box-sizing:border-box">${examEsc(fin.essayText || '')}</textarea>`;
+  return `<div class="exam-list-head"><h3>✍️ الجزء المقالي — اختار سؤال واحد فقط</h3></div>${cards}${box}`;
+}
+function finHeading(t){ return `<div class="exam-list-head"><h3>${t}</h3></div>`; }
+function finQuestionsHtml(review){
+  const tfN = fin.items.filter(it => it.kind === 'tf').length;
+  let html = '';
+  fin.items.forEach((it, i) => {
+    if(i === 0) html += finHeading(`الجزء الأول: صح / خطأ (${tfN})`);
+    if(i === tfN) html += finHeading(`الجزء التاني: اختيار من متعدد (${fin.items.length - tfN})`);
+    html += finCard(it, i, review);
+  });
+  return html + finEssayHtml(review);
+}
+function finRefreshProgress(){
+  const t = document.getElementById('finAnswered'); if(!t) return;
+  t.textContent = `تمت الإجابة على ${finAnswered()} من ${fin.items.length}`;
+  document.querySelectorAll('#finNav .exam-chip').forEach((c, i) => c.classList.toggle('done', fin.answers[fin.items[i].id] !== undefined));
+}
+function renderFinalHome(){
+  const sec = document.getElementById('finalSection'); if(!sec) return;
+  const cards = Object.keys(quizBank).sort().map(cid => {
+    const pool = finPool(cid), h = finHistory(cid), last = h[h.length - 1], best = h.reduce((m, x) => Math.max(m, x.score), 0);
+    return `<div class="quiz-course-card exam-course-card"><h4>${examEsc(courseNameById(cid))}</h4><div class="stats"><span class="stat-chip">📝 ${pool.length} سؤال في البنك</span>${last ? `<span class="stat-chip">🕘 آخر نتيجة: ${last.score}/${last.total}</span><span class="stat-chip">🏆 أفضل نتيجة: ${best}/${last.total}</span>` : '<span class="stat-chip">لسه ما دخلتش فاينل</span>'}</div><button class="exam-start-btn" data-final-start="${cid}" ${pool.length ? '' : 'disabled'}>ابدأ محاكاة الفاينل</button></div>`;
+  }).join('');
+  sec.innerHTML = `<div class="exam-intro"><h2>🏁 محاكاة امتحان الفاينل</h2><p>اختار المادة وابدأ امتحان تجريبي بنفس شكل الفاينل.</p><ul><li><strong>${FINAL_TF} سؤال صح/خطأ</strong> + <strong>${FINAL_MCQ} اختيار من متعدد</strong> من كل محاضرات المادة (بدون Study Notes).</li><li><strong>سؤالين مقاليين</strong> بتختار واحد منهم وتكتب إجابته.</li><li>الوقت <strong>${FINAL_SECONDS / 60} دقيقة</strong> وبعدها الامتحان بيتسلّم لوحده.</li><li>الدرجة التلقائية من ${FINAL_TF + FINAL_MCQ}، والمقالي بتراجعه بنفسك مع نقاط مساعدة من المحاضرة.</li></ul></div><div class="quiz-course-grid">${cards}</div>`;
+}
+function renderFinalRun(){
+  const sec = document.getElementById('finalSection'); if(!sec || !fin) return;
+  const chips = fin.items.map((it, i) => `<button class="exam-chip" data-fchip="${i}">${i + 1}</button>`).join('');
+  sec.innerHTML = `<div class="exam-wrap"><div class="exam-bar" id="finBar"><div class="exam-bar-row"><div class="exam-title">🏁 فاينل — ${examEsc(courseNameById(fin.cid))}</div><div class="exam-timer" id="finTimer" dir="ltr">${examFmt(Math.max(0, fin.endsAt - Date.now()) / 1000)}</div></div><div class="exam-bar-row"><span class="exam-answered" id="finAnswered"></span><span class="exam-bar-actions"><button class="quiz-lang-toggle" id="finLangBtn">${fin.lang === 'en' ? 'العربية' : 'English'}</button><button class="exam-submit" id="finSubmit">تسليم الامتحان</button></span></div><div class="exam-nav" id="finNav">${chips}</div></div><div id="finQuestions">${finQuestionsHtml(false)}</div><div class="exam-bottom"><button class="exam-submit big" id="finSubmit2">تسليم الامتحان</button></div></div>`;
+  finRefreshProgress(); finUpdateTimer(); finStartTick();
+}
+function renderFinalResults(){
+  const sec = document.getElementById('finalSection'); if(!sec || !fin) return;
+  const pct = fin.total ? Math.round(fin.score / fin.total * 100) : 0;
+  sec.innerHTML = `<div class="exam-wrap">${fin.reason === 'timeout' ? '<div class="exam-banner">⏰ الوقت خلص والامتحان اتسلّم تلقائياً</div>' : ''}<div class="quiz-card exam-result" style="text-align:center"><div class="exam-result-course">${examEsc(courseNameById(fin.cid))}</div><h2>${fin.score} / ${fin.total}</h2><div class="exam-pct">${pct}%</div><div class="exam-stats"><span class="stat-chip good">صح/خطأ: ${fin.tfScore} / ${fin.items.filter(i => i.kind === 'tf').length}</span><span class="stat-chip good">اختيار من متعدد: ${fin.mcqScore} / ${fin.items.filter(i => i.kind === 'mcq').length}</span><span class="stat-chip">المقالي: راجعه بنفسك</span></div><div class="exam-actions"><button class="quiz-lang-toggle" id="finLangBtn">${fin.lang === 'en' ? 'العربية' : 'English'}</button><button class="exam-start-btn" id="finAgain">امتحان جديد</button><button class="exam-start-btn" id="finHome" style="background:var(--gold)">رجوع للمواد</button></div></div>${fin.items.map((it, i) => (i === 0 ? finHeading('الأسئلة') : '') + finCard(it, i, true)).join('')}${finEssayHtml(true)}</div>`;
+}
+function renderFinalSection(){
+  if(!fin) fin = examRead(FINAL_KEY);
+  if(fin && (!fin.items || !fin.cid)) { fin = null; examWrite(FINAL_KEY, null); }
+  if(fin){
+    if(!fin.submitted && Date.now() >= fin.endsAt){ finFinish('timeout'); return; }
+    if(fin.submitted){ renderFinalResults(); return; }
+    renderFinalRun(); return;
+  }
+  renderFinalHome();
+}
+(function(){
+  const sec = document.getElementById('finalSection'); if(!sec) return;
+  sec.addEventListener('click', e => {
+    const st = e.target.closest('[data-final-start]');
+    if(st){ fin = finBuild(st.dataset.finalStart); finPersist(); renderFinalSection(); window.scrollTo(0, 0); return; }
+    if(e.target.closest('#finSubmit') || e.target.closest('#finSubmit2')){
+      const left = fin.items.length - finAnswered();
+      if(!left || confirm(`لسه فيه ${left} سؤال من غير إجابة. تسلّم الامتحان؟`)) finFinish('manual'); return;
+    }
+    if(e.target.closest('#finAgain')){ const c = fin.cid; fin = finBuild(c); finPersist(); renderFinalSection(); window.scrollTo(0, 0); return; }
+    if(e.target.closest('#finHome')){ fin = null; examWrite(FINAL_KEY, null); renderFinalHome(); return; }
+    if(e.target.closest('#finLangBtn')){ fin.lang = fin.lang === 'en' ? 'ar' : 'en'; try{ localStorage.setItem(EXAM_LANG_KEY, fin.lang); }catch(err){} finPersist(); if(fin.submitted) renderFinalResults(); else { const t = document.getElementById('finEssayText'); if(t) fin.essayText = t.value; document.getElementById('finQuestions').innerHTML = finQuestionsHtml(false); document.getElementById('finLangBtn').textContent = fin.lang === 'en' ? 'العربية' : 'English'; } return; }
+    const chip = e.target.closest('[data-fchip]');
+    if(chip){ const t = document.getElementById('finQ-' + chip.dataset.fchip), b = document.getElementById('finBar'); if(t){ t.style.scrollMarginTop = ((b ? b.offsetHeight : 120) + 12) + 'px'; t.scrollIntoView({ behavior: 'smooth', block: 'start' }); } return; }
+    const opt = e.target.closest('.exam-opt');
+    if(opt && fin && !fin.submitted){
+      if(Date.now() >= fin.endsAt){ finFinish('timeout'); return; }
+      const i = Number(opt.dataset.fi), it = fin.items[i], q = finQ(it);
+      const val = q.type === 'mcq' ? Number(opt.dataset.idx) : (opt.dataset.val === 'true');
+      if(fin.answers[it.id] === val) delete fin.answers[it.id]; else fin.answers[it.id] = val;
+      const card = document.getElementById('finQ-' + i);
+      if(card) card.querySelectorAll('.exam-opt').forEach(b => { const bv = q.type === 'mcq' ? Number(b.dataset.idx) : (b.dataset.val === 'true'); b.classList.toggle('selected', fin.answers[it.id] === bv); });
+      finPersist(); finRefreshProgress();
+    }
+  });
+  sec.addEventListener('change', e => { if(e.target.name === 'finEssay' && fin && !fin.submitted){ fin.essaySel = Number(e.target.value); finPersist(); } });
+  sec.addEventListener('input', e => { if(e.target.id === 'finEssayText' && fin && !fin.submitted){ fin.essayText = e.target.value; finPersist(); } });
 })();
 
 /* ---- Quiz init ---- */
