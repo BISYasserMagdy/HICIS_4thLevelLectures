@@ -673,6 +673,10 @@
 
   /* ---------- Videos section ---------- */
   #videosSection{display:none;}
+  .video-notice{position:relative;background:linear-gradient(135deg,#eef6f0,#fdf6e3);border:1px solid var(--line);border-radius:var(--radius);padding:14px 18px;margin-bottom:16px;}
+  .video-notice h4{margin:0 0 8px;font-family:'Cairo',sans-serif;color:var(--green-deep);}
+  .video-notice ul{margin:4px 0 8px;padding-inline-start:20px;line-height:1.8;color:var(--muted);font-size:.88rem;}
+  .video-notice-x{position:absolute;top:10px;inset-inline-end:12px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer;color:var(--muted);}
   .video-intro{color:var(--muted); margin:0 0 22px; font-size:.95rem;}
   .video-card{display:flex; flex-direction:column; gap:10px;}
   .video-card .vc-course{font-family:'Cairo',sans-serif; font-weight:800; color:var(--green-deep); font-size:1.05rem; margin:0;}
@@ -1518,6 +1522,7 @@
 
 <main id="videosSection">
   <p class="video-intro">🎬 قوايم تشغيل ومقترحات فيديوهات لشرح المواد — اختار المادة وشاهد الشرح.</p>
+  <div id="videosNotice"></div>
   <div id="videosList"></div>
 </main>
 
@@ -1661,7 +1666,7 @@ let activeLevel = "الكل";
 /* ---------------- Storage helpers ---------------- */
 /* DATA_VERSION bumped whenever seedData changes, so everyone's stored copy
    (which may include courses removed later, like CSS) resets to the latest seed. */
-const DATA_VERSION = "v47";
+const DATA_VERSION = "v48";
 
 async function loadCourses(){
   try{
@@ -4996,7 +5001,15 @@ const videoSuggestions = [
   { courseId:"c4", title:"Feasibility Study", channel:"Dr Mohamed Gaber Ghanem", count:"7 فيديوهات",
     url:"https://www.youtube.com/playlist?list=PLL8ZSo-b0ACAj5HVI2_pN_ASsJLuOjEYz" },
   { courseId:"c5", title:"Lecture 1 Statistics", channel:"", count:"",
-    url:"https://www.youtube.com/watch?v=c8-XMmyPyr4" }
+    url:"https://www.youtube.com/watch?v=c8-XMmyPyr4" },
+  { courseId:"c5", title:"Statistics - Correlation (شرح الأمثلة بالترتيب)", channel:"", count:"4 فيديوهات بالترتيب",
+    url:"https://www.youtube.com/watch?v=wvQdWLx0uhM",
+    videos:[
+      {id:"wvQdWLx0uhM",title:"7- Example on Pearson Correlation Coefficient — شرح"},
+      {id:"d38YEYNhfKo",title:"9- Example on Rank Correlation Coefficient — شرح"},
+      {id:"WpKDBXMKldI",title:"10- Example 2, Part 1 on Rank Correlation Coefficient — شرح"},
+      {id:"HozXg2cIpUY",title:"11- Example 2, Part 2: Rank Correlation Coefficient Explained"}
+    ] }
 ];
 
 function playlistId(url){
@@ -5135,7 +5148,24 @@ function refreshAssignBadge(){
 }
 document.addEventListener('DOMContentLoaded', refreshAssignBadge);
 
+const VIDEOS_NOTICE_KEY = 'portal_videos_notice_dismissed';
+function videosSignature(){ return videoSuggestions.map(v => v.courseId + ':' + v.title + ':' + ((v.videos || []).length)).join('|'); }
+function renderVideosNotice(){
+  const box = document.getElementById('videosNotice'); if(!box) return;
+  let dismissed = '';
+  try{ dismissed = localStorage.getItem(VIDEOS_NOTICE_KEY) || ''; }catch(e){}
+  if(dismissed === videosSignature()){ box.innerHTML = ''; return; }
+  const by = {};
+  videoSuggestions.forEach(v => { (by[v.courseId] = by[v.courseId] || []).push(v); });
+  const rows = Object.keys(by).map(cid => {
+    const c = courses.find(x => x.id === cid) || {};
+    const items = by[cid].map(v => `<li>${escapeHtml(v.title)}${v.count ? ' — ' + escapeHtml(v.count) : (v.videos ? ' — ' + v.videos.length + ' فيديو' : '')}</li>`).join('');
+    return `<div><strong>${escapeHtml(c.name || cid)}</strong><ul>${items}</ul></div>`;
+  }).join('');
+  box.innerHTML = `<div class="video-notice"><button class="video-notice-x" id="videosNoticeX" aria-label="إخفاء">✕ إخفاء</button><h4>🆕 الفيديوهات المقترحة المضافة حالياً</h4>${rows}</div>`;
+}
 function renderVideos(){
+  renderVideosNotice();
   const wrap = document.getElementById('videosList');
   const byCourse = {};
   videoSuggestions.forEach(v => { (byCourse[v.courseId] = byCourse[v.courseId] || []).push(v); });
@@ -5168,7 +5198,7 @@ function renderVideos(){
               </button>
               <div class="vi-row-info">
                 <div class="vi-row-title" data-tid="${escapeHtml(vd.id)}" data-auto="${vd.title ? 0 : 1}">${escapeHtml(vd.title || `الفيديو ${i+1}`)}</div>
-                <a href="https://www.youtube.com/watch?v=${encodeURIComponent(vd.id)}&list=${encodeURIComponent(pid)}" target="_blank" rel="noopener">فتح على يوتيوب ↗</a>
+                <a href="https://www.youtube.com/watch?v=${encodeURIComponent(vd.id)}${pid ? '&list=' + encodeURIComponent(pid) : ''}" target="_blank" rel="noopener">فتح على يوتيوب ↗</a>
               </div>
             </div>`).join('')}
           </details>` : ''}
@@ -5179,6 +5209,12 @@ function renderVideos(){
   loadVideoTitles();
 }
 
+document.getElementById('videosNotice').addEventListener('click', (e)=>{
+  if(e.target.closest('#videosNoticeX')){
+    try{ localStorage.setItem(VIDEOS_NOTICE_KEY, videosSignature()); }catch(err){}
+    document.getElementById('videosNotice').innerHTML = '';
+  }
+});
 document.getElementById('videosList').addEventListener('click', (e)=>{
   const th = e.target.closest('button[data-vid]');
   if(th){
